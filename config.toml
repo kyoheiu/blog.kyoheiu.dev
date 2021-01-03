@@ -62,6 +62,5 @@ taxonomies = [
 languages = []
 
 [extra]
-# Put all your custom variables here
 author = "Kyohei Uto"
-icon = "material-tux-dark.svg"
+icon = "http://127.0.0.1:1111/images/material-tux-dark.svg"
