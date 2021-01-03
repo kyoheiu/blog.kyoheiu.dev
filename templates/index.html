@@ -4,6 +4,10 @@
 <h1 class="title">
 </h1>
 
+<p>
+  recent posts
+</p>
+
   {% set section = get_section(path="post/_index.md") %}
   {% for page in section.pages %}
     {% if loop.index0 == 5 %}{% break %}{% endif %}

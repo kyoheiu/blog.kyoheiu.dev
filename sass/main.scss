@@ -15,10 +15,13 @@ body {
     margin: 0 auto;
     padding-top: 50px;
     padding-bottom: 50px;
+    a {
+        text-decoration: underline;
+    }
 }
 
 .title {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
 }
 
 .date {
