@@ -1,0 +1,125 @@
+$textcolor: #222;
+$lightcolor: #666;
+$effectcolor: steelblue;
+$codebackground: #eff1f5;
+
+html {
+    font-size: 15px;
+}
+
+body {
+    line-height: 1.5;
+    color: $textcolor;
+    font-family: monospace;
+    max-width: 80%;
+    margin: 0 auto;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.title {
+    font-size: 1.4rem;
+}
+
+.date {
+    color: $effectcolor;
+}
+
+.taxonomies a {
+    color: $lightcolor;
+}
+
+.header {
+    color: $lightcolor;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    top: 0;
+    border-bottom: solid 2px $effectcolor;
+    a {
+        color: $lightcolor;
+        text-decoration: none;
+    }
+    nav {
+        margin: 0 0 0 auto;
+    }
+    ul {
+        list-style: none;
+        display: flex;
+        margin: 0;
+    }
+    li {
+        margin: 0 0 0 1rem;
+    }
+}
+
+.footer {
+    color: $lightcolor;
+    text-align: right;
+    padding: 10px;
+    a {
+        color: $lightcolor;
+    }
+}
+
+a {
+    text-decoration: none;
+    color: $textcolor;
+    .taxonomies {
+        color: $lightcolor;
+    }
+}
+
+a:visited {
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: $effectcolor;
+}
+
+h2 {
+    font-size: 2.0rem;
+}
+
+h3 {
+    font-size: 1.8rem;    
+}
+
+h4 {
+    font-size: 1.6rem;    
+}
+
+h5 {
+    font-size: 1.4rem;    
+}
+
+h6 {
+    font-size: 1.2rem;    
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}
+
+pre {
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+code {
+    background-color: $codebackground;
+    :not(pre) {
+        color: $lightcolor;
+    }
+}
+
+blockquote {
+    border-left: 8px solid $effectcolor;
+    padding: 1rem;
+}
+
+img, video {
+    max-width: 90%;
+    align: center;
+}
