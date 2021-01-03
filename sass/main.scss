@@ -107,11 +107,8 @@ pre {
     overflow-y: hidden;
 }
 
-code {
+:not(pre) > code {
     background-color: $codebackground;
-    :not(pre) {
-        color: $lightcolor;
-    }
 }
 
 blockquote {

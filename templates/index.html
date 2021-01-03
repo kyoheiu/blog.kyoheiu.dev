@@ -7,8 +7,12 @@
   {% set section = get_section(path="post/_index.md") %}
   {% for page in section.pages %}
   <p>
-    <div class="date">{{ page.date }}</div>
-    <div class="title"><a href="{{ page.permalink | safe }}">{{ page.title }}</a></div>
+    <div class="date">
+      {{ page.date }}
+    </div>
+    <div class="title">
+      <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
+    </div>
     <div class="taxonomies">
     {% if page.taxonomies.categories %}
         {% for category in page.taxonomies.categories %}
