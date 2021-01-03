@@ -3,18 +3,17 @@
 
 <head>
   <meta charset="utf-8">
-  <title>tudurikata.com</title>
+  <title>{{ config.title }}</title>
   <link rel="stylesheet" href="{{ get_url(path="main.css", trailing_slash=false) }}">
 </head>
 
 <div class="header">
   <a href="/"><img src="{{ config.extra.icon }}" alt="{{ config.title }}" width="60" height="60"></a>
-> Hello.
+> {{ config.extra.message }}
   <nav class="top">
     <ul>
       <li><a href="/">[{{ config.title }}]</a></li>
-      <li><a href="/post">>BLOG</a></li>
-      <li><a href="/about">>ABOUT</a></li>
+      <li><a href="/post">>ALL POSTS</a></li>
     </ul>
   </nav>
 </div>

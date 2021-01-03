@@ -64,3 +64,4 @@ languages = []
 [extra]
 author = "Kyohei Uto"
 icon = "http://127.0.0.1:1111/images/material-tux-dark.svg"
+message = "Hello."
