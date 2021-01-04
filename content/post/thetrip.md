@@ -1,6 +1,7 @@
 +++
 title = "Weike Wang 'The Trip'"
 date = 2019-11-28
+math = false
 [taxonomies]
 categories = ["review"]
 tags = ["review"]
