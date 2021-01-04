@@ -1,6 +1,8 @@
 +++
 title = "HaskellによるWebスクレイピング"
 date = 2020-08-23
+[extra]
+math = false
 [taxonomies]
 categories = ["code"]
 tags = ["Haskell", "WEBscraping", "scalpel"]

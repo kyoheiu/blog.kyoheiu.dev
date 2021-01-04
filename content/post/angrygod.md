@@ -1,6 +1,7 @@
 +++
 title = "Joyce Carol Oates 'Sinners in the Hands of an Angry God'"
 date = 2019-10-15
+math = false
 [taxonomies]
 categories = ["review"]
 tags = ["story"]

@@ -17,6 +17,13 @@ body {
     margin: 0 auto;
     padding-top: 50px;
     padding-bottom: 50px;
+    
+    img, video {
+        display: block;
+        margin: 0 auto;
+        max-width: 90%;
+    }
+    
     a {
         text-decoration: underline;
     }
@@ -42,6 +49,7 @@ body {
     color: $lightcolor;
     background-color: white;
     top: 0;
+    padding-bottom : 3px;
     border-bottom: solid 2px $basecolor;
     a {
         color: $lightcolor;
@@ -127,14 +135,9 @@ blockquote {
     padding: 1rem;
 }
 
-img, video {
-    max-width: 90%;
-    align: center;
-}
-
 .site_title {
     color: $basecolor;
-    font-size: 2rem;
+    font-size: 3vmin;
     a {
         text-decoration: none;
         color: $basecolor;

@@ -4,6 +4,8 @@ date = 2020-07-08
 [taxonomies]
 categories = ["math"]
 tags = ["group", "category"]
+[extra]
+math = true
 +++
 
 Steve Awodey, *Category Theory*で圏論を少しずつ学習中。いきなりつまずいた表題の定理の証明についてまとめておく。

@@ -50,12 +50,17 @@ languages = []
 # Author name, displayed at footer.
 author = "Kyohei Uto"
 
-# Path to the header icon image.
+# Path to the header icon / favicon image.
 # Please save image to static/images
 icon = "/images/penguin.svg"
+
+favicon = "/images/penguin.svg"
 
 # px size
 iconsize = 50
 
 # top text
 words = "Keep it simple and stupid."
+
+# mathjax
+math = true
