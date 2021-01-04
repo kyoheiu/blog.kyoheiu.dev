@@ -12,7 +12,7 @@
 
   {% set section = get_section(path="post/_index.md") %}
   {% for page in section.pages %}
-    {% if loop.index0 == 5 %}{% break %}{% endif %}
+    {% if loop.index0 == config.extra.indexposts %}{% break %}{% endif %}
     <p>
       <div class="date">
         {{ page.date }}
