@@ -62,5 +62,8 @@ iconsize = 50
 # top text
 words = "Keep it simple and stupid."
 
+# number of posts on index
+indexposts = 5
+
 # mathjax
 math = true
