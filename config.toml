@@ -22,21 +22,6 @@ highlight_theme = "base16-ocean-dark"
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = false
 
-# The filename to use for the feed. Used as the template filename, too.
-# Defaults to "atom.xml", which has a built-in template that renders an Atom 1.0 feed.
-# There is also a built-in template "rss.xml" that renders an RSS 2.0 feed.
-# feed_filename = "atom.xml"
-
-# The number of articles to include in the feed. All items are included if
-# this limit is not set (the default).
-# feed_limit = 20
-
-# When set to "true", files in the `static` directory are hard-linked. Useful for large
-# static files. Note that for this to work, both `static` and the
-# output directory need to be on the same filesystem. Note that the theme's `static`
-# files are always copied, regardless of this setting.
-# hard_link_static = false
-
 # The taxonomies to be rendered for the site and their configuration.
 # Example:
 #     taxonomies = [
@@ -62,7 +47,15 @@ taxonomies = [
 languages = []
 
 [extra]
+# Author name, displayed at footer.
 author = "Kyohei Uto"
+
+# Path to the header icon image.
+# Please save image to static/images
 icon = "/images/penguin.svg"
+
+# px size
 iconsize = 50
+
+# top text
 words = "Keep it simple and stupid."
