@@ -4,9 +4,11 @@
 <h1 class="title">
 </h1>
 
-<p>
+{{ config.extra.words }}
+
+<h3>
   recent posts
-</p>
+</h3>
 
   {% set section = get_section(path="post/_index.md") %}
   {% for page in section.pages %}
@@ -32,5 +34,9 @@
       </div>
     </p>
   {% endfor %}
+
+<p>
+  &emsp;<a href="/post">>archives</a>
+</p>
 
 {% endblock content %}

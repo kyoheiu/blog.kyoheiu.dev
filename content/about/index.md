@@ -16,11 +16,12 @@ Development Environment:
 - WM: i3
 
 Thanks:
-- header icon made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+- header icon made by <a href="https://www.flaticon.com/authors/vectors-market" title="Vectors Market">Vectors Market</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
 
 ### about author
 
 editor in Tokyo
 
-Kyohei Uto's TED Translations
-[https://www.ted.com/profiles/14244197/translator](https://www.ted.com/profiles/14244197/translator)
+- [gitlab: kyoheiu](https://gitlab.com/kyoheiu)
+- [reddit: kyohei_u](https://www.reddit.com/user/kyohei_u)
+- [Kyohei Uto's TED Translations](https://www.ted.com/profiles/14244197/translator)

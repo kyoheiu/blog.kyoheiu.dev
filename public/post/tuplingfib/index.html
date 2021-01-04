@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>tudurikata</title>
+  <link rel="stylesheet" href="https:&#x2F;&#x2F;tudurikata.com&#x2F;main.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<div class="header">
+  <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.svg" alt="tudurikata" width="50" height="50"></a></p>
+  <div class="site_title">
+    <a href="/">&thinsp;$&thinsp;tudurikata</a>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+  </div>
+</div>
+
+<body>
+  <section class="section">
+    <div class="container">
+      
+<h1 class="title">
+  フィボナッチ数列（Haskellタプリング法）
+</h1>
+<p class="subtitle"><strong>2020-05-03</strong></p>
+<p><h2 id="naive-fib">naive fib</h2>
+<p>まずnaiveな定義から。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">slowFib 0 = 1
+slowFib 1 = 1
+slowFib n = slowFib (n-1) + slowFib (n-2)
+</span></code></pre><pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">*</span><span style="color:#d08770;">Main</span><span style="color:#c0c5ce;">&gt; slowFib </span><span style="color:#d08770;">30
+1346269
+</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">1.54</span><span style="color:#c0c5ce;"> secs, </span><span style="color:#d08770;">929</span><span style="color:#c0c5ce;">,</span><span style="color:#d08770;">853</span><span style="color:#c0c5ce;">,</span><span style="color:#d08770;">032</span><span style="color:#c0c5ce;"> bytes)
+</span></code></pre>
+<p>n=30くらいまではなんとか耐えられるが、びっくりするくらい遅い。<a href="https://www.amazon.co.jp/dp/B004VB3V0K/">Learn You a Haskell for Great Good</a>に特に注釈無しで記載されているので、学習中の人は一度は試してみたことがあると思う。Haskellってもしかして遅いのかな？ と学習者を不安にさせる遅さだ。<br />
+<a href="https://www.amazon.co.jp/dp/4048930532/">Haskellによる関数プログラミングの思考法</a>によると、この関数の計算量はO(Φ^n)（Φ=(1+√5)/2, 黄金律）なので、指数オーダーで計算量が増えていくことになるが、黄金律と言われてもあまりピンとこないのでもう少しこねてみる。<br />
+計算を分解してみると、たぶん次のようになるはずだ。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">slowFib n
+= slowFib (n-</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">) + slowFib (n-</span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">)
+= (slowFib (n-</span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">) + slowFib (n-</span><span style="color:#d08770;">3</span><span style="color:#c0c5ce;">)) + (slowFib (n-</span><span style="color:#d08770;">3</span><span style="color:#c0c5ce;">) + slowFib (n-</span><span style="color:#d08770;">4</span><span style="color:#c0c5ce;">))
+= (slowFib (n-</span><span style="color:#d08770;">3</span><span style="color:#c0c5ce;">) + slowFib (n-</span><span style="color:#d08770;">4</span><span style="color:#c0c5ce;">)) + (slowFib (n-</span><span style="color:#d08770;">4</span><span style="color:#c0c5ce;">) + slowFib (n-</span><span style="color:#d08770;">5</span><span style="color:#c0c5ce;">)) + (slowFib (n-</span><span style="color:#d08770;">4</span><span style="color:#c0c5ce;">) + slowFib (n-</span><span style="color:#d08770;">5</span><span style="color:#c0c5ce;">)) + (slowFib (n-</span><span style="color:#d08770;">5</span><span style="color:#c0c5ce;">) + slowFib (n-</span><span style="color:#d08770;">6</span><span style="color:#c0c5ce;">))
+...
+</span></code></pre>
+<p>２行めでは２項だったのが３行めでは４項、４行めで８項になっているので、ここまでは項数は^2で増えていく。もちろんすべての項が一律に倍の項数になるわけではなく、前の項から順番に、いずれ<code>slowFib 1(0)</code>に達するので、それ以上は項数は増えない。そして全体でみると、２より少し小さいくらいの数字（＝黄金律）の指数オーダーで項数が増えていく。…ということだと思う。</p>
+<h2 id="tapuringufa">タプリング法</h2>
+<p><a href="https://www.amazon.co.jp/dp/B07SFCMP66/">入門Haskellプログラミング</a>にあったヒントをもとに実装したもの。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">fasterFib </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;"> (a,b) = a
+fasterFib n (a,b) = fasterFib (n-</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">) (a+b,a)
+</span></code></pre><pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">*</span><span style="color:#d08770;">Main</span><span style="color:#c0c5ce;">&gt; fasterFib </span><span style="color:#d08770;">30</span><span style="color:#c0c5ce;"> (</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">,</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">)
+</span><span style="color:#d08770;">1346269
+</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">0.01</span><span style="color:#c0c5ce;"> secs, </span><span style="color:#d08770;">117</span><span style="color:#c0c5ce;">,</span><span style="color:#d08770;">312</span><span style="color:#c0c5ce;"> bytes)
+
+*</span><span style="color:#d08770;">Main</span><span style="color:#c0c5ce;">&gt; fasterFib </span><span style="color:#d08770;">50</span><span style="color:#c0c5ce;"> (</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">,</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">)
+</span><span style="color:#d08770;">20365011074
+</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">0.01</span><span style="color:#c0c5ce;"> secs, </span><span style="color:#d08770;">127</span><span style="color:#c0c5ce;">,</span><span style="color:#d08770;">296</span><span style="color:#c0c5ce;"> bytes)
+</span></code></pre>
+<p>第一引数はカウンタで、これが1になるまで1つずつ減らしていく。減らしていく過程で第二引数のペアが足され、次のペアを生成する。これは（たぶん）タプリング法と呼ばれる手法なのだが、なぜこれが速いのか、自分で実装しておきながら理屈がいまいちピンとこなかったので、分解してみる。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">fasterFib </span><span style="color:#d08770;">30</span><span style="color:#c0c5ce;"> (</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">,</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">)
+= fasterFib </span><span style="color:#d08770;">29</span><span style="color:#c0c5ce;"> (</span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">,</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">)
+= fasterFib </span><span style="color:#d08770;">28</span><span style="color:#c0c5ce;"> (</span><span style="color:#d08770;">3</span><span style="color:#c0c5ce;">,</span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">)
+= fasterFib </span><span style="color:#d08770;">27</span><span style="color:#c0c5ce;"> (</span><span style="color:#d08770;">5</span><span style="color:#c0c5ce;">,</span><span style="color:#d08770;">3</span><span style="color:#c0c5ce;">)
+...
+= fasterFib </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;"> (</span><span style="color:#d08770;">1346269</span><span style="color:#c0c5ce;">,</span><span style="color:#d08770;">832040</span><span style="color:#c0c5ce;">)
+= </span><span style="color:#d08770;">1346269
+</span></code></pre>
+<p>項数がどの行も同じ１つで済んでいるということが、こういうふうに書いてみれば明らかだ。
+<a href="http://https://www.amazon.co.jp/dp/4048930532/" title="Haskellによる関数プログラミングの思考法">Haskellによる関数プログラミングの思考法</a>は少し違う形で実装していて、</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#65737e;">--fib2 n = (fib n, fib (n+1))と考えて
+</span><span style="color:#c0c5ce;">fib2 </span><span style="color:#d08770;">0 </span><span style="color:#c0c5ce;">= (</span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">,</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">)
+fib2 n = (b,a+b)
+	</span><span style="color:#b48ead;">where
+</span><span style="color:#c0c5ce;">		(a,b) = fib </span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;"> (n-</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">)
+</span></code></pre>
+<p>としている。著者によると、「タプリング法では引数を追加して関数を一般化するのではなく、結果を追加して関数を一般化する」(p.161)。<br />
+<code>fasterFib</code>は引数（左辺）のほうに追加しているが、実質的には<code>fib n = fib (n-1) + fib (n-2)</code>という計算の結果を引数として追加しているので、変形タプリング法と呼べる、かもしれない。<code>fib2</code>のほうは逆に、式の右辺にペアの形で追加している。タプル（ペア）の形で計算の結果をまとめて関数内で用いる、というのがタプリング法の肝であるようだ。</p>
+</p>
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto | powered by Zola.
+</div>
+
+</html>

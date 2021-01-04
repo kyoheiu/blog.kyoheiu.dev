@@ -11,7 +11,9 @@ body {
     line-height: 1.5;
     color: $textcolor;
     font-family: monospace;
-    max-width: 80%;
+    width: 80%;
+    min-width: 200px;
+    max-width: 1000px;
     margin: 0 auto;
     padding-top: 50px;
     padding-bottom: 50px;
@@ -39,13 +41,10 @@ body {
 .header {
     color: $lightcolor;
     background-color: white;
-    display: flex;
-    align-items: center;
     top: 0;
     border-bottom: solid 2px $basecolor;
     a {
         color: $lightcolor;
-        text-decoration: none;
     }
     nav {
         margin: 0 0 0 auto;
@@ -57,6 +56,11 @@ body {
     }
     li {
         margin: 0 0 0 1rem;
+    }
+    img {
+        min-width: 20px;
+        min-height: 20px;
+        float: left;
     }
 }
 
@@ -90,19 +94,19 @@ h2 {
 }
 
 h3 {
-    font-size: 1.8rem;    
-}
-
-h4 {
-    font-size: 1.6rem;    
-}
-
-h5 {
     font-size: 1.4rem;    
 }
 
-h6 {
+h4 {
+    font-size: 1.3rem;    
+}
+
+h5 {
     font-size: 1.2rem;    
+}
+
+h6 {
+    font-size: 1.1rem;    
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -126,4 +130,17 @@ blockquote {
 img, video {
     max-width: 90%;
     align: center;
+}
+
+.site_title {
+    color: $basecolor;
+    font-size: 2rem;
+    a {
+        text-decoration: none;
+        color: $basecolor;
+    }
+}
+
+.menu {
+    text-align: right;
 }

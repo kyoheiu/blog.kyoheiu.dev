@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>tudurikata</title>
+  <link rel="stylesheet" href="https:&#x2F;&#x2F;tudurikata.com&#x2F;main.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<div class="header">
+  <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.svg" alt="tudurikata" width="50" height="50"></a></p>
+  <div class="site_title">
+    <a href="/">&thinsp;$&thinsp;tudurikata</a>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+  </div>
+</div>
+
+<body>
+  <section class="section">
+    <div class="container">
+      
+<h1 class="title">
+  HaskellによるWebスクレイピング
+</h1>
+<p class="subtitle"><strong>2020-08-23</strong></p>
+<p><p>RSSを吐かず、実際に訪れないと更新されたかどうか確認できないWebサイトの情報を追うために、ささやかだがスクレイピング・プロジェクトを作った。
+流れとしてはこういう感じになる。</p>
+<ol>
+<li>Haskell(<code>scalpel</code>)により、更新情報の通知エリアのみを抜き出す</li>
+<li>抜き出してきた情報をローカルの<code>update.txt</code>の中身と比較し、同一であれば何もしない、異なっていればそれを<code>update.txt</code>に上書きした上でSlackのチャンネルへ通知（投稿）</li>
+<li>このプログラムを、linux起動時にネットワークを確保した上で走るように<code>systemd</code>を使って.serviceを作成</li>
+</ol>
+<p>この記事では(1)と(2)の<code>update.txt</code>の上書きまでをまとめる。続く部分は以下の記事に。</p>
+<ol>
+<li>HaskellによるWebスクレイピング（この記事）</li>
+<li><a href="https://tudurikata.com/post/posttoslack/">HaskellでSlackに投稿する</a></li>
+<li><a href="https://tudurikata.com/post/systemd-service/">systemdを使ってプログラムを定期実行する</a></li>
+</ol>
+<p><code>Main.hs</code>は以下の通り。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">{-#</span><span style="color:#b48ead;">LANGUAGE</span><span style="color:#c0c5ce;"> OverloadedStrings#-}
+
+</span><span style="color:#b48ead;">module </span><span style="color:#c0c5ce;">Main </span><span style="color:#b48ead;">where
+
+import qualified </span><span style="color:#c0c5ce;">Data.ByteString.Char8 </span><span style="color:#b48ead;">as </span><span style="color:#c0c5ce;">B
+</span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Text.HTML.Scalpel
+</span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Data.Maybe
+</span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Lib
+
+</span><span style="color:#8fa1b3;">url </span><span style="color:#b48ead;">:: URL
+</span><span style="color:#c0c5ce;">url = &quot;</span><span style="color:#a3be8c;">http://example.com</span><span style="color:#c0c5ce;">&quot;
+
+</span><span style="color:#8fa1b3;">filePath </span><span style="color:#b48ead;">:: FilePath
+</span><span style="color:#c0c5ce;">filePath = &quot;</span><span style="color:#a3be8c;">update.txt</span><span style="color:#c0c5ce;">&quot;
+
+</span><span style="color:#b48ead;">data </span><span style="color:#d08770;">NewsText
+    </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">NewsText</span><span style="color:#c0c5ce;"> { time :: </span><span style="color:#d08770;">B</span><span style="color:#c0c5ce;">.</span><span style="color:#d08770;">ByteString
+               </span><span style="color:#c0c5ce;">, contents :: </span><span style="color:#d08770;">B</span><span style="color:#c0c5ce;">.</span><span style="color:#d08770;">ByteString</span><span style="color:#c0c5ce;"> } </span><span style="color:#b48ead;">deriving</span><span style="color:#c0c5ce;"> (</span><span style="color:#a3be8c;">Show</span><span style="color:#c0c5ce;">,</span><span style="color:#a3be8c;">Read</span><span style="color:#c0c5ce;">,</span><span style="color:#a3be8c;">Eq</span><span style="color:#c0c5ce;">)
+
+main = </span><span style="color:#b48ead;">do
+</span><span style="color:#c0c5ce;">    new &lt;- scrapeURL url information
+    old &lt;- </span><span style="color:#d08770;">B</span><span style="color:#c0c5ce;">.readFile filePath
+    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> new2 = </span><span style="color:#d08770;">B</span><span style="color:#c0c5ce;">.pack $ show $ fromJust new
+    </span><span style="color:#b48ead;">if</span><span style="color:#c0c5ce;"> new2 == old </span><span style="color:#b48ead;">then</span><span style="color:#c0c5ce;"> print &quot;</span><span style="color:#a3be8c;">no update.</span><span style="color:#c0c5ce;">&quot;
+                   </span><span style="color:#b48ead;">else do
+                       </span><span style="color:#d08770;">Lib</span><span style="color:#c0c5ce;">.sendUDMessage
+                       </span><span style="color:#d08770;">B</span><span style="color:#c0c5ce;">.writeFile filePath new2
+    </span><span style="color:#b48ead;">where
+            </span><span style="color:#8fa1b3;">information </span><span style="color:#b48ead;">:: Scraper B</span><span style="color:#c0c5ce;">.</span><span style="color:#b48ead;">ByteString</span><span style="color:#c0c5ce;"> [</span><span style="color:#b48ead;">NewsText</span><span style="color:#c0c5ce;">]
+            information = chroots (&quot;</span><span style="color:#a3be8c;">div</span><span style="color:#c0c5ce;">&quot; @: [hasClass &quot;</span><span style="color:#a3be8c;">information</span><span style="color:#c0c5ce;">&quot;]) newsTexts
+
+            </span><span style="color:#8fa1b3;">newsTexts </span><span style="color:#b48ead;">:: Scraper B</span><span style="color:#c0c5ce;">.</span><span style="color:#b48ead;">ByteString NewsText
+</span><span style="color:#c0c5ce;">            newsTexts = </span><span style="color:#b48ead;">do
+</span><span style="color:#c0c5ce;">                time &lt;- text $ &quot;</span><span style="color:#a3be8c;">dt</span><span style="color:#c0c5ce;">&quot;
+                contents &lt;- text $ &quot;</span><span style="color:#a3be8c;">dd</span><span style="color:#c0c5ce;">&quot;
+                return $ </span><span style="color:#d08770;">NewsText</span><span style="color:#c0c5ce;"> time contents
+</span></code></pre>
+<p>HaskellにおけるWebスクレイピング用のライブラリは他にいくつかあるようだけれど、<code>scalpel</code>は豊富な機能を持ち、たいていのことは可能という印象を受ける。今回の作業においてはオーバーキル気味かもしれないが、一回いじっておくとわりとすんなり他のケースに対しても応用できる、素直なライブラリのように感じた。<br />
+<code>scalpel</code>を使う部分は初心者にも大して難しくなかった。<code>div</code>の<code>class</code>でまず絞り、さらにそこからタグで絞って抜き出す、という感じだ。きちんとやるならもっとエラーケースについて考えないといけないはずだが今回はパス。<code>scrapeURL</code>は<code>StringLike str =&gt; URL -&gt; Scraper str a -&gt; IO (Maybe a)</code>となっているので、仮に該当するタグが消失していても<code>Nothing</code>が返ってくる。シンプルだが<code>Maybe</code>の威力を感じる部分。<br />
+結局未解決なのは、抜き出してくるテキストに日本語が含まれている場合、<code>Data.Text</code>系を採用しても正確に日本語を拾えない点。これはこちらの文字列の拾い方が悪いのか、対象のWebサイトの仕様なのかよくわからない（要調査）。今回の狙いは更新の有無のみをテキストの「イコールorノットイコール」で判別し、通知する、というものなので、文字化けは許容範囲と判断した。<br />
+その上で、<code>Data.Bytestring.Char8</code>を採用しているのは、<code>String</code>はパフォーマンス上一応避けておきたいというのと、過去のテキストと現在のテキストそれぞれを読み込む際のすり合わせのしやすさから。<code>now</code>と<code>old</code>の型が違っていると、内容が同じでも違うものと判断してしまうので、型をちゃんと見なくてはいけない。Visual Studio Codeのエクステンション<code>Haskell</code>に最近<code>haskell-ide-engine</code>が統合されたので、型チェックにはとても有用だった。</p>
+</p>
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto | powered by Zola.
+</div>
+
+</html>
