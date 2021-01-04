@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>tudurikata</title>
+  <link rel="stylesheet" href="https:&#x2F;&#x2F;tudurikata.com&#x2F;main.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<div class="header">
+  <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.svg" alt="tudurikata" width="50" height="50"></a></p>
+  <div class="site_title">
+    <a href="/">&thinsp;$&thinsp;tudurikata</a>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+  </div>
+</div>
+
+<body>
+  <section class="section">
+    <div class="container">
+      
+<h1 class="title">
+  HaskellでSlackに投稿する
+</h1>
+<p class="subtitle"><strong>2020-08-24</strong></p>
+<p><ol>
+<li><a href="https://tudurikata.com/post/haskellscraping01/">HaskellによるWebスクレイピング</a></li>
+<li>HaskellでSlackに投稿する（この記事）</li>
+<li><a href="https://tudurikata.com/post/systemd-service/">systemdを使ってプログラムを定期実行する</a></li>
+</ol>
+<p>scalpelで更新情報を抽出した後、保存されているテキストデータと異なっていた場合は、その旨をSlackへ通知を入れたい。
+そのための関数は<code>Main.hs</code>とは別に<code>Lib.hs</code>へ保存する。</p>
+<p><code>Lib.hs</code></p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">{-# </span><span style="color:#b48ead;">LANGUAGE</span><span style="color:#c0c5ce;"> OverloadedStrings #-}
+
+</span><span style="color:#b48ead;">module </span><span style="color:#c0c5ce;">Lib </span><span style="color:#b48ead;">where
+
+import </span><span style="color:#c0c5ce;">Network.Curl </span><span style="color:#b48ead;">as </span><span style="color:#c0c5ce;">NC
+
+</span><span style="color:#8fa1b3;">webhookurl </span><span style="color:#b48ead;">:: URLString
+</span><span style="color:#c0c5ce;">webhookurl = &quot;</span><span style="color:#a3be8c;">https://hooks.slack.com/services/xxxx/xxxxxxxxxxxxxxxxx</span><span style="color:#c0c5ce;">&quot;
+
+</span><span style="color:#8fa1b3;">message </span><span style="color:#b48ead;">::</span><span style="color:#c0c5ce;"> [</span><span style="color:#b48ead;">String</span><span style="color:#c0c5ce;">]
+message = [&quot;</span><span style="color:#a3be8c;">payload={</span><span style="color:#96b5b4;">\&quot;</span><span style="color:#a3be8c;">text</span><span style="color:#96b5b4;">\&quot;</span><span style="color:#a3be8c;">: </span><span style="color:#96b5b4;">\&quot;</span><span style="color:#a3be8c;">UPDATE: Check http://example.com/</span><span style="color:#96b5b4;">\&quot;</span><span style="color:#a3be8c;"> }</span><span style="color:#c0c5ce;">&quot;]
+
+sendUDMessage = curlPost webhookurl message
+</span></code></pre>
+<p>最初は<code>slack-api</code>あたりを使おうかと色々探っていたのだが、単にSlack内のチャンネルに投稿するだけであれば、Incoming Webhooksを使って投稿するのが一番手っ取り早い。</p>
+<p>cf: <a href="https://api.slack.com/messaging/webhooks">Sending messages using Incoming Webhooks | Slack</a></p>
+<p>コード内でWebhooksのURLが丸裸になるのが微妙だが、セキュリティ面を厳密に考慮する必要のない私的ミニプロジェクトなのでよしとする。<br />
+Webhooksを叩くには、たとえばlinuxのターミナルからであれば<code>curl post</code>でいける。これをHaskellで実現するには、<code>Network.Curl</code>ライブラリの<code>curlPost</code>で十分。<br />
+<code>message</code>の形式はSlackの仕様に合わせる必要があるが、投稿内容自体は件のWebサイトへのリンクがあれば事足りるので、全体として非常にシンプルにモジュールを作れた。</p>
+</p>
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto | powered by Zola.
+</div>
+
+</html>

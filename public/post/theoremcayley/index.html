@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>tudurikata</title>
+  <link rel="stylesheet" href="https:&#x2F;&#x2F;tudurikata.com&#x2F;main.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<div class="header">
+  <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.svg" alt="tudurikata" width="50" height="50"></a></p>
+  <div class="site_title">
+    <a href="/">&thinsp;$&thinsp;tudurikata</a>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+  </div>
+</div>
+
+<body>
+  <section class="section">
+    <div class="container">
+      
+<h1 class="title">
+  ケーリーの定理の証明
+</h1>
+<p class="subtitle"><strong>2020-07-08</strong></p>
+<p><p>Steve Awodey, <em>Category Theory</em>で圏論を少しずつ学習中。いきなりつまずいた表題の定理の証明についてまとめておく。</p>
+<blockquote>
+<p>Theorem(Cayley). Every group G is isomorphic to a group of permutations.<br />
+(p.13)<br />
+群$G$は置換群の部分群と同型。</p>
+</blockquote>
+<p>単語の定義から。<br />
+$X$を群とするとき、全単射写像$f: X \rightarrow X$を$X$の置換という。$X$の置換全体からなる群を$X$の置換群という。<br />
+置換群とは、$cod(f)$を指すのではないことに注意。つまり定理の出発点になる群$G$とはレイヤーの異なるところに位置する群としてイメージすることで、定理の意味を把握しやすくなると思う。</p>
+<p>定理の証明は以下の順序で行う。</p>
+<ol>
+<li>全単射写像$\bar{g}: G \rightarrow G$を定義する。</li>
+<li>$i: G \rightarrow \bar{G}$が同型写像であること、つまり$G \cong \bar{G}$を示す。</li>
+</ol>
+<h3 id="1-bar-g-g-rightarrow-g">(1) $\bar{g}: G \rightarrow G$</h3>
+<p>ある$g \in G$について、すべての$h \in G$に対し</p>
+<p>$$\bar{g}(h) = g \cdot h$$</p>
+<p>となる写像$\bar{g}$があるとする。</p>
+<h4 id="dan-she-xing">単射性</h4>
+<p>$\bar{g}(a) = \bar{g}(b)$であれば、</p>
+<p>$$g \cdot a = g \cdot b$$<br />
+$$g^{-1} \cdot g \cdot a = g^{-1} \cdot g \cdot b$$</p>
+<p>したがって$a = b$となる。</p>
+<h4 id="quan-she-xing">全射性</h4>
+<p>$y \in G$について、$G$のある元$x$が存在して$\bar{g}(x) = y$となることを示す。<br />
+$G$は群なので、</p>
+<p>$$y = e \cdot y = g \cdot g^{-1} \cdot y = g \cdot (g^{-1} \cdot y)$$</p>
+<p>したがって、$x = g^{-1} \cdot y$とおくと、$\bar{g}(x) = y$とおけ、$\bar{g}$は全単射。</p>
+<h3 id="2-i-g-rightarrow-bar-g-to-j-bar-g-rightarrow-g">(2) $i: G \rightarrow \bar{G}$と$j: \bar{G} \rightarrow G$</h3>
+<p>各元$g \in G$について、$G$の置換への写像（つまり関数を呼び出す関数）$i$を</p>
+<p>$$i: G \rightarrow \bar{G}$$<br />
+$$i(g) = \bar{g}$$</p>
+<p>とする。</p>
+<p>また、各元$\bar{g} \in \bar{G}$について、ある元$x \in G$への写像$j$を</p>
+<p>$$j: \bar{G} \rightarrow G$$<br />
+$$j(\bar{g}) = \bar{g}(x)$$</p>
+<p>とする。</p>
+<p>ここで、iが同型写像であることを示すためには、$j$が群$X$の置換$\bar{g}$からその置換$\bar{g}$のもととなった$g \in G$への写像となるような$x$をとる必要がある。</p>
+<p>$$\bar{g}(x) = g = g \cdot u$$</p>
+<p>したがって求めるべき$x$は$x = u$となり、$j(\bar{g}) = \bar{g}(u)$と書ける。</p>
+<p>実際、このとき</p>
+<p>$$(i \circ j)(g) = j \circ (i(g)) = j(\bar{g}) = \bar{g}(u) = g \cdot u = g$$</p>
+<p>また、</p>
+<p>$$(j \circ i)(\bar{g}) = i(j(\bar{g})) = i(\bar{g}(u)) = i(g \cdot u) = i(g) = \bar{g}$$</p>
+<p>より、$i$は同型写像。$\square$</p>
+</p>
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto | powered by Zola.
+</div>
+
+</html>

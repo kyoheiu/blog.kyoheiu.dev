@@ -5,18 +5,18 @@
   <meta charset="utf-8">
   <title>{{ config.title }}</title>
   <link rel="stylesheet" href="{{ get_url(path="main.css", trailing_slash=false) }}">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 
 <div class="header">
-  <a href="/"><img src="{{ config.extra.icon }}" alt="{{ config.title }}" width="{{ config.extra.iconsize }}" height="{{ config.extra.iconsize }}"></a>
-> {{ config.extra.message }}
-  <nav class="top">
-    <ul>
-      <li><a href="/">[{{ config.title }}]</a></li>
-      <li><a href="/post">>archives</a></li>
-      <li><a href="/about">>about</a></li>   
-    </ul>
-  </nav>
+  <p><a href="/"><img src="{{ config.base_url }}{{ config.extra.icon }}" alt="{{ config.title }}" width="{{ config.extra.iconsize }}" height="{{ config.extra.iconsize }}"></a></p>
+  <div class="site_title">
+    <a href="/">&thinsp;$&thinsp;{{ config.title }}</a>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+  </div>
 </div>
 
 <body>
@@ -28,7 +28,7 @@
 </body>
 
 <div class="footer">
-  <a href="/">[{{ config.title }}]</a>&emsp;&copy; {{ config.extra.author }} / powered by Zola.
+  <a href="/">{{ config.title }}</a>&emsp;&copy; {{ config.extra.author }} | powered by Zola.
 </div>
 
 </html>
