@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>{{ config.title }}</title>
   <link rel="stylesheet" href="{{ get_url(path="main.css", trailing_slash=false) }}">
-  <link rel="shortcut icon" type="image/svg+xml" href="{{ config.extra.favicon }}">
+  <link rel="shortcut icon" type="image/svg+xml" href="{{ config.extra.emily_favicon }}">
   <meta name="viewport" content="width=device-width,initial-scale=1">
  
   {% if page.extra.math %}
@@ -24,7 +24,7 @@
 </head>
 
 <div class="header">
-  <p><a href="/"><img src="{{ config.base_url }}{{ config.extra.icon }}" alt="{{ config.title }}" width="{{ config.extra.iconsize }}" height="{{ config.extra.iconsize }}"></a></p>
+  <p><a href="/"><img src="{{ config.base_url }}{{ config.extra.emily_icon }}" alt="{{ config.title }}" width="{{ config.extra.emily_iconsize }}" height="{{ config.extra.emily_iconsize }}"></a></p>
   <div class="site_title">
     <a href="/">&thinsp;{{ config.title }}</a>
   </div>
@@ -43,7 +43,7 @@
 </body>
 
 <div class="footer">
-  <a href="/">{{ config.title }}</a>&emsp;&copy; {{ config.extra.author }} | powered by Zola.
+  <a href="/">{{ config.title }}</a>&emsp;&copy; {{ config.extra.emily_author }} | powered by Zola.
 </div>
 
 </html>
