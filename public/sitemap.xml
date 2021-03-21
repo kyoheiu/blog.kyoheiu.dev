@@ -11,6 +11,9 @@
         <loc>https://tudurikata.com/categories/</loc>
     </url>
     <url>
+        <loc>https://tudurikata.com/categories/blog/</loc>
+    </url>
+    <url>
         <loc>https://tudurikata.com/categories/code/</loc>
     </url>
     <url>
@@ -39,8 +42,16 @@
         <lastmod>2020-09-20</lastmod>
     </url>
     <url>
+        <loc>https://tudurikata.com/post/beginning-rust/</loc>
+        <lastmod>2021-02-13</lastmod>
+    </url>
+    <url>
         <loc>https://tudurikata.com/post/chemisty/</loc>
         <lastmod>2019-10-10</lastmod>
+    </url>
+    <url>
+        <loc>https://tudurikata.com/post/chromium-losing-sync/</loc>
+        <lastmod>2021-02-05</lastmod>
     </url>
     <url>
         <loc>https://tudurikata.com/post/dataset/</loc>
@@ -67,6 +78,10 @@
         <lastmod>2019-12-06</lastmod>
     </url>
     <url>
+        <loc>https://tudurikata.com/post/juliascraping/</loc>
+        <lastmod>2021-01-14</lastmod>
+    </url>
+    <url>
         <loc>https://tudurikata.com/post/kaihuku/</loc>
         <lastmod>2020-07-09</lastmod>
     </url>
@@ -85,6 +100,14 @@
     <url>
         <loc>https://tudurikata.com/post/memofib/</loc>
         <lastmod>2020-05-04</lastmod>
+    </url>
+    <url>
+        <loc>https://tudurikata.com/post/nim-csv/</loc>
+        <lastmod>2021-01-20</lastmod>
+    </url>
+    <url>
+        <loc>https://tudurikata.com/post/nim-ssg/</loc>
+        <lastmod>2021-02-02</lastmod>
     </url>
     <url>
         <loc>https://tudurikata.com/post/nospanish/</loc>
@@ -127,6 +150,10 @@
         <lastmod>2020-05-03</lastmod>
     </url>
     <url>
+        <loc>https://tudurikata.com/post/zola-ssg/</loc>
+        <lastmod>2021-01-07</lastmod>
+    </url>
+    <url>
         <loc>https://tudurikata.com/tags/</loc>
     </url>
     <url>
@@ -134,6 +161,12 @@
     </url>
     <url>
         <loc>https://tudurikata.com/tags/category/</loc>
+    </url>
+    <url>
+        <loc>https://tudurikata.com/tags/chromium/</loc>
+    </url>
+    <url>
+        <loc>https://tudurikata.com/tags/csv-parser/</loc>
     </url>
     <url>
         <loc>https://tudurikata.com/tags/dhcp/</loc>
@@ -148,6 +181,9 @@
         <loc>https://tudurikata.com/tags/google-assistant/</loc>
     </url>
     <url>
+        <loc>https://tudurikata.com/tags/google/</loc>
+    </url>
+    <url>
         <loc>https://tudurikata.com/tags/group/</loc>
     </url>
     <url>
@@ -157,7 +193,13 @@
         <loc>https://tudurikata.com/tags/ifttt/</loc>
     </url>
     <url>
+        <loc>https://tudurikata.com/tags/julia/</loc>
+    </url>
+    <url>
         <loc>https://tudurikata.com/tags/linux/</loc>
+    </url>
+    <url>
+        <loc>https://tudurikata.com/tags/nim/</loc>
     </url>
     <url>
         <loc>https://tudurikata.com/tags/nonfiction/</loc>
@@ -172,10 +214,19 @@
         <loc>https://tudurikata.com/tags/review/</loc>
     </url>
     <url>
+        <loc>https://tudurikata.com/tags/rust/</loc>
+    </url>
+    <url>
         <loc>https://tudurikata.com/tags/scalpel/</loc>
     </url>
     <url>
+        <loc>https://tudurikata.com/tags/security/</loc>
+    </url>
+    <url>
         <loc>https://tudurikata.com/tags/slack/</loc>
+    </url>
+    <url>
+        <loc>https://tudurikata.com/tags/static-site-generator/</loc>
     </url>
     <url>
         <loc>https://tudurikata.com/tags/steam/</loc>
@@ -188,5 +239,8 @@
     </url>
     <url>
         <loc>https://tudurikata.com/tags/webscraping/</loc>
+    </url>
+    <url>
+        <loc>https://tudurikata.com/tags/zola/</loc>
     </url>
 </urlset>

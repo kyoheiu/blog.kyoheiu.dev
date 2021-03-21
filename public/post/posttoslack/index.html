@@ -3,19 +3,24 @@
 
 <head>
   <meta charset="utf-8">
-  <title>tudurikata</title>
-  <link rel="stylesheet" href="https:&#x2F;&#x2F;tudurikata.com&#x2F;main.css">
-  <link rel="shortcut icon" type="image/svg+xml" href="&#x2F;images&#x2F;penguin.svg">
+  
+<title>HaskellでSlackに投稿する | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;logo.svg">
   <meta name="viewport" content="width=device-width,initial-scale=1">
- 
+
+  
+  <link id="style1" rel="stylesheet" type="text/css" href=https:&#x2F;&#x2F;tudurikata.com&#x2F;maindark.css>
   
 
 </head>
 
 <div class="header">
-  <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.svg" alt="tudurikata" width="50" height="50"></a></p>
   <div class="site_title">
-    <a href="/">&thinsp;tudurikata</a>
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;logo.svg"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
   </div>
   <div class="menu">
     <a href="/post">>archives</a>
@@ -27,11 +32,31 @@
   <section class="section">
     <div class="container">
       
-<h1 class="title">
+<h2>
   HaskellでSlackに投稿する
-</h1>
-<p class="subtitle"><strong>2020-08-24</strong></p>
-<p><ol>
+</h2>
+
+<div class="date">
+  2020-08-24
+</div>
+
+<div class="taxonomies">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/haskell/">#Haskell</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/slack/">#Slack</a>
+      
+  
+</div>
+
+<p>
+  <ol>
 <li><a href="https://tudurikata.com/post/haskellscraping01/">HaskellによるWebスクレイピング</a></li>
 <li>HaskellでSlackに投稿する（この記事）</li>
 <li><a href="https://tudurikata.com/post/systemd-service/">systemdを使ってプログラムを定期実行する</a></li>
@@ -40,7 +65,7 @@
 そのための関数は<code>Main.hs</code>とは別に<code>Lib.hs</code>へ保存する。</p>
 <p><code>Lib.hs</code></p>
 <pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">{-# </span><span style="color:#b48ead;">LANGUAGE</span><span style="color:#c0c5ce;"> OverloadedStrings #-}
+<code class="language-hs" data-lang="hs"><span style="color:#c0c5ce;">{-# </span><span style="color:#b48ead;">LANGUAGE</span><span style="color:#c0c5ce;"> OverloadedStrings #-}
 
 </span><span style="color:#b48ead;">module </span><span style="color:#c0c5ce;">Lib </span><span style="color:#b48ead;">where
 
@@ -59,14 +84,19 @@ sendUDMessage = curlPost webhookurl message
 <p>コード内でWebhooksのURLが丸裸になるのが微妙だが、セキュリティ面を厳密に考慮する必要のない私的ミニプロジェクトなのでよしとする。<br />
 Webhooksを叩くには、たとえばlinuxのターミナルからであれば<code>curl post</code>でいける。これをHaskellで実現するには、<code>Network.Curl</code>ライブラリの<code>curlPost</code>で十分。<br />
 <code>message</code>の形式はSlackの仕様に合わせる必要があるが、投稿内容自体は件のWebサイトへのリンクがあれば事足りるので、全体として非常にシンプルにモジュールを作れた。</p>
+
 </p>
+
+
+
 
     </div>
   </section>
 </body>
 
 <div class="footer">
-  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto | powered by Zola.
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://gitlab.com/kyoheiu/emily_zola_theme">emily</a>.
 </div>
 
 </html>

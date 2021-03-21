@@ -3,30 +3,24 @@
 
 <head>
   <meta charset="utf-8">
-  <title>tudurikata</title>
-  <link rel="stylesheet" href="https:&#x2F;&#x2F;tudurikata.com&#x2F;main.css">
-  <link rel="shortcut icon" type="image/svg+xml" href="&#x2F;images&#x2F;penguin.svg">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
- 
   
-  <script>
-    MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']]
-      }
-    };
-  </script>
-  <script type="text/javascript" id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
-  </script>
+<title>ケーリーの定理の証明 | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;logo.svg">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  
+  <link id="style1" rel="stylesheet" type="text/css" href=https:&#x2F;&#x2F;tudurikata.com&#x2F;maindark.css>
   
 
 </head>
 
 <div class="header">
-  <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.svg" alt="tudurikata" width="50" height="50"></a></p>
   <div class="site_title">
-    <a href="/">&thinsp;tudurikata</a>
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;logo.svg"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
   </div>
   <div class="menu">
     <a href="/post">>archives</a>
@@ -38,11 +32,31 @@
   <section class="section">
     <div class="container">
       
-<h1 class="title">
+<h2>
   ケーリーの定理の証明
-</h1>
-<p class="subtitle"><strong>2020-07-08</strong></p>
-<p><p>Steve Awodey, <em>Category Theory</em>で圏論を少しずつ学習中。いきなりつまずいた表題の定理の証明についてまとめておく。</p>
+</h2>
+
+<div class="date">
+  2020-07-08
+</div>
+
+<div class="taxonomies">
+  
+      
+      <a href="https://tudurikata.com/categories/math/">/math</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/group/">#group</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/category/">#category</a>
+      
+  
+</div>
+
+<p>
+  <p>Steve Awodey, <em>Category Theory</em>で圏論を少しずつ学習中。いきなりつまずいた表題の定理の証明についてまとめておく。</p>
 <blockquote>
 <p>Theorem(Cayley). Every group G is isomorphic to a group of permutations.<br />
 (p.13)<br />
@@ -87,14 +101,30 @@ $$j(\bar{g}) = \bar{g}(x)$$</p>
 <p>また、</p>
 <p>$$(j \circ i)(\bar{g}) = i(j(\bar{g})) = i(\bar{g}(u)) = i(g \cdot u) = i(g) = \bar{g}$$</p>
 <p>より、$i$は同型写像。$\square$</p>
+
 </p>
+
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+<script type="text/javascript" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+
+
 
     </div>
   </section>
 </body>
 
 <div class="footer">
-  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto | powered by Zola.
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://gitlab.com/kyoheiu/emily_zola_theme">emily</a>.
 </div>
 
 </html>

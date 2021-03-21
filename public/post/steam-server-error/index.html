@@ -3,19 +3,24 @@
 
 <head>
   <meta charset="utf-8">
-  <title>tudurikata</title>
-  <link rel="stylesheet" href="https:&#x2F;&#x2F;tudurikata.com&#x2F;main.css">
-  <link rel="shortcut icon" type="image/svg+xml" href="&#x2F;images&#x2F;penguin.svg">
+  
+<title>Steamサーバー接続時トラブルを解決する（Arch Linux） | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;logo.svg">
   <meta name="viewport" content="width=device-width,initial-scale=1">
- 
+
+  
+  <link id="style1" rel="stylesheet" type="text/css" href=https:&#x2F;&#x2F;tudurikata.com&#x2F;maindark.css>
   
 
 </head>
 
 <div class="header">
-  <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.svg" alt="tudurikata" width="50" height="50"></a></p>
   <div class="site_title">
-    <a href="/">&thinsp;tudurikata</a>
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;logo.svg"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
   </div>
   <div class="menu">
     <a href="/post">>archives</a>
@@ -27,11 +32,35 @@
   <section class="section">
     <div class="container">
       
-<h1 class="title">
+<h2>
   Steamサーバー接続時トラブルを解決する（Arch Linux）
-</h1>
-<p class="subtitle"><strong>2020-12-23</strong></p>
-<p><h3 id="huan-jing">環境</h3>
+</h2>
+
+<div class="date">
+  2020-12-23
+</div>
+
+<div class="taxonomies">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/linux/">#linux</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/arch-linux/">#Arch Linux</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/steam/">#steam</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/dhcp/">#DHCP</a>
+      
+  
+</div>
+
+<p>
+  <h3 id="huan-jing">環境</h3>
 <p>OS: Arch Linux x86_64<br />
 Kernel: 5.9.14-arch1-1<br />
 Steamは<code>pacman</code>のパッケージを使用。</p>
@@ -67,14 +96,19 @@ DHCP=yes
 <p>https://github.com/ValveSoftware/steam-for-linux/issues/2085
 https://github.com/ValveSoftware/steam-for-linux/issues/4855</p>
 <p>関連していそうなissue。「Steam以外はふつうにネット接続できている」というのがミソ。<code>networkd</code>以外を使っていても、同症状の場合は一度DHCP接続を確認してみるとよいかもしれない。</p>
+
 </p>
+
+
+
 
     </div>
   </section>
 </body>
 
 <div class="footer">
-  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto | powered by Zola.
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://gitlab.com/kyoheiu/emily_zola_theme">emily</a>.
 </div>
 
 </html>

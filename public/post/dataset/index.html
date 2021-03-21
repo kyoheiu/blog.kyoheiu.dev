@@ -3,19 +3,24 @@
 
 <head>
   <meta charset="utf-8">
-  <title>tudurikata</title>
-  <link rel="stylesheet" href="https:&#x2F;&#x2F;tudurikata.com&#x2F;main.css">
-  <link rel="shortcut icon" type="image/svg+xml" href="&#x2F;images&#x2F;penguin.svg">
+  
+<title>Haskellで種類の数を数える（重複の削除） | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;logo.svg">
   <meta name="viewport" content="width=device-width,initial-scale=1">
- 
+
+  
+  <link id="style1" rel="stylesheet" type="text/css" href=https:&#x2F;&#x2F;tudurikata.com&#x2F;maindark.css>
   
 
 </head>
 
 <div class="header">
-  <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.svg" alt="tudurikata" width="50" height="50"></a></p>
   <div class="site_title">
-    <a href="/">&thinsp;tudurikata</a>
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;logo.svg"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
   </div>
   <div class="menu">
     <a href="/post">>archives</a>
@@ -27,11 +32,29 @@
   <section class="section">
     <div class="container">
       
-<h1 class="title">
+<h2>
   Haskellで種類の数を数える（重複の削除）
-</h1>
-<p class="subtitle"><strong>2020-05-01</strong></p>
-<p><p>複数の要素を扱うための基礎的なライブラリをいろいろテストしてみる題材として、こちらの問題を使用させてもらう。</p>
+</h2>
+
+<div class="date">
+  2020-05-01
+</div>
+
+<div class="taxonomies">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/haskell/">#Haskell</a>
+      
+  
+</div>
+
+<p>
+  <p>複数の要素を扱うための基礎的なライブラリをいろいろテストしてみる題材として、こちらの問題を使用させてもらう。</p>
 <p>At Coder abc164 C - gacha </p>
 <p>https://atcoder.jp/contests/abc164/tasks/abc164_c</p>
 <blockquote>
@@ -62,7 +85,7 @@ apple
 <h3 id="risutowoyong-itazai-gui-guan-shu">リストを用いた再帰関数</h3>
 <p>まずリストで再帰関数を作ったバージョン。</p>
 <pre style="background-color:#2b303b;">
-<code><span style="color:#65737e;">--TLE
+<code class="language-hs" data-lang="hs"><span style="color:#65737e;">--TLE
 </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Control.Monad
 
 </span><span style="color:#8fa1b3;">delDupe </span><span style="color:#b48ead;">::</span><span style="color:#c0c5ce;"> [</span><span style="color:#b48ead;">String</span><span style="color:#c0c5ce;">] </span><span style="color:#b48ead;">-&gt;</span><span style="color:#c0c5ce;"> [</span><span style="color:#b48ead;">String</span><span style="color:#c0c5ce;">] </span><span style="color:#b48ead;">-&gt;</span><span style="color:#c0c5ce;"> [</span><span style="color:#b48ead;">String</span><span style="color:#c0c5ce;">]
@@ -81,7 +104,7 @@ main = </span><span style="color:#b48ead;">do
 <h3 id="nubnozheng-ti">nubの正体</h3>
 <p>あとで気づいたのだが、Preludeにはリストの重複を削除する関数<code>nub</code>が標準でついているので、次のように書けることは書ける。</p>
 <pre style="background-color:#2b303b;">
-<code><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Control.Monad
+<code class="language-hs" data-lang="hs"><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Control.Monad
 
 main = </span><span style="color:#b48ead;">do
 </span><span style="color:#c0c5ce;">    n &lt;- readLn
@@ -91,7 +114,7 @@ main = </span><span style="color:#b48ead;">do
 <p>が、これは実は最初の「再帰での重複チェック→新たなリストの生成」と実行時間・メモリ使用量ともに変わらなかった。Preludeの<code>nub</code>の定義はこちら。</p>
 <p>https://hackage.haskell.org/package/base-4.12.0.0/docs/src/Data.OldList.html#nub</p>
 <pre style="background-color:#2b303b;">
-<code><span style="color:#65737e;">-- | /O(n^2)/. The &#39;nub&#39; function removes duplicate elements from a list.
+<code class="language-hs" data-lang="hs"><span style="color:#65737e;">-- | /O(n^2)/. The &#39;nub&#39; function removes duplicate elements from a list.
 -- In particular, it keeps only the first occurrence of each element.
 -- (The name &#39;nub&#39; means \`essence\&#39;.)
 -- It is a special case of &#39;nubBy&#39;, which allows the programmer to supply
@@ -127,7 +150,7 @@ nubBy eq </span><span style="color:#d08770;">[]             </span><span style="
 <p>そこで２つめの、<code>sort</code>して重複をまとめる方法。
 まずはリストを用いると、このようになる。</p>
 <pre style="background-color:#2b303b;">
-<code><span style="color:#65737e;">--AC
+<code class="language-hs" data-lang="hs"><span style="color:#65737e;">--AC
 </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Control.Monad
 </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Data.List </span><span style="color:#b48ead;">as </span><span style="color:#c0c5ce;">List
 
@@ -146,12 +169,12 @@ https://hackage.haskell.org/package/vector-0.12.0.1/docs/Data-Vector.html</p>
 <p>これはポリフォーミックなarrayで、リスト操作とarray操作のいいとこどりをしたものである、とHackageでは説明されている。
 一通りの標準的な関数は装備されているが、ここで用いたいのは<code>uniq</code>関数。</p>
 <pre style="background-color:#2b303b;">
-<code><span style="color:#8fa1b3;">uniq </span><span style="color:#b48ead;">:: Eq </span><span style="color:#bf616a;">a </span><span style="color:#b48ead;">=&gt; Vector </span><span style="color:#bf616a;">a </span><span style="color:#b48ead;">-&gt; Vector </span><span style="color:#bf616a;">a
+<code class="language-hs" data-lang="hs"><span style="color:#8fa1b3;">uniq </span><span style="color:#b48ead;">:: Eq </span><span style="color:#bf616a;">a </span><span style="color:#b48ead;">=&gt; Vector </span><span style="color:#bf616a;">a </span><span style="color:#b48ead;">-&gt; Vector </span><span style="color:#bf616a;">a
 </span></code></pre>
 <p>隣接した同じ要素を<code>drop</code>できるものだが、「隣接している」ことが条件なのでsortedが前提となる。
 そこで<code>sort</code>関数と組み合わせて次のようにする。</p>
 <pre style="background-color:#2b303b;">
-<code><span style="color:#65737e;">--AC
+<code class="language-hs" data-lang="hs"><span style="color:#65737e;">--AC
 </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Control.Monad
 </span><span style="color:#b48ead;">import qualified </span><span style="color:#c0c5ce;">Data.Vector </span><span style="color:#b48ead;">as </span><span style="color:#c0c5ce;">V
 </span><span style="color:#b48ead;">import qualified </span><span style="color:#c0c5ce;">Data.List </span><span style="color:#b48ead;">as </span><span style="color:#c0c5ce;">L
@@ -170,7 +193,7 @@ https://hackage.haskell.org/package/containers-0.6.2.1/docs/Data-Set.html</p>
 <p>このライブラリが楽しいのは、<code>Set.fromList</code>でリストからSetを生成する過程で、重複要素が自動的に<code>drop</code>される点。この自動<code>drop</code>がいかにも自然に感じられるところがmake senseだ。<br />
 Data.Setを用いたコードは次のようになる。</p>
 <pre style="background-color:#2b303b;">
-<code><span style="color:#65737e;">--AC
+<code class="language-hs" data-lang="hs"><span style="color:#65737e;">--AC
 </span><span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">Control.Monad
 </span><span style="color:#b48ead;">import qualified </span><span style="color:#c0c5ce;">Data.Set </span><span style="color:#b48ead;">as </span><span style="color:#c0c5ce;">Set
  
@@ -182,14 +205,19 @@ main = </span><span style="color:#b48ead;">do
 <p><code>Set.size</code>はリストでいう<code>length</code>だが、これはO(1)。<br />
 実行結果も、リスト版<code>group . sort</code>と大差がつくわけではないものの、最速。<br />
 集合論的な発想を武器にできれば、色々な場面でかなり効率的にデータ処理ができそうな予感がする。</p>
+
 </p>
+
+
+
 
     </div>
   </section>
 </body>
 
 <div class="footer">
-  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto | powered by Zola.
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://gitlab.com/kyoheiu/emily_zola_theme">emily</a>.
 </div>
 
 </html>

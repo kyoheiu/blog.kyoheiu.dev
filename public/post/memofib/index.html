@@ -3,19 +3,24 @@
 
 <head>
   <meta charset="utf-8">
-  <title>tudurikata</title>
-  <link rel="stylesheet" href="https:&#x2F;&#x2F;tudurikata.com&#x2F;main.css">
-  <link rel="shortcut icon" type="image/svg+xml" href="&#x2F;images&#x2F;penguin.svg">
+  
+<title>フィボナッチ数列（memoization） | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;logo.svg">
   <meta name="viewport" content="width=device-width,initial-scale=1">
- 
+
+  
+  <link id="style1" rel="stylesheet" type="text/css" href=https:&#x2F;&#x2F;tudurikata.com&#x2F;maindark.css>
   
 
 </head>
 
 <div class="header">
-  <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.svg" alt="tudurikata" width="50" height="50"></a></p>
   <div class="site_title">
-    <a href="/">&thinsp;tudurikata</a>
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;logo.svg"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
   </div>
   <div class="menu">
     <a href="/post">>archives</a>
@@ -27,11 +32,29 @@
   <section class="section">
     <div class="container">
       
-<h1 class="title">
+<h2>
   フィボナッチ数列（memoization）
-</h1>
-<p class="subtitle"><strong>2020-05-04</strong></p>
-<p><h2 id="memoization">memoization(?)</h2>
+</h2>
+
+<div class="date">
+  2020-05-04
+</div>
+
+<div class="taxonomies">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/haskell/">#Haskell</a>
+      
+  
+</div>
+
+<p>
+  <h2 id="memoization">memoization(?)</h2>
 <p>次に、memoizationによるフィボナッチ数列関数の作成にトライしてみる。<br />
 memoizationとは日本語だとメモ化とも呼ばれるプログラミングの手法で、「一度計算したものを記録しておき、必要なときに取り出すようにする」効率化のこと、らしい。</p>
 <p>前回のslowFibが遅い理由は、一度計算してしまえばそのあと再利用できる項を愚直に展開して項数を増やしているからだ。これを解決するのに、memoizationの発想は有用ではないだろうか、というわけ。<br />
@@ -112,14 +135,19 @@ memoFib2 n = let fibList = map fib [0..] in fibList !! n
 <p>これを踏まえて元の定義をもう一度見てみると、話は実は非常に単純で、最初の<code>Fib2</code>では、<code>fib</code>は<code>memoFib2</code>に、そして<code>memoFib2</code>は<code>map fib [0..]</code>に結びついている。したがって<code>map fib [0..]</code>が最低限以上の回数計算されている。一方、<code>memoFib1</code>がポイントフリーで表現されているということは、<code>map fib [0..]</code>は最終的に必要になった段階でようやく評価される、ということを実質的に意味している。このポイントフリーと遅延評価の関係を意識できていないと、大変混乱する羽目になる、というわけだった。<br />
 適当に人のコードを写経すると理解不足なところが出てくる、という教訓。</p>
 <p>ところでmemoizationに話を戻すと、この場合、<code>fibList = map fib [0..]</code> がその役割を担っている。<code>slowfib</code>からスタートしてみると、<code>map f xs</code>で計算結果を記録していくmemoizationのやり方はとても自然に感じられる。</p>
+
 </p>
+
+
+
 
     </div>
   </section>
 </body>
 
 <div class="footer">
-  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto | powered by Zola.
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://gitlab.com/kyoheiu/emily_zola_theme">emily</a>.
 </div>
 
 </html>

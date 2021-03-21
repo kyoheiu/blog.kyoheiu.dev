@@ -3,19 +3,24 @@
 
 <head>
   <meta charset="utf-8">
-  <title>tudurikata</title>
-  <link rel="stylesheet" href="https:&#x2F;&#x2F;tudurikata.com&#x2F;main.css">
-  <link rel="shortcut icon" type="image/svg+xml" href="&#x2F;images&#x2F;penguin.svg">
+  
+<title>HaskellによるWebスクレイピング | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;logo.svg">
   <meta name="viewport" content="width=device-width,initial-scale=1">
- 
+
+  
+  <link id="style1" rel="stylesheet" type="text/css" href=https:&#x2F;&#x2F;tudurikata.com&#x2F;maindark.css>
   
 
 </head>
 
 <div class="header">
-  <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.svg" alt="tudurikata" width="50" height="50"></a></p>
   <div class="site_title">
-    <a href="/">&thinsp;tudurikata</a>
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;logo.svg"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
   </div>
   <div class="menu">
     <a href="/post">>archives</a>
@@ -27,11 +32,33 @@
   <section class="section">
     <div class="container">
       
-<h1 class="title">
+<h2>
   HaskellによるWebスクレイピング
-</h1>
-<p class="subtitle"><strong>2020-08-23</strong></p>
-<p><p>RSSを吐かず、実際に訪れないと更新されたかどうか確認できないWebサイトの情報を追うために、ささやかだがスクレイピング・プロジェクトを作った。
+</h2>
+
+<div class="date">
+  2020-08-23
+</div>
+
+<div class="taxonomies">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/haskell/">#Haskell</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/webscraping/">#WEBscraping</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/scalpel/">#scalpel</a>
+      
+  
+</div>
+
+<p>
+  <p>RSSを吐かず、実際に訪れないと更新されたかどうか確認できないWebサイトの情報を追うために、ささやかだがスクレイピング・プロジェクトを作った。
 流れとしてはこういう感じになる。</p>
 <ol>
 <li>Haskell(<code>scalpel</code>)により、更新情報の通知エリアのみを抜き出す</li>
@@ -46,7 +73,7 @@
 </ol>
 <p><code>Main.hs</code>は以下の通り。</p>
 <pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">{-#</span><span style="color:#b48ead;">LANGUAGE</span><span style="color:#c0c5ce;"> OverloadedStrings#-}
+<code class="language-hs" data-lang="hs"><span style="color:#c0c5ce;">{-#</span><span style="color:#b48ead;">LANGUAGE</span><span style="color:#c0c5ce;"> OverloadedStrings#-}
 
 </span><span style="color:#b48ead;">module </span><span style="color:#c0c5ce;">Main </span><span style="color:#b48ead;">where
 
@@ -87,14 +114,19 @@ main = </span><span style="color:#b48ead;">do
 <code>scalpel</code>を使う部分は初心者にも大して難しくなかった。<code>div</code>の<code>class</code>でまず絞り、さらにそこからタグで絞って抜き出す、という感じだ。きちんとやるならもっとエラーケースについて考えないといけないはずだが今回はパス。<code>scrapeURL</code>は<code>StringLike str =&gt; URL -&gt; Scraper str a -&gt; IO (Maybe a)</code>となっているので、仮に該当するタグが消失していても<code>Nothing</code>が返ってくる。シンプルだが<code>Maybe</code>の威力を感じる部分。<br />
 結局未解決なのは、抜き出してくるテキストに日本語が含まれている場合、<code>Data.Text</code>系を採用しても正確に日本語を拾えない点。これはこちらの文字列の拾い方が悪いのか、対象のWebサイトの仕様なのかよくわからない（要調査）。今回の狙いは更新の有無のみをテキストの「イコールorノットイコール」で判別し、通知する、というものなので、文字化けは許容範囲と判断した。<br />
 その上で、<code>Data.Bytestring.Char8</code>を採用しているのは、<code>String</code>はパフォーマンス上一応避けておきたいというのと、過去のテキストと現在のテキストそれぞれを読み込む際のすり合わせのしやすさから。<code>now</code>と<code>old</code>の型が違っていると、内容が同じでも違うものと判断してしまうので、型をちゃんと見なくてはいけない。Visual Studio Codeのエクステンション<code>Haskell</code>に最近<code>haskell-ide-engine</code>が統合されたので、型チェックにはとても有用だった。</p>
+
 </p>
+
+
+
 
     </div>
   </section>
 </body>
 
 <div class="footer">
-  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto | powered by Zola.
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://gitlab.com/kyoheiu/emily_zola_theme">emily</a>.
 </div>
 
 </html>

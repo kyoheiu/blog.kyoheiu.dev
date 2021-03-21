@@ -3,19 +3,24 @@
 
 <head>
   <meta charset="utf-8">
-  <title>tudurikata</title>
-  <link rel="stylesheet" href="https:&#x2F;&#x2F;tudurikata.com&#x2F;main.css">
-  <link rel="shortcut icon" type="image/svg+xml" href="&#x2F;images&#x2F;penguin.svg">
+  
+<title>Haskellの素因数分解 | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;logo.svg">
   <meta name="viewport" content="width=device-width,initial-scale=1">
- 
+
+  
+  <link id="style1" rel="stylesheet" type="text/css" href=https:&#x2F;&#x2F;tudurikata.com&#x2F;maindark.css>
   
 
 </head>
 
 <div class="header">
-  <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.svg" alt="tudurikata" width="50" height="50"></a></p>
   <div class="site_title">
-    <a href="/">&thinsp;tudurikata</a>
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;logo.svg"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
   </div>
   <div class="menu">
     <a href="/post">>archives</a>
@@ -27,12 +32,30 @@
   <section class="section">
     <div class="container">
       
-<h1 class="title">
+<h2>
   Haskellの素因数分解
-</h1>
-<p class="subtitle"><strong>2020-05-02</strong></p>
-<p><pre style="background-color:#2b303b;">
-<code><span style="color:#8fa1b3;">headPrimeFactor </span><span style="color:#b48ead;">:: Integer -&gt; Integer
+</h2>
+
+<div class="date">
+  2020-05-02
+</div>
+
+<div class="taxonomies">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/haskell/">#Haskell</a>
+      
+  
+</div>
+
+<p>
+  <pre style="background-color:#2b303b;">
+<code class="language-hs" data-lang="hs"><span style="color:#8fa1b3;">headPrimeFactor </span><span style="color:#b48ead;">:: Integer -&gt; Integer
 </span><span style="color:#c0c5ce;">headPrimeFactor n = </span><span style="color:#b48ead;">if</span><span style="color:#c0c5ce;"> fstprime == </span><span style="color:#d08770;">[]
                     </span><span style="color:#b48ead;">then</span><span style="color:#c0c5ce;"> n
                     </span><span style="color:#b48ead;">else</span><span style="color:#c0c5ce;"> head fstprime
@@ -52,24 +75,29 @@ primeFactorsList </span><span style="color:#d08770;">1 </span><span style="color
 これを再帰的にコンスしていくのが<code>primeFactorsList</code>で、仕組みとしては上に書いた通り。</p>
 <p>適当な整数を素因数分解してみると、次のようになる。</p>
 <pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">*Main</span><span style="color:#c0c5ce;">&gt; primeFactorsList 2039801
+<code class="language-bash" data-lang="bash"><span style="color:#bf616a;">*Main</span><span style="color:#c0c5ce;">&gt; primeFactorsList 2039801
 </span><span style="color:#bf616a;">[23,131,677]
 </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">0.01</span><span style="color:#c0c5ce;"> secs, 170,624 bytes)
 </span></code></pre><pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">*Main</span><span style="color:#c0c5ce;">&gt; primeFactorsList 2380479237540923
+<code class="language-bash" data-lang="bash"><span style="color:#bf616a;">*Main</span><span style="color:#c0c5ce;">&gt; primeFactorsList 2380479237540923
 </span><span style="color:#bf616a;">[29,82085490949687]
 </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">3.48</span><span style="color:#c0c5ce;"> secs, 2,754,399,560 bytes)
 </span></code></pre>
 <p>ひとつの整数の素因数分解として速いか遅いか、まだよくわからないけれど…。 
 もう少し工夫したやり方があるような気もするなぁ。</p>
+
 </p>
+
+
+
 
     </div>
   </section>
 </body>
 
 <div class="footer">
-  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto | powered by Zola.
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://gitlab.com/kyoheiu/emily_zola_theme">emily</a>.
 </div>
 
 </html>

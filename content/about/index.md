@@ -1,27 +1,28 @@
 +++
-title = "about this site and author"
+title = "このサイトについて"
 date = 2020-01-01
+template = "post-page.html"
 +++
 
-### about this site
-Personal notes about:
+- coding
 - literature
 - math
 - linux
-- Haskell
-and more.
 
-Development Environment:
+などについて書いています。
+
+#### 環境
 - OS: Arch Linux x86_64  
-- Browser: Chromium
+- CPU: Intel i5-9400F
+- Memory: 16GB
 
-Thanks:
+#### Thanks:
 - header icon made by <a href="https://www.flaticon.com/authors/vectors-market" title="Vectors Market">Vectors Market</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
 
-### about author
+#### Who's writing 
 
-editor in Tokyo
+東京の編集者
 
 - [GitLab: kyoheiu](https://gitlab.com/kyoheiu)
-- [reddit: kyohei_u](https://www.reddit.com/user/kyohei_u)
+- [GitHub: kyoheiu](https://github.com/kyoheiu)
 - [Kyohei Uto's TED Translations](https://www.ted.com/profiles/14244197/translator)
