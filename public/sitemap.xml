@@ -26,6 +26,10 @@
         <loc>https://tudurikata.com/post/</loc>
     </url>
     <url>
+        <loc>https://tudurikata.com/post/about-backup/</loc>
+        <lastmod>2021-03-22</lastmod>
+    </url>
+    <url>
         <loc>https://tudurikata.com/post/againstempathy/</loc>
         <lastmod>2019-11-05</lastmod>
     </url>
@@ -174,6 +178,9 @@
     </url>
     <url>
         <loc>https://tudurikata.com/tags/dhcp/</loc>
+    </url>
+    <url>
+        <loc>https://tudurikata.com/tags/dotfiles/</loc>
     </url>
     <url>
         <loc>https://tudurikata.com/tags/essay/</loc>

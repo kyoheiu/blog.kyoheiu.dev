@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>バックアップについて考える | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;logo.svg">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  
+  <link id="style1" rel="stylesheet" type="text/css" href=https:&#x2F;&#x2F;tudurikata.com&#x2F;maindark.css>
+  
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;logo.svg"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+  </div>
+</div>
+
+<body>
+  <section class="section">
+    <div class="container">
+      
+<h2>
+  バックアップについて考える
+</h2>
+
+<div class="date">
+  2021-03-22
+</div>
+
+<div class="taxonomies">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/linux/">#Linux</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/arch-linux/">#Arch Linux</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/dotfiles/">#dotfiles</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/static-site-generator/">#Static Site Generator</a>
+      
+  
+</div>
+
+<p>
+  <p><a href="https://tudurikata.com/post/reinstall-arch/">Arch Linuxを再インストールした話</a>に関連して。</p>
+<h3 id="dotfilesnoxi-ifang">dotfilesの扱い方</h3>
+<p>今回感じたのは、最低限i3と、ターミナルエミュレーター / vifm / nvimを入れて、dotfilesをリモートリポジトリから引っ張ってくれば作業環境は整うわけなので、追加のバックアップ作業はもしかしたら要らないのかも、ということ。これまではtimeshiftで定期的にバックアップをとっていたのだが、結局一度も使わないままだったし…。<br />
+逆に上記のパッケージのdotfilesがリモートに存在しない場合、動くことは動くが、細かい設定を整えようとするとかなり面倒くさいことになってしまうので、思っていた以上にdotfilesのバックアップは大事だったとも言える（r/unixpornに貼りつけるだけのアレじゃなかった）。</p>
+<p>dotfilesの設定ファイルを使って環境をリカバーする場合、シェルスクリプトでシンボリックリンクを作成して該当の.config内ディレクトリに入れる人が多そうなイメージだが、とりあえずNimでプログラムを作ってみた。</p>
+<p>＜コード＞</p>
+<h3 id="shu-kitupanasikodonoxi-ifang">書きっぱなしコードの扱い方</h3>
+<p>これまで練習用に書いてきたHaskellやらRustやらのコードはクリーンインストールによりすべて消えてしまった。まあ見返すことはほとんどなかったし、たとえばHaskellでスクレイピングするプログラムの骨子はサイトに上げているので、それ以外のちまちましたやつ（Project Eulerの解答とか）は別にいいかな…と思いつつ、でもやっぱりちょっとさびしい。<br />
+こういう断片的なコードをいちいちGitHub GistsやGitLab Snippetsに上げるか、それとも書き捨てのつもりで気にしないかはけっこう微妙な問題だと思う。見返さなかったとはいえ、振り返ると意外と発見があったり、最近書いていない言語を思い出すのに使ったり、ということもあるだろうし、悩ましい。<br />
+<a href="https://note.com/konojunya/n/n461544d2f881">Gistsに自動アップロードするCLIを書いている</a>方を見つけて、なるほど、と思ったが、書いた端から上げたい感じもある。VS Codeのエクステンションとか、もうありそうだな…と思ったら<a href="https://github.com/kenhowardpdx/vscode-gist">あった</a>。自分なりに使いそうなフローで何かCLIを作ってみてもいいかもしれない。<br />
+GitLabも<a href="https://docs.gitlab.com/ee/api/snippets.html#get-a-single-snippet">Snippets APIの紹介がとてもよくまとまっている</a>のでけっこう使いやすそう。</p>
+<h3 id="jing-de-saitozieneretanoluo-tosixue">静的サイトジェネレーターの落とし穴(?)</h3>
+<p>それと、Hugo / Zolaなどの静的サイトジェネレーターを使っている場合は、サイト上にフロントマター付きの.mdファイルが存在するわけではないので、もしデータが消えてしまった場合はサイト上のテキストをコピーしてきて、あらためて.mdとしてタグ付けをしないといけない（もしくはサイトをスクレイピングして.mdファイルを生成するプログラムを書くか。できなくはないが面倒ではある）。<br />
+幸い、数か月前までプライベートリポジトリにサイトごと上げていたので、手作業での.md復旧は数記事で済んだのだが、これがまったくバックアップがない状況だったらけっこう辛かったかもしれない。プライベートリポジトリでもいいので更新時にpushしておくのが大事だとしみじみ思った（もちろん、github.ioなどでサイトをホスティングしている場合は当然バックアップがとれているのでこんなことは考えなくていい）。</p>
+<h3 id="owarini">おわりに</h3>
+<p>以上に書いたものはすべてgitのリモートリポジトリの存在が前提になっている。ここに何か落とし穴がまだあるかもしれない。</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://gitlab.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>
