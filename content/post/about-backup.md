@@ -13,9 +13,35 @@ tags = ["Linux", "Arch Linux", "dotfiles", "Static Site Generator"]
 今回感じたのは、最低限i3と、ターミナルエミュレーター / vifm / nvimを入れて、dotfilesをリモートリポジトリから引っ張ってくれば作業環境は整うわけなので、追加のバックアップ作業はもしかしたら要らないのかも、ということ。これまではtimeshiftで定期的にバックアップをとっていたのだが、結局一度も使わないままだったし…。  
 逆に上記のパッケージのdotfilesがリモートに存在しない場合、動くことは動くが、細かい設定を整えようとするとかなり面倒くさいことになってしまうので、思っていた以上にdotfilesのバックアップは大事だったとも言える（r/unixpornに貼りつけるだけのアレじゃなかった）。
 
-dotfilesの設定ファイルを使って環境をリカバーする場合、シェルスクリプトでシンボリックリンクを作成して該当の.config内ディレクトリに入れる人が多そうなイメージだが、とりあえずNimでプログラムを作ってみた。
+シェルスクリプトでdotfilesの設定ファイルのシンボリックリンクを各所に貼るプログラムを書いている人が多いと思うが、同じようなものをNimでさくっと書いてみたので貼っておきます。
 
-＜コード＞
+```nim
+import os
+
+let dotfiles = getCurrentDir()
+let home = getHomeDir()
+
+for kind, path in walkDir(dotfiles):
+  let (dir, name, ext) = path.splitFile
+  if name == "dotfiles": continue
+  else:
+    if kind == pcFile:
+      let target1 = home & name & ext
+      removeFile(target1)
+      path.createSymlink(target1)
+    if kind == pcDir:
+      if name != ".git":
+        for fkind, fpath in walkDir(path):
+          let (fdir, fname, fext) = fpath.splitFile
+          if fname != "colors":
+            let configName = name & "/" & fname & fext
+            let target2 = home & ".config/" & configName
+            removeFile(target2)
+            fpath.createSymlink(target2)
+```
+
+`os`ライブラリの`createSymlink`は同名のファイルが存在した場合failになるので、ファイルを削除してからシンボリックリンクを作成している。つまりファイル削除を含むプログラムなので、利用する場合は自己責任でお願いします。
+nvimのcolorsディレクトリを除いているのはこれ以上コードが入れ子になるのが嫌だったから、程度の理由。
 
 ### 書きっぱなしコードの扱い方
 

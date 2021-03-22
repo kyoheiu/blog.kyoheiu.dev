@@ -64,8 +64,33 @@
 <h3 id="dotfilesnoxi-ifang">dotfilesの扱い方</h3>
 <p>今回感じたのは、最低限i3と、ターミナルエミュレーター / vifm / nvimを入れて、dotfilesをリモートリポジトリから引っ張ってくれば作業環境は整うわけなので、追加のバックアップ作業はもしかしたら要らないのかも、ということ。これまではtimeshiftで定期的にバックアップをとっていたのだが、結局一度も使わないままだったし…。<br />
 逆に上記のパッケージのdotfilesがリモートに存在しない場合、動くことは動くが、細かい設定を整えようとするとかなり面倒くさいことになってしまうので、思っていた以上にdotfilesのバックアップは大事だったとも言える（r/unixpornに貼りつけるだけのアレじゃなかった）。</p>
-<p>dotfilesの設定ファイルを使って環境をリカバーする場合、シェルスクリプトでシンボリックリンクを作成して該当の.config内ディレクトリに入れる人が多そうなイメージだが、とりあえずNimでプログラムを作ってみた。</p>
-<p>＜コード＞</p>
+<p>シェルスクリプトでdotfilesの設定ファイルのシンボリックリンクを各所に貼るプログラムを書いている人が多いと思うが、同じようなものをNimでさくっと書いてみたので貼っておきます。</p>
+<pre style="background-color:#2b303b;">
+<code class="language-nim" data-lang="nim"><span style="color:#b48ead;">import</span><span style="color:#c0c5ce;"> os
+
+</span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> dotfiles = </span><span style="color:#8fa1b3;">getCurrentDir</span><span style="color:#c0c5ce;">()
+</span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> home = </span><span style="color:#8fa1b3;">getHomeDir</span><span style="color:#c0c5ce;">()
+
+</span><span style="color:#b48ead;">for</span><span style="color:#c0c5ce;"> kind, path </span><span style="color:#b48ead;">in </span><span style="color:#8fa1b3;">walkDir</span><span style="color:#c0c5ce;">(dotfiles):
+  </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> (dir, name, ext) = path.splitFile
+  </span><span style="color:#b48ead;">if</span><span style="color:#c0c5ce;"> name == </span><span style="color:#a3be8c;">&quot;dotfiles&quot;</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">continue
+  else</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#b48ead;">if</span><span style="color:#c0c5ce;"> kind == pcFile:
+      </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> target1 = home &amp; name &amp; </span><span style="color:#8fa1b3;">ext
+      removeFile</span><span style="color:#c0c5ce;">(target1)
+      path.</span><span style="color:#8fa1b3;">createSymlink</span><span style="color:#c0c5ce;">(target1)
+    </span><span style="color:#b48ead;">if</span><span style="color:#c0c5ce;"> kind == pcDir:
+      </span><span style="color:#b48ead;">if</span><span style="color:#c0c5ce;"> name != </span><span style="color:#a3be8c;">&quot;.git&quot;</span><span style="color:#c0c5ce;">:
+        </span><span style="color:#b48ead;">for</span><span style="color:#c0c5ce;"> fkind, fpath </span><span style="color:#b48ead;">in </span><span style="color:#8fa1b3;">walkDir</span><span style="color:#c0c5ce;">(path):
+          </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> (fdir, fname, fext) = fpath.splitFile
+          </span><span style="color:#b48ead;">if</span><span style="color:#c0c5ce;"> fname != </span><span style="color:#a3be8c;">&quot;colors&quot;</span><span style="color:#c0c5ce;">:
+            </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> configName = name &amp; </span><span style="color:#a3be8c;">&quot;/&quot; </span><span style="color:#c0c5ce;">&amp; fname &amp; fext
+            </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> target2 = home &amp; </span><span style="color:#a3be8c;">&quot;.config/&quot; </span><span style="color:#c0c5ce;">&amp; </span><span style="color:#8fa1b3;">configName
+            removeFile</span><span style="color:#c0c5ce;">(target2)
+            fpath.</span><span style="color:#8fa1b3;">createSymlink</span><span style="color:#c0c5ce;">(target2)
+</span></code></pre>
+<p><code>os</code>ライブラリの<code>createSymlink</code>は同名のファイルが存在した場合failになるので、ファイルを削除してからシンボリックリンクを作成している。つまりファイル削除を含むプログラムなので、利用する場合は自己責任でお願いします。
+nvimのcolorsディレクトリを除いているのはこれ以上コードが入れ子になるのが嫌だったから、程度の理由。</p>
 <h3 id="shu-kitupanasikodonoxi-ifang">書きっぱなしコードの扱い方</h3>
 <p>これまで練習用に書いてきたHaskellやらRustやらのコードはクリーンインストールによりすべて消えてしまった。まあ見返すことはほとんどなかったし、作り途中のプロジェクトはGitLabのプライベートリポジトリに上げながらやっているから無事だ。それ以外にも、ちょっと面倒な感じの、たとえばHaskellでスクレイピングするプログラムの骨子などはサイトに上げているので、残りのちまちましたやつ（Project Eulerの解答とか）は別にいいかな…と思いつつ、でもやっぱりちょっとさびしい。<br />
 こういう断片的なコードをいちいちGitHub GistsやGitLab Snippetsに上げるか、それとも書き捨てのつもりで気にしないかはけっこう微妙な問題だと思う。見返さなかったとはいえ、振り返ると意外と発見があったり、最近書いていない言語を思い出すのに使ったり、ということもあるだろうし、悩ましい。<br />
