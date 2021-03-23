@@ -15,32 +15,9 @@ tags = ["Linux", "Arch Linux", "dotfiles", "Static Site Generator"]
 
 シェルスクリプトでdotfilesの設定ファイルのシンボリックリンクを各所に貼るプログラムを書いている人が多いと思うが、同じようなものをNimでさくっと書いてみたので貼っておきます。
 
-```nim
-import os
+<script src="https://gist.github.com/kyoheiu/9b5c634d38f26d1b67ad1d34bb29ef76.js"></script>
 
-let dotfiles = getCurrentDir()
-let home = getHomeDir()
-
-for kind, path in walkDir(dotfiles):
-  let (dir, name, ext) = path.splitFile
-  if name == "dotfiles": continue
-  else:
-    if kind == pcFile:
-      let target1 = home & name & ext
-      removeFile(target1)
-      path.createSymlink(target1)
-    if kind == pcDir:
-      if name != ".git":
-        for fkind, fpath in walkDir(path):
-          let (fdir, fname, fext) = fpath.splitFile
-          if fname != "colors":
-            let configName = name & "/" & fname & fext
-            let target2 = home & ".config/" & configName
-            removeFile(target2)
-            fpath.createSymlink(target2)
-```
-
-`os`ライブラリの`createSymlink`は同名のファイルが存在した場合failになるので、ファイルを削除してからシンボリックリンクを作成している。つまりファイル削除を含むプログラムなので、利用する場合は自己責任でお願いします。
+`os`ライブラリの`createSymlink`は同名のファイルが存在した場合failになるので、ファイルを削除してからシンボリックリンクを作成している。利用する場合は自己責任でお願いします。
 nvimのcolorsディレクトリを除いているのはこれ以上コードが入れ子になるのが嫌だったから、程度の理由。
 
 ### 書きっぱなしコードの扱い方
