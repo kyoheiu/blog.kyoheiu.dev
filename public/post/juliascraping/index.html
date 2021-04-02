@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>JuliaによるWebスクレイピング（簡易版） | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;logo.svg">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+  
+
+<script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;logo.svg"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+
+    
+    &nbsp;<button onclick="changeTheme()">change theme</button>
+    
+
+  </div>
+</div>
+
+<body onload = "getTheme()">
+  <section class="section">
+    <div class="container">
+      
+  JuliaによるWebスクレイピング（簡易版）
+<div class="date">
+  2021-01-14
+</div>
+
+<div class="taxonomies">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/julia/">#Julia</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/webscraping/">#WEBscraping</a>
+      
+  
+</div>
+
+<p>
+  <p>Juliaで特定のWebページの更新日のみを取得するスクリプト。試し書きに近いのであしからず。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">using HTTP
+
+url = &quot;http://example.com&quot;
+
+function main()
+   head = HTTP.head(url)
+   lastmod = head.headers[6]
+   println(lastmod)
+end
+
+@time main()
+</span></code></pre><pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">julia&gt; include(&quot;scraping.jl&quot;)
+&quot;Last-Modified&quot; =&gt; &quot;Thu, 10 Dec 2020 00:53:40 GMT&quot;
+  2.787799 seconds (9.54 M allocations: 479.701 MiB, 6.53% gc time)
+</span></code></pre>
+<p>関数定義部分はもうちょっとチェインっぽい感じでかっこよく書ける気もする。
+使用するライブラリはHTTP.jlのみ。head.headersはarrayを返すので、[6]でarray中の要素を指定している（Juliaは1からカウント）。実際、head.headersと番号を指定せずにおくと</p>
+<pre style="background-color:#2b303b;">
+<code class="language-julia" data-lang="julia"><span style="color:#c0c5ce;">julia&gt; head.headers
+</span><span style="color:#d08770;">8</span><span style="color:#c0c5ce;">-element Array{Pair{SubString{String},SubString{String}},</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">}:
+           &quot;</span><span style="color:#a3be8c;">Date</span><span style="color:#c0c5ce;">&quot; =&gt; &quot;</span><span style="color:#a3be8c;">Thu, 14 Jan 2021 20:35:31 GMT</span><span style="color:#c0c5ce;">&quot;
+   &quot;</span><span style="color:#a3be8c;">Content-Type</span><span style="color:#c0c5ce;">&quot; =&gt; &quot;</span><span style="color:#a3be8c;">text/html</span><span style="color:#c0c5ce;">&quot;
+ &quot;</span><span style="color:#a3be8c;">Content-Length</span><span style="color:#c0c5ce;">&quot; =&gt; &quot;</span><span style="color:#a3be8c;">9480</span><span style="color:#c0c5ce;">&quot;
+     &quot;</span><span style="color:#a3be8c;">Connection</span><span style="color:#c0c5ce;">&quot; =&gt; &quot;</span><span style="color:#a3be8c;">keep-alive</span><span style="color:#c0c5ce;">&quot;
+         &quot;</span><span style="color:#a3be8c;">Server</span><span style="color:#c0c5ce;">&quot; =&gt; &quot;</span><span style="color:#a3be8c;">Apache</span><span style="color:#c0c5ce;">&quot;
+  &quot;</span><span style="color:#a3be8c;">Last-Modified</span><span style="color:#c0c5ce;">&quot; =&gt; &quot;</span><span style="color:#a3be8c;">Thu, 10 Dec 2020 00:53:40 GMT</span><span style="color:#c0c5ce;">&quot;
+  &quot;</span><span style="color:#a3be8c;">Accept-Ranges</span><span style="color:#c0c5ce;">&quot; =&gt; &quot;</span><span style="color:#a3be8c;">none</span><span style="color:#c0c5ce;">&quot;
+           &quot;</span><span style="color:#a3be8c;">Vary</span><span style="color:#c0c5ce;">&quot; =&gt; &quot;</span><span style="color:#a3be8c;">Range,Accept-Encoding</span><span style="color:#c0c5ce;">&quot;
+</span></code></pre>
+<p>となる。</p>
+<p>取得したHTMLをさらにパースしてbodyやh1など特定のタグの内容を抽出したい場合はGumbo.jlを用いる。</p>
+<p>恐ろしく簡潔だが、ちょっと時間がかかりすぎのような気もする。ただ他言語と比較して、ということをやるまでの気力はないので、ここまでにしておきます。</p>
+<h4 id="jlhuairunoshi-xing">.jlファイルの実行</h4>
+<p>ちょっと困ったのが.jlファイルの実行について。REPLモードでincludeして関数を叩く分には何の問題もないのだが、どちらかというとREPLモードに入らず直接ターミナルで実行ファイルを叩く形のほうが好みなので、方法がないか探した。
+公式にはターミナルで.jlファイルのあるディレクトリにcdし、julia hoge.jlで実行可能だが、この際、.jlファイルはmoduleとしてではなく、上記のように</p>
+<ul>
+<li>必要な関数定義</li>
+<li>実行したいスクリプト</li>
+</ul>
+<p>のみを記述する。ちなみにこの場合、REPLモードでも、上記のようにinclude(&quot;hoge.jl&quot;)のみで実行することはできる。
+逆にmodule化してしまうと、julia hoge.jlでもinclude(&quot;hoge.jl&quot;)でもスクリプトが実行されることはない（REPLモードの場合は、スクリプト部分がシンタックスエラーと判定されてしまう）。</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://gitlab.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>

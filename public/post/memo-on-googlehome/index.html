@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>Google Assistantに話しかけた内容をメールで自分に送信する | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;logo.svg">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+  
+
+<script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;logo.svg"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+
+    
+    &nbsp;<button onclick="changeTheme()">change theme</button>
+    
+
+  </div>
+</div>
+
+<body onload = "getTheme()">
+  <section class="section">
+    <div class="container">
+      
+  Google Assistantに話しかけた内容をメールで自分に送信する
+<div class="date">
+  2020-10-06
+</div>
+
+<div class="taxonomies">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/google-assistant/">#Google Assistant</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/gas/">#GAS</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/ifttt/">#IFTTT</a>
+      
+  
+</div>
+
+<p>
+  <p>Google Assistantに話しかけると、スプレッドシートに入力され、さらに内容がメールで自分に送られてくる、という仕組みを作ったのでメモ。要するに音声メモ。</p>
+<p>流れは以下の通り。<br />
+Google Assistant -&gt; [IFTTT] -&gt; スプレッドシート -&gt; [GAS] -&gt; Gmail送信</p>
+<p>最初はIFTTTでSlackへの直接投稿を狙っていたのだが、自宅のGoogle homeでは機能しなかった。スマートフォンのAssistantでは問題なかったので、homeの仕様かもしれないが、似た症例を見つけられず、結果的に送信部分はGAS、という今の形をとることに。IFTTTとGASに分ければ、Gmailでなく他の手段に切り替えたいときも比較的イージーに変更できそう、という点もメリット。</p>
+<p>まず、IFTTT経由でのスプレッドシートへの入力について。<br />
+THISは以下の通り。</p>
+<p><img src="https://tudurikata.com/post/memo-on-googlehome/a.png" alt="IFTTT_THIS" /></p>
+<p>THATはこちら。</p>
+<p><img src="https://tudurikata.com/post/memo-on-googlehome/b.png" alt="IFTTT_THAT" /></p>
+<p>日付の<code>CreatedAt</code>、text ingredientが代入される<code>TextField</code>に加えて、定形であるunsentを入力しておく。<br />
+スプレットシートはこのようになる。</p>
+<p><img src="https://tudurikata.com/post/memo-on-googlehome/c.png" alt="IFTTT_THIS" /></p>
+<p>このスプレッドシートからスクリプトエディタを起動。<br />
+コードはこちら。</p>
+<pre style="background-color:#2b303b;">
+<code class="language-htc" data-lang="htc"><span style="color:#b48ead;">var </span><span style="color:#bf616a;">recipient </span><span style="color:#c0c5ce;">= &#39;</span><span style="color:#a3be8c;">mailaddress</span><span style="color:#c0c5ce;">&#39;;
+</span><span style="color:#b48ead;">var </span><span style="color:#bf616a;">subject </span><span style="color:#c0c5ce;">= &#39;</span><span style="color:#a3be8c;">memo from Google Assistant</span><span style="color:#c0c5ce;">&#39;;
+</span><span style="color:#b48ead;">var </span><span style="color:#bf616a;">sheet </span><span style="color:#c0c5ce;">= </span><span style="color:#ebcb8b;">SpreadsheetApp</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">getActiveSheet</span><span style="color:#c0c5ce;">();
+</span><span style="color:#b48ead;">var </span><span style="color:#bf616a;">last_row </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">sheet</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">getLastRow</span><span style="color:#c0c5ce;">();
+
+</span><span style="color:#b48ead;">function </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">() {
+  </span><span style="color:#b48ead;">for</span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">var </span><span style="color:#bf616a;">i </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">i </span><span style="color:#c0c5ce;">&lt;= </span><span style="color:#bf616a;">last_row</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">i</span><span style="color:#c0c5ce;">++){
+    </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">isSent </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">sheet</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">getRange</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">i</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">3</span><span style="color:#c0c5ce;">);
+    </span><span style="color:#b48ead;">if</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">isSent</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">getValue</span><span style="color:#c0c5ce;">() == &#39;</span><span style="color:#a3be8c;">unsent</span><span style="color:#c0c5ce;">&#39;){
+      </span><span style="color:#b48ead;">var </span><span style="color:#bf616a;">body </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">sheet</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">getRange</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">i</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">).</span><span style="color:#bf616a;">getValue</span><span style="color:#c0c5ce;">();
+      </span><span style="color:#ebcb8b;">GmailApp</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">sendEmail</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">recipient</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">subject</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">body</span><span style="color:#c0c5ce;">);
+      </span><span style="color:#bf616a;">isSent</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">setValue</span><span style="color:#c0c5ce;">(&#39;</span><span style="color:#a3be8c;">sent</span><span style="color:#c0c5ce;">&#39;);
+    }
+  }
+}
+</span></code></pre>
+<p>GAS、というかJavaScriptを触ったことがほとんどないので変なところがありそうだが、今のところ動いている。</p>
+<p>家事をしているときに忘れていた用事や入れておいたほうがいいtodoを思いつきがちなので、すぐにGoogle nest等に話しかけることでメモがとれるのはかなり使い勝手がいい。</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://gitlab.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>

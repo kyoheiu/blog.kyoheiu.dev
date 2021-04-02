@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>Arch Linux再インストールで発見したこと | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;logo.svg">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+  
+
+<script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;logo.svg"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+
+    
+    &nbsp;<button onclick="changeTheme()">change theme</button>
+    
+
+  </div>
+</div>
+
+<body onload = "getTheme()">
+  <section class="section">
+    <div class="container">
+      
+  Arch Linux再インストールで発見したこと
+<div class="date">
+  2021-03-21
+</div>
+
+<div class="taxonomies">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/linux/">#Linux</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/arch-linux/">#Arch Linux</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/systemd/">#systemd</a>
+      
+  
+</div>
+
+<p>
+  <p>先日自分のミスでパーティションをブレイクしてしまい、Arch Linuxが起動不可の状態に。インストールメディアを準備して<code>arch-chroot</code>すればもしかしたら救出できたのかもしれなかったが、少し時間があったのでこの際、とクリーンインストールをした（ちょうどKDE neonを入れたサブ機を用意したてだったのが本当にラッキーだった）。前回インストールをしたのは１年前だったと思うが、少し様子が変わっていたのでメモ。</p>
+<h4 id="roguwotoreruyouninatuteita">ログをとれるようになっていた</h4>
+<p>もしかするとこれは前からだったかもしれないが、インストール作業のログをとれるようになっている。また、ArchWikiへの誘導も冒頭にあって、ちょっぴり親切な雰囲気が醸し出されていた。</p>
+<h4 id="wifi-menugashi-enai">wifi-menuが使えない</h4>
+<p>最新のisoでは<code>wifi-menu</code>が含まれていないのか、開幕<code>wifi-menu</code>でとりあえずネットワーク接続を確保するということができない。<br />
+ArchWikiでは<code>iwctl</code>による接続を推奨している。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">iwctl
+device list # デバイス名の確認
+station &lt;デバイス名&gt; connect &lt;アクセスポイント名&gt;
+</span></code></pre>
+<p>これでOK。接続したら<code>ctrl+C</code>で抜けることを忘れずに。</p>
+<h4 id="systemd-bootnoshe-ding-womisusitemoqi-kanai">systemd-bootの設定をミスしても泣かない</h4>
+<p>ここで何回かミスってしまったのだが、最初からやり直す必要はない。インストールメディアを挿したまま再起動し、ネットワーク接続を確保した後、マウント。</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">mount /dev/device2 /mnt
+mount /dev/device1 /mnt/boot
+</span></code></pre>
+<p>その後、</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">arch-chroot /mnt
+</span></code></pre>
+<p>これで<code>/boot</code>以下の設定ファイルもいじれるようになる。</p>
+<p>個人的にミスしやすいポイントとしては、<code>/boot/loader/entries/arch.conf</code>内のoptions行。<br />
+<code>blkid</code>で調べたPARTUUIDを入れるのだが、間違えてUUIDを入れるとか、違うパーティションのPARTUUIDを入れてしまうといったミスが起こりやすい。ここは落ち着いて写真を撮って進行しましょう。</p>
+<h4 id="systemddeyarikurisuruyounizu-mu">systemdでやりくりするように組む</h4>
+<p>以前は<a href="https://tudurikata.com/post/archinstall/">この記事</a>にあるようにブートローダーとしてgrubを選択していたのだけど、このコマンドを正確に打つのめっちゃ大変ですよね。systemd-bootに切り替えたほうがインストールは楽になるはず。<br />
+ネットワーク接続についても、複数のパッケージで組もうとするとその分再インストールの手間が増え、手順も複雑になって後々わけがわからなくなるので、極力systemd内で生きていくように選択していったほうがよいように思う。<br />
+ネットワーク接続は僕の場合、<code>iwd</code>を入れて<code>iwctl</code>で接続したのち、systemd-networkdとsystemd-resolvedを<code>enable</code>し、<code>dhcpcd</code>も入れてnetworkdの各種設定ファイルを作成、で再起動後も自動接続できた（こう書くとかなり面倒くさそうだが、意外とそうでもない）。</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://gitlab.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>
