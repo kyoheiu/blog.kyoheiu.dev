@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>nmark - a markdown parser written in Nim | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;logo.svg">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+  
+
+<script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;logo.svg"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+
+    
+    &nbsp;<button onclick="changeTheme()">change theme</button>
+    
+
+  </div>
+</div>
+
+<body onload = "getTheme()">
+  <section class="section">
+    <div class="container">
+      
+<p>
+<div class="archive_title">[nmark - a markdown parser written in Nim]</div>
+<div class="date">2021-04-27</div>
+<div class="taxonomies">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/nim/">#Nim</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/markdown/">#markdown</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/commonmark/">#CommonMark</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/parser/">#parser</a>
+      
+  
+</div>
+</p>
+
+<p>
+  <p>Fast markdown parser, based on CommonMark, written in Nim.</p>
+<p><a href="https://github.com/kyoheiu/nmark">kyoheiu/nmark</a></p>
+<h3 id="usage">Usage</h3>
+<pre style="background-color:#2b303b;">
+<code class="language-nim" data-lang="nim"><span style="color:#b48ead;">import</span><span style="color:#c0c5ce;"> nmark
+
+</span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> txt = </span><span style="color:#a3be8c;">&quot;&quot;&quot;
+&gt; Lorem ipsum dolor
+sit amet.
+&gt; - Qui *quodsi iracundia*
+&gt; - aliquando id
+&quot;&quot;&quot;
+
+</span><span style="color:#b48ead;">echo</span><span style="color:#c0c5ce;"> txt.markdown
+</span></code></pre>
+<p>...and it's done.</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;"># output
+&lt;blockquote&gt;
+&lt;p&gt;Lorem ipsum dolor
+sit amet.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Qui &lt;em&gt;quodsi iracundia&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;aliquando id&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+</span></code></pre>
+<p>You can use tables in <code>nmark</code>.</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">| abc | defghi |
+:-: | -----------:
+bar | baz
+</span></code></pre>
+<p>is converted to:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&quot;center&quot;&gt;abc&lt;/th&gt;
+&lt;th align=&quot;right&quot;&gt;defghi&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&quot;center&quot;&gt;bar&lt;/td&gt;
+&lt;td align=&quot;right&quot;&gt;baz&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</span></code></pre>
+<p>(Tables need to be separated from other blocks by empty line.)</p>
+<h3 id="performance-comparison">Performance comparison</h3>
+<p>One of the reason I'm working on this parser is that other markdown parser librarys written in Nim seemed relatively slow. Here is a comparison between <code>nim-markdown</code>, which I think is the standard Nim markdown parser, and <code>nmark</code>, through a static site generator(which, btw, I made) and <code>hyperfine</code>.</p>
+<p><code>./casa build</code> generates 100 same htmls containing a lot of markdown delimiter. For detail please check my <a href="https://github.com/kyoheiu/Casa">repo</a>.</p>
+<h4 id="nim-markdown">nim-markdown &gt;&gt;</h4>
+<table><thead><tr><th align="left">Command</th><th align="right">Mean [ms]</th><th align="right">Min [ms]</th><th align="right">Max [ms]</th><th align="right">Relative</th></tr></thead><tbody>
+<tr><td align="left"><code>./casa build</code></td><td align="right">296.1 ± 12.2</td><td align="right">287.6</td><td align="right">322.4</td><td align="right">1.00</td></tr>
+</tbody></table>
+<h4 id="nmark">nmark &gt;&gt;</h4>
+<table><thead><tr><th align="left">Command</th><th align="right">Mean [ms]</th><th align="right">Min [ms]</th><th align="right">Max [ms]</th><th align="right">Relative</th></tr></thead><tbody>
+<tr><td align="left"><code>./casa build</code></td><td align="right">54.4 ± 0.9</td><td align="right">53.1</td><td align="right">57.4</td><td align="right">1.00</td></tr>
+</tbody></table>
+<h3 id="caution">Caution</h3>
+<p>This is still work-in-progess project, and does not FULLY pass the <a href="https://spec.commonmark.org/0.29/">spec-test of CommonMark</a>. For example,</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">&gt; foo
+bar
+===
+</span></code></pre>
+<p>... is, by <code>nmark</code>, converted to:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">&lt;blockquote&gt;
+&lt;h1&gt;foo
+bar&lt;/h1&gt;
+&lt;/blockquote&gt;
+</span></code></pre>
+<p>Though I believe <code>nmark</code> is enough for normal usage, I'm working on improving the accuracy and performance. And issues, pull requests always welcome.</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://gitlab.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>
