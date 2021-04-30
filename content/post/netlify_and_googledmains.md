@@ -21,7 +21,7 @@ Next, GitLab pages. OK I use GitLab for my main repository-hosting service, and 
 It was not. Using custom domain in GitLab pages is hard. I do not recommend this setup.
 
 ### Why?
-Because its official document is broken.
+Because its document is broken.
 
 In [official tutorial](https://docs.gitlab.com/ee/user/project/pages/custom_domains_ssl_tls_certification/), they say "set the A record to foo, and TXT record to bar." But in the settings page of custom domain, I'm told to set CNAME and TXT. What's going on?
 
