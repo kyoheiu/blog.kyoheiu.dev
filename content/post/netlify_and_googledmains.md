@@ -10,11 +10,11 @@ I recently jumped into Netlify-hosted from other server. This article is about h
 
 First of all, Options of hosting service I had in mind were:
 
-- Netlify
 - Firebase
 - GitLab pages
+- Netlify
 
-Firebase seemed good for dynamic site, but this site is made by Zola (a fantastic static site generator) so, well, I don't use it for now.
+Firebase seemed good for dynamic site, but this site is powered by Zola (a fantastic static site generator) so, well, I don't use it for now.
 
 Next, GitLab pages. OK I use GitLab for my main repository-hosting service, and it's been great. So I thought GitLab pages with custom domain was natural and might be easy.
 
