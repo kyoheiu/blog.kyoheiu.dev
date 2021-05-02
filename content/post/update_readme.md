@@ -26,3 +26,34 @@ tags = ["Nim", "Git", "GitHub"]
 で、CIを勉強してみようかなぁと思っている。最終的にはジェネレータを使わないという選択になりそうな気がする。
 
 こんなふうに、機能を追加したりバグを修正したりするたびにREADME.md内の細かい数字をアップデートしないといけない状況というのはあると思うのだけれど、何か効率的なやり方があるんだろうか。
+
+### 追記
+シェルスクリプトの代わりにnimscriptを書いて、パフォーマンス比較のmarkdownファイルをREADME.mdとは別に作り、そこに`hyperfine`の結果をコピーするというやり方にしてみた。
+
+```nim
+mode = ScriptMode.Verbose
+
+const version = "0.1.6"
+
+const text = """
+# Perfomance comparison detail
+...
+### nmark@""" 
+
+cd "../casa"
+
+exec("nimble install nmark")
+exec("nim c -d:release casa")
+exec("hyperfine './casa build' --export-markdown nmark.md")
+let s = text & version & """
+>>
+""" & readFile("nmark.md")
+
+cd "../nmark"
+
+writeFile("perfcmp.md", s)
+
+echo "Done."
+```
+
+手動でいじるのは定数として入れているバージョン番号のみなのでだいぶ楽にはなった。この番号も、何らかのスクリプトで.nimbleファイルからとってきたいところだが、適当な関数が見つからないためとりあえずここまでにしている。tomlと見なしてパースすればいいような気もする。
