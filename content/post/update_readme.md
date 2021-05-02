@@ -28,7 +28,7 @@ tags = ["Nim", "Git", "GitHub"]
 こんなふうに、機能を追加したりバグを修正したりするたびにREADME.md内の細かい数字をアップデートしないといけない状況というのはあると思うのだけれど、何か効率的なやり方があるんだろうか。
 
 ### 追記
-シェルスクリプトの代わりにnimscriptを書いて、パフォーマンス比較のmarkdownファイルをREADME.mdとは別に作り、そこに`hyperfine`の結果をコピーするというやり方にしてみた。
+シェルスクリプトの代わりにnimscriptを書いて、パフォーマンス比較の詳細を記したmarkdownファイルをREADME.mdとは別に作り、そこに`hyperfine`の結果をコピーするというやり方にしてみた。
 
 ```nim
 mode = ScriptMode.Verbose
