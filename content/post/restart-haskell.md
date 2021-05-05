@@ -4,7 +4,7 @@ date = 2021-05-05
 math = false
 [taxonomies]
 categories = ["code"]
-tags = ["Haskell", "Haskell Language Server"]
+tags = ["Haskell", "haskell-language-server"]
 +++
 ここ数ヶ月、ずっとimperative programmingをしていてちょっと疲れてきたのと、今Haskellに戻ったら前よりはもう少し書ける／わかるようになっているかもしれないという期待で、あらためてHaskellに入門してみる。
 ### 環境構築
