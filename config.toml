@@ -39,8 +39,8 @@ feed_filename = "rss.xml"
 #     ]
 #
 taxonomies = [
-    {name = "categories", rss = false},
-    {name = "tags", rss = false},
+    {name = "categories", feed = true},
+    {name = "tags", feed = true},
 ]
 
 # The additional languages for the site.
@@ -51,7 +51,9 @@ taxonomies = [
 #       {code = "it"}, # there won't be a feed for Italian content
 #     ]
 #
-languages = []
+languages = [
+    {code = "en", feed = true},
+]
 
 # When set to "true", the Sass files in the `sass` directory in the site root are compiled.
 # Sass files in theme directories are always compiled.
@@ -125,7 +127,7 @@ build_search_index = false
 
 [search]
 # Whether to include the title of the page/section in the index
-include_title = true
+include_title = false
 # Whether to include the description of the page/section in the index
 include_description = false
 # Whether to include the rendered content of the page/section in the index
