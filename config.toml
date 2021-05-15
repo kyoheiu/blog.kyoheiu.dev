@@ -40,9 +40,7 @@ feed_filename = "rss.xml"
 #
 taxonomies = [
     {name = "categories", feed = true, lang = "ja"},
-    {name = "categories", feed = true, lang = "en"},
     {name = "tags", feed = true, lang = "ja"},
-    {name = "tags", feed = true, lang = "en"},
 ]
 
 # The additional languages for the site.
@@ -54,7 +52,6 @@ taxonomies = [
 #     ]
 #
 languages = [
-    {code = "en", feed = true},
 ]
 
 # When set to "true", the Sass files in the `sass` directory in the site root are compiled.

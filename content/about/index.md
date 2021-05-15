@@ -26,3 +26,5 @@ template = "post-page.html"
 - [GitLab: kyoheiu](https://gitlab.com/kyoheiu)
 - [GitHub: kyoheiu](https://github.com/kyoheiu)
 - [Kyohei Uto's TED Translations](https://www.ted.com/profiles/14244197/translator)
+
+Blog in English: [tudurikata.io](https://kyoheiu.netlify.app/)
