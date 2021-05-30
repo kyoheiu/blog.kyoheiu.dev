@@ -23,8 +23,8 @@ template = "post-page.html"
 
 東京の編集者
 
-- [GitLab: kyoheiu](https://gitlab.com/kyoheiu)
 - [GitHub: kyoheiu](https://github.com/kyoheiu)
+- [GitLab: kyoheiu](https://gitlab.com/kyoheiu)
 - [Kyohei Uto's TED Translations](https://www.ted.com/profiles/14244197/translator)
 
 Blog in English: [tudurikata.io](https://kyoheiu.netlify.app/)
