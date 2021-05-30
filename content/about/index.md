@@ -21,8 +21,6 @@ template = "post-page.html"
 
 #### Who's writing 
 
-東京の編集者
-
 - [GitHub: kyoheiu](https://github.com/kyoheiu)
 - [GitLab: kyoheiu](https://gitlab.com/kyoheiu)
 - [Kyohei Uto's TED Translations](https://www.ted.com/profiles/14244197/translator)
