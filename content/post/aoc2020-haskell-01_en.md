@@ -46,7 +46,7 @@ Using singly-linked list as iterator(basic in Haskell), `L.find` looks up `Maybe
 
 ### Part Two
 This problem is followed by a little bit harder one: Search the three numbers that sum to 2020. So does we have to make subsequences of a sequence?  
-`subsequences` in `Data.List` costs high, and takes long time to finish if the sequence is long. In this case, instead of full-search, we should re-use the first answer code like this:
+`subsequences` in `Data.List` costs high, and takes long time to finish if the sequence is big. In this case, instead of full-search, we should re-use the first answer code like this:
 
 ```hs
 import Data.List as L
