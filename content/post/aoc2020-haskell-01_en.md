@@ -58,6 +58,7 @@ twoSum n (x:xs)
                     Just m -> Just (x * m)
                     Nothing -> twoSum n xs
 
+threeSum [] = Nothing
 threeSum (x:xs)
     |x >= 2020 = threeSum xs
     |otherwise = case twoSum (2020 - x) xs of
