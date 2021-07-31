@@ -8,7 +8,7 @@ tags = ["Haskell", "Megaparsec", "Attoparsec", "Parsec"]
 [Advent of Code 2020のDay 19](https://adventofcode.com/2020/day/19)を解いていて、複数パーサーの選択でしばらくつまずいていたのでメモ。
 
 ### TL;DR
-- MegaparsecおよびParsecでは、tryでくるんだパーサー内でeofを使うと正常に動かない場合がある。
+- MegaparsecおよびParsecでは、tryでくるんだパーサー内でeofを使うと正常に動かない場合がある？
 - Attoparsecではchoice内でも問題なくendOfInputが動く。
 
 ### テキストを直和型のリストにパースする
