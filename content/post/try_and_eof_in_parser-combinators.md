@@ -154,7 +154,7 @@ Pairs 1 [(2,3),(3,2)]
 `zero`, `pairs`, `key`の順番を入れ替えて試した結果は以下の通り。
 
 order | result | T/F
-:-:   | :-: | :-:
+:-   | :- | :-:
 `zero key pairs` | `[Zero [4,1,5],Key 4 'a',Key 5 'b']` | F
 `zero pairs key` | `[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)]]` | F
 `pairs zero key` | `[Pairs 0 [(4,1)],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 'a',Key 5 'b']` | F
