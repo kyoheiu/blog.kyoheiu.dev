@@ -1,28 +1,23 @@
 +++
-title = "このサイトについて"
+title = "about this site"
 date = 2020-01-01
 template = "post-page.html"
 +++
 
+### Topics on this site
 - coding
 - literature
 - math
 - linux
 
-などについて書いています。
-
-#### 環境
-- OS: Arch Linux x86_64  
-- CPU: Intel i5-9400F
-- Memory: 16GB
-
-#### Thanks:
+### Thanks
 - header icon made by <a href="https://www.flaticon.com/authors/vectors-market" title="Vectors Market">Vectors Market</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
 
-#### Who's writing 
+### Who's writing 
 
 - [GitHub: kyoheiu](https://github.com/kyoheiu)
-- [GitLab: kyoheiu](https://gitlab.com/kyoheiu)
 - [Kyohei Uto's TED Translations](https://www.ted.com/profiles/14244197/translator)
 
-Blog in English: [tudurikata.io](https://kyoheiu.netlify.app/)
+### Contact
+
+From [here](https://docs.google.com/forms/d/e/1FAIpQLSestthbBhmkRn7uDuhx7L11MCAhMK-OM8A0OLrdh_JFkhpwTQ/viewform?usp=sf_link).
