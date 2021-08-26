@@ -1,6 +1,7 @@
 +++
 title = "Day 1: Solving Advent of Code 2020 in Haskell"
 date = 2021-05-15
+draft = true
 [taxonomies]
 categories = ["code"]
 tags = ["Haskell"]
