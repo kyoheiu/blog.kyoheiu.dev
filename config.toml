@@ -170,9 +170,6 @@ emily_favicon = "/images/penguin.png"
 # height will be automatically rendered.
 emily_iconsize = 70
 
-# top text in index.html.
-emily_words = "Keep it simple and stupid."
-
 # number of posts in index.html.
 emily_indexposts = 5
 
@@ -180,4 +177,4 @@ emily_indexposts = 5
 emily_dark_mode = true
 
 # show theme-toggler
-emily_theme_toggler = true
+emily_theme_toggler = false 
