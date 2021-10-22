@@ -13,8 +13,6 @@ tags = ["Rust", "file manager", "termion", "tui"]
 A simple TUI file manager with vim-like keybind, written in Rust.
 (_Currently works on Linux_)
 
-![sample](https://github.com/kyoheiu/fm/blob/main/screenshots/sample.gif)
-
 My aim is to make a file manager that enables you to:
 
 - open files in the current directory as fast as you can
