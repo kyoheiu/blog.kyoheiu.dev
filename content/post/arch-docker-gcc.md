@@ -59,7 +59,7 @@ jobs:
 
 jobsは３つ。Ubuntu上・macOS上・Arch Linux上それぞれでのインストールをテストしている。（`cargo install --path .`が通ればcrates.ioからのインストールも問題ないという認識）
 
-ご覧の通り、ubuntuとmacOSでは特に追加でライブラリをインストールする必要なくパスしているが、archlinux:latestを使った最後のテストでは、`gcc`と`rustup`を先にインストールしている。
+ご覧の通り、UbuntuとmacOSでは特に追加でライブラリをインストールする必要なくパスしているが、archlinux:latestを使った最後のテストでは、`gcc`と`rustup`を先にインストールしている。
 `rustup`がarchlinux:latestに含まれていないのは当たり前のことなのでこれは良い。問題なのは`gcc`。
 
 `gcc`を事前インストールしない場合、テスト中に
@@ -87,11 +87,11 @@ error: package 'gcc' was not found
 
 でもやっぱり引っかかる。そこで、よく[公式の説明](https://hub.docker.com/_/archlinux)を読んで見ると…
 
-> Besides base we also provide images for the base-devel package group. 
+> Besides `base` we also provide images for the `base-devel` package group. 
 
 tagにちゃんと`base-devel`がある…！　そして
 
-> The latest tag will always match the latest base tag.
+> The `latest` tag will always match the latest `base` tag.
 
 はい、ありがちな`base-devel`抜け。  
 何も考えずlatestを使ってはいけないという教訓を得ました。
@@ -114,4 +114,4 @@ tagにちゃんと`base-devel`がある…！　そして
         cargo install --path .
 ```
 
-データベースの更新はいずれにせよ必要として、gccの明示的インストールを削除。テストももちろんパス。あースッキリした。
+データベースの更新はいずれにせよ必要として、`gcc`の明示的インストールを削除。テストももちろんパス。あースッキリした。
