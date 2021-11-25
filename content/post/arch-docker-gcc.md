@@ -83,11 +83,11 @@ warning: database file for 'community' does not exist (use '-Sy' to download)
 error: package 'gcc' was not found
 ```
 
-うーん、やっぱり入ってない。`gcc`が含まれてないなんて、そんなことある？
+うーん、やっぱり入ってない。`gcc`が含まれてないなんて、そんなことある？　と思いながら、テストはパスするのでそのままにしていた。
 
-そこで、よく公式の説明を読んで見ると…
+でもやっぱり引っかかる。そこで、よく[公式の説明](https://hub.docker.com/_/archlinux)を読んで見ると…
 
-> Besides base we also provide images for the base-devel package group. (https://hub.docker.com/_/archlinux)
+> Besides base we also provide images for the base-devel package group. 
 
 tagにちゃんと`base-devel`がある…！　そして
 
