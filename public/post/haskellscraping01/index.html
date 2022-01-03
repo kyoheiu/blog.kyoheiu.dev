@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>HaskellによるWebスクレイピング | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;penguin.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+  
+
+<script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.png"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+
+    
+
+  </div>
+</div>
+
+<body onload = "getTheme()">
+  <section class="section">
+    <div class="container">
+      
+<p>
+  <div class="title_postpage">HaskellによるWebスクレイピング</div>
+</p>
+<p>
+  <div class="date_postpage">2020-08-23</div>
+  <div class="taxonomies_postpage">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/haskell/">#Haskell</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/webscraping/">#WEBscraping</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/scalpel/">#scalpel</a>
+      
+  
+  </div>
+</p>
+
+<p>
+  <p>RSSを吐かず、実際に訪れないと更新されたかどうか確認できないWebサイトの情報を追うために、ささやかだがスクレイピング・プロジェクトを作った。
+流れとしてはこういう感じになる。</p>
+<ol>
+<li>Haskell(<code>scalpel</code>)により、更新情報の通知エリアのみを抜き出す</li>
+<li>抜き出してきた情報をローカルの<code>update.txt</code>の中身と比較し、同一であれば何もしない、異なっていればそれを<code>update.txt</code>に上書きした上でSlackのチャンネルへ通知（投稿）</li>
+<li>このプログラムを、linux起動時にネットワークを確保した上で走るように<code>systemd</code>を使って.serviceを作成</li>
+</ol>
+<p>この記事では(1)と(2)の<code>update.txt</code>の上書きまでをまとめる。続く部分は以下の記事に。</p>
+<ol>
+<li>HaskellによるWebスクレイピング（この記事）</li>
+<li><a href="https://tudurikata.com/post/posttoslack/">HaskellでSlackに投稿する</a></li>
+<li><a href="https://tudurikata.com/post/systemd-service/">systemdを使ってプログラムを定期実行する</a></li>
+</ol>
+<p><code>Main.hs</code>は以下の通り。</p>
+<pre data-lang="hs" class="language-hs "><code class="language-hs" data-lang="hs">{-#LANGUAGE OverloadedStrings#-}
+
+module Main where
+
+import qualified Data.ByteString.Char8 as B
+import Text.HTML.Scalpel
+import Data.Maybe
+import Lib
+
+url :: URL
+url = &quot;http:&#x2F;&#x2F;example.com&quot;
+
+filePath :: FilePath
+filePath = &quot;update.txt&quot;
+
+data NewsText
+    = NewsText { time :: B.ByteString
+               , contents :: B.ByteString } deriving (Show,Read,Eq)
+
+main = do
+    new &lt;- scrapeURL url information
+    old &lt;- B.readFile filePath
+    let new2 = B.pack $ show $ fromJust new
+    if new2 == old then print &quot;no update.&quot;
+                   else do
+                       Lib.sendUDMessage
+                       B.writeFile filePath new2
+    where
+            information :: Scraper B.ByteString [NewsText]
+            information = chroots (&quot;div&quot; @: [hasClass &quot;information&quot;]) newsTexts
+
+            newsTexts :: Scraper B.ByteString NewsText
+            newsTexts = do
+                time &lt;- text $ &quot;dt&quot;
+                contents &lt;- text $ &quot;dd&quot;
+                return $ NewsText time contents
+</code></pre>
+<p>HaskellにおけるWebスクレイピング用のライブラリは他にいくつかあるようだけれど、<code>scalpel</code>は豊富な機能を持ち、たいていのことは可能という印象を受ける。今回の作業においてはオーバーキル気味かもしれないが、一回いじっておくとわりとすんなり他のケースに対しても応用できる、素直なライブラリのように感じた。<br />
+<code>scalpel</code>を使う部分は初心者にも大して難しくなかった。<code>div</code>の<code>class</code>でまず絞り、さらにそこからタグで絞って抜き出す、という感じだ。きちんとやるならもっとエラーケースについて考えないといけないはずだが今回はパス。<code>scrapeURL</code>は<code>StringLike str =&gt; URL -&gt; Scraper str a -&gt; IO (Maybe a)</code>となっているので、仮に該当するタグが消失していても<code>Nothing</code>が返ってくる。シンプルだが<code>Maybe</code>の威力を感じる部分。<br />
+結局未解決なのは、抜き出してくるテキストに日本語が含まれている場合、<code>Data.Text</code>系を採用しても正確に日本語を拾えない点。これはこちらの文字列の拾い方が悪いのか、対象のWebサイトの仕様なのかよくわからない（要調査）。今回の狙いは更新の有無のみをテキストの「イコールorノットイコール」で判別し、通知する、というものなので、文字化けは許容範囲と判断した。<br />
+その上で、<code>Data.Bytestring.Char8</code>を採用しているのは、<code>String</code>はパフォーマンス上一応避けておきたいというのと、過去のテキストと現在のテキストそれぞれを読み込む際のすり合わせのしやすさから。<code>now</code>と<code>old</code>の型が違っていると、内容が同じでも違うものと判断してしまうので、型をちゃんと見なくてはいけない。Visual Studio Codeのエクステンション<code>Haskell</code>に最近<code>haskell-ide-engine</code>が統合されたので、型チェックにはとても有用だった。</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://github.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>

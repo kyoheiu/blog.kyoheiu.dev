@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>felix - a tui file manager written in Rust | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;penguin.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+  
+
+<script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.png"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+
+    
+
+  </div>
+</div>
+
+<body onload = "getTheme()">
+  <section class="section">
+    <div class="container">
+      
+<p>
+  <div class="title_postpage">felix - a tui file manager written in Rust</div>
+</p>
+<p>
+  <div class="date_postpage">2021-11-25</div>
+  <div class="taxonomies_postpage">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/rust/">#Rust</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/file-manager/">#file manager</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/termion/">#termion</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/tui/">#tui</a>
+      
+  
+  </div>
+</p>
+
+<p>
+  <p><a href="https://crates.io/crates/felix"><img src="https://img.shields.io/crates/v/felix" alt="crates.io" /></a></p>
+<p>A tui file manager with vim-like key mapping, written in Rust.</p>
+<p><img src="sample.gif" alt="sample gif" /></p>
+<p>While heavliy inspired by the great <code>vifm</code> and trying to implement its pleasant experience in Rust, at the same time this project focuses on the following points:</p>
+<ul>
+<li>simple and fast</li>
+<li>easy to configure how to open files</li>
+</ul>
+<h2 id="status">Status</h2>
+<ul>
+<li>Linux : works well</li>
+<li>MacOS : <em>should</em> work, though some unusual errors may occur</li>
+<li>Windows: almost unavailable due to file-name encoding error</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<p>Before you do the following, make sure <code>gcc</code> is installed.</p>
+<p>from crates.io:</p>
+<pre><code>cargo install felix
+</code></pre>
+<p>or from GitHub repository:</p>
+<pre><code>git clone https:&#x2F;&#x2F;github.com&#x2F;kyoheiu&#x2F;felix.git
+cd felix
+cargo install --path .
+</code></pre>
+<h2 id="usage">Usage</h2>
+<table><thead><tr><th>command</th><th></th></tr></thead><tbody>
+<tr><td><code>fx</code></td><td>Show items in the current directory.</td></tr>
+<tr><td><code>fx &lt;directory path&gt;</code></td><td>Show items in the path. Both relative and absolute available.</td></tr>
+</tbody></table>
+<h2 id="key-manual">Key manual</h2>
+<table><thead><tr><th>Key</th><th>Explanation</th></tr></thead><tbody>
+<tr><td>j / Key Up</td><td>Go up. If the list exceeds max-row, list &quot;scrolls&quot; before the top of the list.</td></tr>
+<tr><td>k / Key Down</td><td>Go down. If the list exceeds max-row, list &quot;scrolls&quot; before the bottom of the list.</td></tr>
+<tr><td>h / Key Left</td><td>Go to parent directory if exists.</td></tr>
+<tr><td>l / Key Right / Enter</td><td>Open file or change directory. Commands for execution can be managed in config file.</td></tr>
+<tr><td>gg</td><td>Go to the top.</td></tr>
+<tr><td>G</td><td>Go to the bottom.</td></tr>
+<tr><td>dd</td><td>Delete and yank item (item will go to the trash directory).</td></tr>
+<tr><td>yy</td><td>Yank item. If you yanked other item before, its information is replaced by this one.</td></tr>
+<tr><td>p</td><td>Put yanked item(s) in the current directory. If item with same name exists, copied item will be renamed with the suffix &quot;_copied&quot;.</td></tr>
+<tr><td>V</td><td>Switch to select mode, where you can move cursor to select items.</td></tr>
+<tr><td>d (select mode)</td><td>Delete and yank selected items, and return to normal mode.</td></tr>
+<tr><td>y (select mode)</td><td>Yank selected items, and return to normal mode.</td></tr>
+<tr><td>t</td><td>Toggle sort order (by name &lt;-&gt; by modified time). This change remains until the program ends (sort order will be restored as configured).</td></tr>
+<tr><td>:</td><td>Switch to shell mode (<em><strong>experimantal</strong></em>). Type command and press Enter to execute it. You can use any command in the displayed directory, but it may fail to execute the command (e.g. <code>cd</code> doesn't work for now), and also the display of items may collapse during execution.</td></tr>
+<tr><td>c</td><td>Switch to rename mode (enter new name and press Enter to rename the item).</td></tr>
+<tr><td>/</td><td>Switch to filter mode (enter keyword and press Enter to go to filtered list).</td></tr>
+<tr><td>Esc</td><td>Return to normal mode.</td></tr>
+<tr><td>:e</td><td>Reload the current directory. Useful when something goes wrong in filter mode (e.g. no matches) or shell mode.</td></tr>
+<tr><td>:empty</td><td>Empty the trash directory. <strong>Please think twice before using this command.</strong></td></tr>
+<tr><td>:h</td><td>Show help.</td></tr>
+<tr><td>:q / ZZ</td><td>Exit the program.</td></tr>
+</tbody></table>
+<p>Note that items moved to the trash directory are prefixed with Unix time (like <code>1633843993</code>) to avoid name conflict. This prefix will be removed when paste.</p>
+<h2 id="settings">Settings</h2>
+<table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>config file</td><td><code>$XDG_CONFIG_HOME/felix/config.toml</code></td></tr>
+<tr><td>trash directory</td><td><code>$XDG_CONFIG_HOME/felix/trash</code></td></tr>
+</tbody></table>
+<p>Default config file, which is <a href="config.toml">here</a>, will be created automatically when you launch the program for the first time.</p>
+<p>In config.toml, you can set:</p>
+<ul>
+<li>color of directories, files, and symlinks separatively</li>
+<li>default key for sorting item list (&quot;Name&quot; or &quot;Time&quot;)</li>
+<li>how to open files</li>
+</ul>
+<h3 id="command-setting">Command setting</h3>
+<p>If you write</p>
+<pre><code>default = &quot;nvim&quot;
+
+[exec]
+feh = [&quot;jpg&quot;, &quot;jpeg&quot;, &quot;png&quot;, &quot;gif&quot;, &quot;svg&quot;]
+zathura = [&quot;pdf&quot;]
+</code></pre>
+<p>then, .jpg, .jpeg, .png, .gif and .svg files are opened by <code>feh &lt;file-name&gt;</code>, .pdf files by <code>zathura &lt;file-name&gt;</code> and others by <code>nvim &lt;file-name&gt;</code> .</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://github.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>tudurikata - CLI</title>
+        <link>https://tudurikata.com</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://tudurikata.com/tags/cli/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Sun, 08 Aug 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>rewind - A CLI tool to downgrade packages using local Pacman cache</title>
+            <pubDate>Sun, 08 Aug 2021 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/rewind-downgrade-cli/</link>
+            <guid>https://tudurikata.com/post/rewind-downgrade-cli/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kyoheiu&#x2F;rewind&quot;&gt;kyoheiu&#x2F;rewind&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;sample.gif&quot; alt=&quot;gif&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;installation&quot;&gt;Installation&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;git clone https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;kyoheiu&amp;#x2F;rewind.git
+cd rewind
+cabal install
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;usage&quot;&gt;Usage&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;rewind [package name you want to downgrade]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;like &lt;code&gt;rewind neovim&lt;&#x2F;code&gt;.
+You can use mutliple arguments like &lt;code&gt;rewind neovim emacs&lt;&#x2F;code&gt; as well.&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>reme - A simple CLI tool to create slack reminder</title>
+            <pubDate>Tue, 03 Aug 2021 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/reme-slack-reminder-cli/</link>
+            <guid>https://tudurikata.com/post/reme-slack-reminder-cli/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kyoheiu&#x2F;reme&quot;&gt;kyoheiu&#x2F;reme&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;sample.gif&quot; alt=&quot;gif&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;installation&quot;&gt;Installation&lt;&#x2F;h2&gt;
+&lt;pre&gt;&lt;code&gt;git clone https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;kyoheiu&amp;#x2F;reme.git
+cd reme
+cabal install
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You need &lt;code&gt;~&#x2F;.config&#x2F;reme.dhall&lt;&#x2F;code&gt; file to store the slack authentication token.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dhall&quot; class=&quot;language-dhall &quot;&gt;&lt;code class=&quot;language-dhall&quot; data-lang=&quot;dhall&quot;&gt;{ slackToken = &amp;quot;xoxp-xxxxxx...&amp;quot;
+}
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;If you&#x27;d like to change the file path, replace &lt;code&gt;path&lt;&#x2F;code&gt; in Main.hs.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;usage&quot;&gt;Usage&lt;&#x2F;h3&gt;
+&lt;p&gt;To set reminder,&lt;code&gt;reme &amp;quot;[text]&amp;quot; &amp;quot;[time]&amp;quot;&lt;&#x2F;code&gt; will work.&lt;br &#x2F;&gt;
+&lt;code&gt;reme &amp;quot;[text]&amp;quot;&lt;&#x2F;code&gt; will ask you the time to send reminder.&lt;br &#x2F;&gt;
+&lt;code&gt;reme&lt;&#x2F;code&gt; shows this help.&lt;&#x2F;p&gt;
+&lt;p&gt;For example,&lt;br &#x2F;&gt;
+&lt;code&gt;reme &amp;quot;foo&amp;quot; &amp;quot;in 1 hour&amp;quot;&lt;&#x2F;code&gt; sets the reminder for &amp;quot;foo&amp;quot; in 1 hour.&lt;br &#x2F;&gt;
+&lt;code&gt;reme &amp;quot;foo&amp;quot;&lt;&#x2F;code&gt; asks you the time to send reminder for &amp;quot;foo&amp;quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;For the token and argument for the time detail, see &lt;a href=&quot;https:&#x2F;&#x2F;api.slack.com&#x2F;methods&#x2F;reminders.add&quot;&gt;reminders.add method | Slack&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

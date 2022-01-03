@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>tudurikata - Slack</title>
+        <link>https://tudurikata.com</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://tudurikata.com/tags/slack/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Tue, 03 Aug 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>reme - A simple CLI tool to create slack reminder</title>
+            <pubDate>Tue, 03 Aug 2021 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/reme-slack-reminder-cli/</link>
+            <guid>https://tudurikata.com/post/reme-slack-reminder-cli/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kyoheiu&#x2F;reme&quot;&gt;kyoheiu&#x2F;reme&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;sample.gif&quot; alt=&quot;gif&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;installation&quot;&gt;Installation&lt;&#x2F;h2&gt;
+&lt;pre&gt;&lt;code&gt;git clone https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;kyoheiu&amp;#x2F;reme.git
+cd reme
+cabal install
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You need &lt;code&gt;~&#x2F;.config&#x2F;reme.dhall&lt;&#x2F;code&gt; file to store the slack authentication token.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dhall&quot; class=&quot;language-dhall &quot;&gt;&lt;code class=&quot;language-dhall&quot; data-lang=&quot;dhall&quot;&gt;{ slackToken = &amp;quot;xoxp-xxxxxx...&amp;quot;
+}
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;If you&#x27;d like to change the file path, replace &lt;code&gt;path&lt;&#x2F;code&gt; in Main.hs.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;usage&quot;&gt;Usage&lt;&#x2F;h3&gt;
+&lt;p&gt;To set reminder,&lt;code&gt;reme &amp;quot;[text]&amp;quot; &amp;quot;[time]&amp;quot;&lt;&#x2F;code&gt; will work.&lt;br &#x2F;&gt;
+&lt;code&gt;reme &amp;quot;[text]&amp;quot;&lt;&#x2F;code&gt; will ask you the time to send reminder.&lt;br &#x2F;&gt;
+&lt;code&gt;reme&lt;&#x2F;code&gt; shows this help.&lt;&#x2F;p&gt;
+&lt;p&gt;For example,&lt;br &#x2F;&gt;
+&lt;code&gt;reme &amp;quot;foo&amp;quot; &amp;quot;in 1 hour&amp;quot;&lt;&#x2F;code&gt; sets the reminder for &amp;quot;foo&amp;quot; in 1 hour.&lt;br &#x2F;&gt;
+&lt;code&gt;reme &amp;quot;foo&amp;quot;&lt;&#x2F;code&gt; asks you the time to send reminder for &amp;quot;foo&amp;quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;For the token and argument for the time detail, see &lt;a href=&quot;https:&#x2F;&#x2F;api.slack.com&#x2F;methods&#x2F;reminders.add&quot;&gt;reminders.add method | Slack&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>HaskellでSlackに投稿する</title>
+            <pubDate>Mon, 24 Aug 2020 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/posttoslack/</link>
+            <guid>https://tudurikata.com/post/posttoslack/</guid>
+            <description>&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;tudurikata.com&#x2F;post&#x2F;haskellscraping01&#x2F;&quot;&gt;HaskellによるWebスクレイピング&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;HaskellでSlackに投稿する（この記事）&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;tudurikata.com&#x2F;post&#x2F;systemd-service&#x2F;&quot;&gt;systemdを使ってプログラムを定期実行する&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;scalpelで更新情報を抽出した後、保存されているテキストデータと異なっていた場合は、その旨をSlackへ通知を入れたい。
+そのための関数は&lt;code&gt;Main.hs&lt;&#x2F;code&gt;とは別に&lt;code&gt;Lib.hs&lt;&#x2F;code&gt;へ保存する。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;Lib.hs&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;{-# LANGUAGE OverloadedStrings #-}
+
+module Lib where
+
+import Network.Curl as NC
+
+webhookurl :: URLString
+webhookurl = &amp;quot;https:&amp;#x2F;&amp;#x2F;hooks.slack.com&amp;#x2F;services&amp;#x2F;xxxx&amp;#x2F;xxxxxxxxxxxxxxxxx&amp;quot;
+
+message :: [String]
+message = [&amp;quot;payload={\&amp;quot;text\&amp;quot;: \&amp;quot;UPDATE: Check http:&amp;#x2F;&amp;#x2F;example.com&amp;#x2F;\&amp;quot; }&amp;quot;]
+
+sendUDMessage = curlPost webhookurl message
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;最初は&lt;code&gt;slack-api&lt;&#x2F;code&gt;あたりを使おうかと色々探っていたのだが、単にSlack内のチャンネルに投稿するだけであれば、Incoming Webhooksを使って投稿するのが一番手っ取り早い。&lt;&#x2F;p&gt;
+&lt;p&gt;cf: &lt;a href=&quot;https:&#x2F;&#x2F;api.slack.com&#x2F;messaging&#x2F;webhooks&quot;&gt;Sending messages using Incoming Webhooks | Slack&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;コード内でWebhooksのURLが丸裸になるのが微妙だが、セキュリティ面を厳密に考慮する必要のない私的ミニプロジェクトなのでよしとする。&lt;br &#x2F;&gt;
+Webhooksを叩くには、たとえばlinuxのターミナルからであれば&lt;code&gt;curl post&lt;&#x2F;code&gt;でいける。これをHaskellで実現するには、&lt;code&gt;Network.Curl&lt;&#x2F;code&gt;ライブラリの&lt;code&gt;curlPost&lt;&#x2F;code&gt;で十分。&lt;br &#x2F;&gt;
+&lt;code&gt;message&lt;&#x2F;code&gt;の形式はSlackの仕様に合わせる必要があるが、投稿内容自体は件のWebサイトへのリンクがあれば事足りるので、全体として非常にシンプルにモジュールを作れた。&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

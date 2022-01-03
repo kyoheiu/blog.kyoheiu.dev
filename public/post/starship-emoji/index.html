@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>starshipで絵文字を表示させる（Arch Linux） | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;penguin.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+  
+
+<script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.png"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+
+    
+
+  </div>
+</div>
+
+<body onload = "getTheme()">
+  <section class="section">
+    <div class="container">
+      
+<p>
+  <div class="title_postpage">starshipで絵文字を表示させる（Arch Linux）</div>
+</p>
+<p>
+  <div class="date_postpage">2021-03-31</div>
+  <div class="taxonomies_postpage">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/linux/">#Linux</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/arch-linux/">#Arch Linux</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/starship/">#starship</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/fonts/">#fonts</a>
+      
+  
+  </div>
+</p>
+
+<p>
+  <p>先日のArch Linux再インストールに伴い、色々とアプリケーションを入れ直していたのだけれど、<a href="https://starship.rs/">starship</a>の絵文字表示ができなくなってしまいちょっと手こずったので、メモ。</p>
+<h4 id="bi-yao-napatukezi">必要なパッケージ</h4>
+<ul>
+<li><code>starship</code></li>
+<li>nerd font(AURの<code>nerd-fonts-source-code-pro</code>を使っているが何でもいいはず)</li>
+<li><code>noto-emoji</code></li>
+<li><code>noto-fonts</code></li>
+<li><code>noto-fonts-cjk</code></li>
+</ul>
+<p>最後の２つのパッケージがないとカバーできないUnicode絵文字が微妙に存在する（たとえば[⇡]）。</p>
+<p>starshipの意義については正直なんとも言えないが、デバッグを繰り返しているときに前の実行結果との切れ目がわかりやすい…という効果はある。かもしれない。</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://github.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>

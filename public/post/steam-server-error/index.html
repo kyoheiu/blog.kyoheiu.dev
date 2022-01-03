@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>Steamサーバー接続時トラブルを解決する（Arch Linux） | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;penguin.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+  
+
+<script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.png"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+
+    
+
+  </div>
+</div>
+
+<body onload = "getTheme()">
+  <section class="section">
+    <div class="container">
+      
+<p>
+  <div class="title_postpage">Steamサーバー接続時トラブルを解決する（Arch Linux）</div>
+</p>
+<p>
+  <div class="date_postpage">2020-12-23</div>
+  <div class="taxonomies_postpage">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/linux/">#linux</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/arch-linux/">#Arch Linux</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/steam/">#steam</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/dhcp/">#DHCP</a>
+      
+  
+  </div>
+</p>
+
+<p>
+  <h3 id="huan-jing">環境</h3>
+<p>OS: Arch Linux x86_64<br />
+Kernel: 5.9.14-arch1-1<br />
+Steamは<code>pacman</code>のパッケージを使用。</p>
+<h3 id="wen-ti">問題</h3>
+<p>前提として、「ブラウザなどのネットワーク接続は異常なし」。</p>
+<ol>
+<li>ある日突然、Steamで購入したはずのゲームをダウンロードできなくなる。（ダウンロードアイコンをクリックしてもダウンロードが始まらない／一瞬で停止する）</li>
+<li>上記を解決するべくSteamを再インストールしてみたところ、今度はログインができなくなる。エラーメッセージは <strong>&quot;Steam is having trouble connecting to the Steam servers&quot;</strong>.</li>
+</ol>
+<h3 id="yuan-yin">原因</h3>
+<p>僕の場合は、少し前にネットワークへの接続方法を<code>NetworkManager</code>から<code>systemd-networkd</code>に切り替えた際、DHCP接続の設定が抜けていたことが原因だった模様。</p>
+<h3 id="dui-ce">対策</h3>
+<p><code>systemd-networkd</code>でWi-FiにDHCP接続する場合は、</p>
+<h4 id="1">(1)</h4>
+<p><code>/etc/systemd/network/interface.network</code>に</p>
+<pre><code>[Match]
+Name=interface
+[Network]
+DHCP=yes
+</code></pre>
+<p>と書いておき、<strong>同時に</strong></p>
+<h4 id="2">(2)</h4>
+<p>別途<code>dhcpcd</code>をインストールして</p>
+<pre><code># systemctl start dhcpcd.service
+# systemctl enable dhcpcd.service
+</code></pre>
+<p>しておかなければならない。</p>
+<p><code>NetworkManager</code>を使っていた元々の設定では、このあたりはクリアーできていたようなのだが、<code>networkd</code>へ切り替えたタイミングでDHCPまわりが抜けた結果起こった問題と思われる。</p>
+<p>しかし(2)が抜けた状態でも、ブラウザやターミナルでのインターネット接続は問題なく行えていたので、<code>dhcpcd</code>不在によるトラブルだということを突き止めるまで時間がかかってしまった。</p>
+<h3 id="cf">cf</h3>
+<p>https://github.com/ValveSoftware/steam-for-linux/issues/2085
+https://github.com/ValveSoftware/steam-for-linux/issues/4855</p>
+<p>関連していそうなissue。「Steam以外はふつうにネット接続できている」というのがミソ。<code>networkd</code>以外を使っていても、同症状の場合は一度DHCP接続を確認してみるとよいかもしれない。</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://github.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>

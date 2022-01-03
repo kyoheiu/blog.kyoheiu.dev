@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>tudurikata - Julia</title>
+        <link>https://tudurikata.com</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://tudurikata.com/tags/julia/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Thu, 14 Jan 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>JuliaによるWebスクレイピング（簡易版）</title>
+            <pubDate>Thu, 14 Jan 2021 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/juliascraping/</link>
+            <guid>https://tudurikata.com/post/juliascraping/</guid>
+            <description>&lt;p&gt;Juliaで特定のWebページの更新日のみを取得するスクリプト。試し書きに近いのであしからず。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;using HTTP
+
+url = &amp;quot;http:&amp;#x2F;&amp;#x2F;example.com&amp;quot;
+
+function main()
+   head = HTTP.head(url)
+   lastmod = head.headers[6]
+   println(lastmod)
+end
+
+@time main()
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre&gt;&lt;code&gt;julia&amp;gt; include(&amp;quot;scraping.jl&amp;quot;)
+&amp;quot;Last-Modified&amp;quot; =&amp;gt; &amp;quot;Thu, 10 Dec 2020 00:53:40 GMT&amp;quot;
+  2.787799 seconds (9.54 M allocations: 479.701 MiB, 6.53% gc time)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;関数定義部分はもうちょっとチェインっぽい感じでかっこよく書ける気もする。
+使用するライブラリはHTTP.jlのみ。head.headersはarrayを返すので、[6]でarray中の要素を指定している（Juliaは1からカウント）。実際、head.headersと番号を指定せずにおくと&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;julia&quot; class=&quot;language-julia &quot;&gt;&lt;code class=&quot;language-julia&quot; data-lang=&quot;julia&quot;&gt;julia&amp;gt; head.headers
+8-element Array{Pair{SubString{String},SubString{String}},1}:
+           &amp;quot;Date&amp;quot; =&amp;gt; &amp;quot;Thu, 14 Jan 2021 20:35:31 GMT&amp;quot;
+   &amp;quot;Content-Type&amp;quot; =&amp;gt; &amp;quot;text&amp;#x2F;html&amp;quot;
+ &amp;quot;Content-Length&amp;quot; =&amp;gt; &amp;quot;9480&amp;quot;
+     &amp;quot;Connection&amp;quot; =&amp;gt; &amp;quot;keep-alive&amp;quot;
+         &amp;quot;Server&amp;quot; =&amp;gt; &amp;quot;Apache&amp;quot;
+  &amp;quot;Last-Modified&amp;quot; =&amp;gt; &amp;quot;Thu, 10 Dec 2020 00:53:40 GMT&amp;quot;
+  &amp;quot;Accept-Ranges&amp;quot; =&amp;gt; &amp;quot;none&amp;quot;
+           &amp;quot;Vary&amp;quot; =&amp;gt; &amp;quot;Range,Accept-Encoding&amp;quot;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;となる。&lt;&#x2F;p&gt;
+&lt;p&gt;取得したHTMLをさらにパースしてbodyやh1など特定のタグの内容を抽出したい場合はGumbo.jlを用いる。&lt;&#x2F;p&gt;
+&lt;p&gt;恐ろしく簡潔だが、ちょっと時間がかかりすぎのような気もする。ただ他言語と比較して、ということをやるまでの気力はないので、ここまでにしておきます。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;jlhuairunoshi-xing&quot;&gt;.jlファイルの実行&lt;&#x2F;h4&gt;
+&lt;p&gt;ちょっと困ったのが.jlファイルの実行について。REPLモードでincludeして関数を叩く分には何の問題もないのだが、どちらかというとREPLモードに入らず直接ターミナルで実行ファイルを叩く形のほうが好みなので、方法がないか探した。
+公式にはターミナルで.jlファイルのあるディレクトリにcdし、julia hoge.jlで実行可能だが、この際、.jlファイルはmoduleとしてではなく、上記のように&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;必要な関数定義&lt;&#x2F;li&gt;
+&lt;li&gt;実行したいスクリプト&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;のみを記述する。ちなみにこの場合、REPLモードでも、上記のようにinclude(&amp;quot;hoge.jl&amp;quot;)のみで実行することはできる。
+逆にmodule化してしまうと、julia hoge.jlでもinclude(&amp;quot;hoge.jl&amp;quot;)でもスクリプトが実行されることはない（REPLモードの場合は、スクリプト部分がシンタックスエラーと判定されてしまう）。&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

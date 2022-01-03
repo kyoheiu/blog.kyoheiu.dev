@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>tudurikata - Zola</title>
+        <link>https://tudurikata.com</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://tudurikata.com/tags/zola/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Thu, 07 Jan 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>静的サイトジェネレーターZolaへ移行する</title>
+            <pubDate>Thu, 07 Jan 2021 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/zola-ssg/</link>
+            <guid>https://tudurikata.com/post/zola-ssg/</guid>
+            <description>&lt;h3 id=&quot;gai-yao&quot;&gt;概要&lt;&#x2F;h3&gt;
+&lt;p&gt;以前はGo製のSSG(Static Site Generator)Hugoを使っていたのだけれど、色々考えた結果、Rust製SSGのZolaに乗り換えることに。そしていじっているうちに自分で納得いくまでやりたくなってしまい、テーマも作成してみました、という話です。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;yi-xing-li-you&quot;&gt;移行理由&lt;&#x2F;h3&gt;
+&lt;p&gt;HugoではAcademicという（おそらく）メジャーなthemeを使っていて、特に支障があったわけでもなかったのだけれど、気になるといえば気になっていたのが、「細かいところが気になったとき、すらすらと自分で書き直せるほどの理解を得ないまま使っている感じ」。ただしこれについては、デザインを自分で本格的にいじっていないために手になじんでいないだけかもしれない。&lt;&#x2F;p&gt;
+&lt;p&gt;直接的な動機になったのは、各記事のカテゴリやタグを記事一覧でちゃんと表示してくれる、かつデザイン的に好みのthemeが見つからなかったことだったが、結果的には、Zolaに移行してテーマも自作したことで、とてもスッキリした。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zolanituitenoge-ren-de-pros-cons&quot;&gt;Zolaについての個人的pros&#x2F;cons&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;pros&quot;&gt;pros&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;zola buildが通ればだいたい大丈夫という安心感&lt;&#x2F;li&gt;
+&lt;li&gt;しかも早い。Hugoよりも体感的にはちょっとだけ早い気がする。&lt;&#x2F;li&gt;
+&lt;li&gt;buildエラー時のメッセージが丁寧かつ有用
+&lt;ul&gt;
+&lt;li&gt;Hugoでは何も考えずthemeを使っていたのでそもそもあまりエラーが出なかった印象だが、一から独自変数ありの.htmlを組んでいく中でこれはとても有難かった。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;zola checkがけっこう使える
+&lt;ul&gt;
+&lt;li&gt;内部及び外部リンクをチェックしてくれるコマンドで、リンクミス・リンク切れを教えてくれる。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h4 id=&quot;cons&quot;&gt;cons&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;手間がかかる
+&lt;ul&gt;
+&lt;li&gt;zola init時に勝手に各ページのサンプルを生成してくれればいいのにな…と、自作themeを作りながら何回か感じた。git cloneでthemeを入れた後、全体の構造を理解した上で.htmlをいじらないといけない局面があり、SSGに詳しくない人がいきなり手を出すのはややつらい気がする。最初のSSGとしてはHugoのほうがよさそう。&lt;&#x2F;li&gt;
+&lt;li&gt;そして.htmlやconfig.tomlをいじっていく際、Tera Templateという独特のテンプレートエンジンを使う必要があり、学習コストが高いとまでは言わないけれど、お目当ての機能にたどり着くのにけっこう時間はかかるというのが実感。&lt;&#x2F;li&gt;
+&lt;li&gt;慣れるとそこそこ扱いやすいこのTera Template、Rust用のエンジンということなので、Rustを普段書いている人にとっては学習しておくと一石二鳥…かどうかはよくわかりません。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;themeがまだまだ少なそう
+&lt;ul&gt;
+&lt;li&gt;公式で紹介されているのは2021年初頭時点で29。一方さすがのHugoは公式に載っているものだけでも300近くあるようなので、ここの差は人によっては大きいと思う。ただし、結局自分好みのサイトにしようとするなら、自分でいじらないといけない（いじることのできる）範囲が広いので、自力で全部書くのであれば関係ない。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;公式ドキュメントが若干わかりにくい
+&lt;ul&gt;
+&lt;li&gt;トータルで見ると必要なことは全部書いてあるのだが、知りたいことがどこに書いてあるのか直感的に掴みづらい。たとえば、使用できるシンタックスハイライトのテーマ一覧がSyntax HighlightingというページではなくConfigurationにある、など。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;hugo new post&#x2F;new.mdのような記事作成コマンドがない
+&lt;ul&gt;
+&lt;li&gt;人によっては若干不親切と感じられるかもしれない。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;総合して考えると個人的にはZolaのほうが馬が合う感じで好み。いちから自分の手でちまちま構築する（必要がある）雰囲気がArchと似ていて、「これについては自分が一番よく知っているし、何かあったら自分でなんとかできるはず」という感覚を得られる。これが個人的にはけっこう大事なポイントなので。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;getting-started&quot;&gt;Getting Started&lt;&#x2F;h3&gt;
+&lt;p&gt;以下は、themeを使用しない場合の導入方法です。&lt;&#x2F;p&gt;
+&lt;p&gt;基本的な仕組みは、公式のドキュメントのGetting Startedに。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;$ tree
+.
+├── config.toml
+├── content
+├── sass
+├── static
+├── templates
+└── themes
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;さらにtemplatesの中身は以下。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;[templates]$ tree
+.
+├── base.html
+├── categories
+│   ├── list.html
+│   └── single.html
+├── index.html
+├── post.html
+├── post-page.html
+└── tags
+    ├── list.html
+    └── single.html
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;templatesに入っているこれらすべてのファイルと、親ディレクトリのconfig.tomlが必須要素。（タグ等の分類を使わなければtags及びcategoriesディレクトリは不要）。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;quan-ti-gou-zao&quot;&gt;全体構造&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;base.html すべてのページのテンプレート。head、header、footerなどはここに書く。&lt;&#x2F;li&gt;
+&lt;li&gt;index.html いわゆるトップページの内容。&lt;&#x2F;li&gt;
+&lt;li&gt;post.html, post-page.html それぞれ、記事一覧と各記事ページのテンプレートになる。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;pre&gt;&lt;code&gt;( base.html &amp;gt; index.html     ) + main.scss = example.com&amp;#x2F;index.html
+( base.html &amp;gt; post.html      ) + main.scss = example.com&amp;#x2F;post
+( base.html &amp;gt; post-page.html ) + main.scss + content&amp;#x2F;post&amp;#x2F;hoge.md   = example.com&amp;#x2F;post&amp;#x2F;hoge
+( base.html &amp;gt; post-page.html ) + main.scss + content&amp;#x2F;hoge&amp;#x2F;index.md  = example.com&amp;#x2F;hoge
+content&amp;#x2F;post&amp;#x2F;_index.md = content&amp;#x2F;post以下の記事群についてのメタデータ
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;このように、雛形の.htmlをベースにして（記事の場合は.mdファイルの各変数が代入され）そこに.scssから生成されるCSSファイルが適応されて最終的なhtmlが出力される、という流れになっている。この流れを可能にしているのがTera Template流の変数の仕組み。&lt;&#x2F;p&gt;
+&lt;p&gt;content&#x2F;hoge&#x2F;index.mdとcontent&#x2F;hoge&#x2F;_index.mdの違いは、前者はexample.com&#x2F;hogeへアクセスしたときに表示されるページとしてレンダリングされるが、後者はcontent&#x2F;hoge以下の記事群についてのメタデータを記したファイルであるということ。&lt;&#x2F;p&gt;
+&lt;p&gt;たとえばexample.com&#x2F;aboutに直接aboutページを載せたいときは、content&#x2F;about&#x2F;index.mdにその内容を書く。逆に、記事一覧など、content&#x2F;hoge以下の記事群に対応する変数はcontent&#x2F;hoge&#x2F;_index.mdに記載しておく。（この説明はちょっと怪しいけど…）&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;tips&quot;&gt;tips&lt;&#x2F;h3&gt;
+&lt;p&gt;以上が分かればあとは自分好みに仕上げていくだけだが、個人的に詰まったところ・記録しておきたいところを書いておく。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;hugo-academic-karanoyi-xing&quot;&gt;Hugo(Academic)からの移行&lt;&#x2F;h4&gt;
+&lt;p&gt;Academicの.mdテンプレートはフロントマター（タイトルや投稿日などの記事のメタデータ）の区切りが+++でなく---になっているので、逐一変換する必要がある。記事数が多い場合は何らかのスクリプトを組まないと厳しい。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;sintatukusuhairaito&quot;&gt;シンタックスハイライト&lt;&#x2F;h4&gt;
+&lt;p&gt;config.tomlに好みのテーマを書き、各.mdのコードブロック先頭に言語を明示することで適用される。対応しているテーマがまだ少ないので、こだわりのある人は先に公式をチェックしておきましょう。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;nei-bu-rinku&quot;&gt;内部リンク&lt;&#x2F;h4&gt;
+&lt;p&gt;独特の内部リンク文法を使用しており、たとえば記事内で&#x2F;post&#x2F;hoge.mdにリンクを貼りたいときは@&#x2F;post&#x2F;hoge.mdとなる。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;taxonomies&quot;&gt;taxonomies&lt;&#x2F;h4&gt;
+&lt;p&gt;Zolaにおけるタグやカテゴリなどのtaxonomiesは各記事のフロントマターに明示するだけではダメで、templatesにTAXONOMIES&#x2F;list.html, TAXONOMIES&#x2F;single.htmlという２種類のテンプレートを作る必要がある。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;scss&quot;&gt;scss&lt;&#x2F;h4&gt;
+&lt;p&gt;cssのメタ言語だが、学習コストはかなり低いので触っておいて損はないと思う。といっても自分はscss独自の機能はほぼ使用していないけれど…。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;index-htmlnizhi-jie-ji-shi-yi-lan-wobiao-shi-suru&quot;&gt;index.htmlに直接記事一覧を表示する&lt;&#x2F;h4&gt;
+&lt;p&gt;set_section関数を使用してpage.htmlを拾った上で、for構文を用いて表示する。&lt;&#x2F;p&gt;
+&lt;p&gt;全記事でなく一部のみを表示したい場合はループカウントすることになるが、Tera Templateはloop.indexという特殊変数を用いてカウントするので注意。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;config-extra-variable&quot;&gt;config.extra.variable&lt;&#x2F;h4&gt;
+&lt;p&gt;config.tomlの[extra]（自作の設定）でなるべく変数定義することでコードがクリーンになる気がする。ただし、.scss内で自作変数を使うことはできないっぽい。.scssでなく直接.cssを書いて置いておくのであれば使えそう。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;shu-shi&quot;&gt;数式&lt;&#x2F;h4&gt;
+&lt;p&gt;数式の表示はMathJaxを使用した。関連する部分のコードを貼っておくので参考までに。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;html&quot; class=&quot;language-html &quot;&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;  {% if page.extra.math %}
+  &amp;lt;script&amp;gt;
+    MathJax = {
+      tex: {
+        inlineMath: [[&amp;#x27;$&amp;#x27;, &amp;#x27;$&amp;#x27;], [&amp;#x27;\\(&amp;#x27;, &amp;#x27;\\)&amp;#x27;]]
+      }
+    };
+  &amp;lt;&amp;#x2F;script&amp;gt;
+  &amp;lt;script type=&amp;quot;text&amp;#x2F;javascript&amp;quot; id=&amp;quot;MathJax-script&amp;quot; async
+    src=&amp;quot;https:&amp;#x2F;&amp;#x2F;cdn.jsdelivr.net&amp;#x2F;npm&amp;#x2F;mathjax@3&amp;#x2F;es5&amp;#x2F;tex-chtml.js&amp;quot;&amp;gt;
+  &amp;lt;&amp;#x2F;script&amp;gt;
+  {% endif %}
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;matomeruto&quot;&gt;まとめると&lt;&#x2F;h3&gt;
+&lt;p&gt;わかってくると楽しい、そういうジェネレーターです。興味がある方はぜひ。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;theme&quot;&gt;theme&lt;&#x2F;h3&gt;
+&lt;p&gt;自分で構築さえできれば、それそのものをテーマとして配布することができる。手順も簡単で、通常のサイトディレクトリにtheme.tomlを追加するだけ。&lt;&#x2F;p&gt;
+&lt;p&gt;自分のサイトをテーマ化して独立させたものをGitLabに載せています。&lt;br &#x2F;&gt;
+&lt;a href=&quot;https:&#x2F;&#x2F;gitlab.com&#x2F;kyoheiu&#x2F;emily_zola_theme&quot;&gt;Kyohei Uto &#x2F; emily_zola_theme · GitLab&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

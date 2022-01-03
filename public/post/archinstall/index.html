@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>Arch Linuxインストールメモ(2020) | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;penguin.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+  
+
+<script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.png"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+
+    
+
+  </div>
+</div>
+
+<body onload = "getTheme()">
+  <section class="section">
+    <div class="container">
+      
+<p>
+  <div class="title_postpage">Arch Linuxインストールメモ(2020)</div>
+</p>
+<p>
+  <div class="date_postpage">2020-09-20</div>
+  <div class="taxonomies_postpage">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/linux/">#linux</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/arch-linux/">#Arch Linux</a>
+      
+  
+  </div>
+</p>
+
+<p>
+  <h1 id="2021-03-21-konomemohagu-ku-xian-xing-baziyondehashi-emasen-ji-lu-tositecan-siteimasu-archwikiwodu-mimasiyou">(2021-03-21) このメモは古く、現行バージョンでは使えません。記録として残しています。ArchWikiを読みましょう。</h1>
+<p>Arch Linuxインストールの覚書。将来の自分へのメモとして。</p>
+<p>liveインストールの時点でどの程度パッケージを入れておくかは自由だが、インストール自体が初めての場合は<code>pacstrap</code>段階では基本パッケージ、エディタ、ネットワーク関係（これも選択肢は複数ある）くらいにとどめておき、後でX以下を入れていくほうが理解が進むのでいいと思う。</p>
+<h3 id="insutoruhou-toraburunowei-ran-fang-zhi-ce">インストール後トラブルの未然防止策</h3>
+<ul>
+<li>ネットワークに接続できない -&gt; インストール時にネットワーク周りのパッケージを導入しておく。</li>
+<li><code>pacman</code>が見つからない -&gt; インストール時に<code>base-devel</code>を入れておく。</li>
+</ul>
+<h3 id="hazimeni">はじめに</h3>
+<p>UEFIモードでliveUSBを起動すること</p>
+<h3 id="mazuwifijie-sok">まずwifi接続</h3>
+<p>wifi-menu</p>
+<h3 id="pateisiyon">パーティション</h3>
+<h4 id="risutowoque-ren">リストを確認</h4>
+<p><code>fdisk -l</code></p>
+<h4 id="pateisiyonbureiku">パーティションブレイク</h4>
+<p><code>sgdisk --zap-all /dev/nvme0n1</code></p>
+<h4 id="pateisiyonfen-ge-kai-shi">パーティション分割開始</h4>
+<pre><code>gdisk &#x2F;dev&#x2F;nvme0n1
+Command (? for help): o
+This option deletes all partitions and creates a new protective MBR.
+Proceed? (Y&#x2F;N): y
+
+Command (? for help): n
+Partition number (1-128, default 1): default
+First sector (34-xxxxxxxxx, default = xxxx) or {+-}size{KMGTP}: default
+Last sector (xxxx-xxxxxxxxx, default = xxxxxxxxx) or {+-}size{KMGTP}: +500M
+Hex code or GUID (L to show codes, Enter = 8300): ef00
+
+Command (? for help): n
+Partition number (2-128, default 2): default
+First sector (34-xxxxxxxxx, default = xxxxxx) or {+-}size{KMGTP}: default
+Last sector (xxxxxx-xxxxxxxxx, default = xxxxxxxxx) or {+-}size{KMGTP}: default
+Hex code or GUID (L to show codes, Enter = 8300): default
+
+Command (? for help): w
+
+Do you want to proceed? (Y&#x2F;N): y
+OK: writing new GUID partition table (GPT) to &#x2F;dev&#x2F;nvme0n1
+</code></pre>
+<h3 id="huomatuto">フォーマット</h3>
+<pre><code>mkfs.fat -F32 &#x2F;dev&#x2F;nvme0n1p1
+mkfs.ext4 &#x2F;dev&#x2F;nvme0n1p2
+</code></pre>
+<h3 id="maunto">マウント</h3>
+<pre><code>mount &#x2F;dev&#x2F;nvme0n1p2 &#x2F;mnt
+mkdir &#x2F;mnt&#x2F;boot
+mount &#x2F;dev&#x2F;nvme0n1p1 &#x2F;mnt&#x2F;boot
+</code></pre>
+<h3 id="mirarisutonobian-ji">ミラーリストの編集</h3>
+<p><code>vi /etc/pacman.d/mirrorlist</code></p>
+<h3 id="shi-ji-he-wase">時計合わせ</h3>
+<p><code>timedatectl set-ntp true</code></p>
+<h3 id="patukeziinsutorukai-shi">パッケージインストール開始</h3>
+<h4 id="ji-ben-patukezi">基本パッケージ</h4>
+<p><code>pacstrap /mnt base linux linux-firmware base-devel man-deb man-pages</code></p>
+<h4 id="netutowakuguan-xi">ネットワーク関係</h4>
+<p><code>pacstrap /mnt networkmanager nm-connection-editor network-manager-applet</code></p>
+<h4 id="tekisutoedeita">テキストエディタ</h4>
+<p><code>pacstrap /mnt nano vi nvim</code></p>
+<h4 id="desukutotupuhuan-jing-x">デスクトップ環境（X）</h4>
+<p><code>pacstrap /mnt  xorg-server xorg-apps xorg-xinit</code></p>
+<h4 id="desukutotupuhuan-jing-wm">デスクトップ環境（WM）</h4>
+<p><code>pacstrap /mnt i3</code></p>
+<h4 id="i3guan-lian">i3関連</h4>
+<p><code>pacstrap /mnt vifm feh picom rxvt-unicode rofi parcellite</code></p>
+<h4 id="ri-ben-yu-zhou-ri">日本語周り</h4>
+<p><code>pacstrap /mnt fcitx fcitx-mozc fcitx-im fcitx-configtool</code></p>
+<h4 id="sonota">その他</h4>
+<p><code>pacstrap /mnt chromium xf86-video-intel lightdm lightdm-gtk-greeter</code></p>
+<h3 id="fstabzuo-cheng">Fstab作成</h3>
+<p><code>genfstab -U /mnt &gt;&gt; /mnt/etc/fstab</code></p>
+<h3 id="chroot">chroot</h3>
+<p><code>arch-chroot /mnt</code></p>
+<h3 id="taimuzon">タイムゾーン</h3>
+<p><code>ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime</code></p>
+<h3 id="adjtimesheng-cheng">adjtime生成</h3>
+<p><code>hwclock --systohc</code></p>
+<h3 id="lang">LANG</h3>
+<pre><code>vi &#x2F;etc&#x2F;locale.gen
+	en_US.UTF-8 UTF-8
+	ja_JP.UTF-8 UTF-8
+
+locale-gen
+echo LANG=en_US.UTF-8 &gt; &#x2F;etc&#x2F;locale.conf
+export LANG=en_US.UTF-8
+</code></pre>
+<h3 id="hosutonemu">ホストネーム</h3>
+<pre><code>echo hostname &gt; &#x2F;etc&#x2F;hostname
+vi &#x2F;etc&#x2F;hosts
+127.0.0.1	localhost
+::1		localhost
+127.0.1.1	hostname.localdomain	hostname
+</code></pre>
+<h3 id="rootpasuwado">rootパスワード</h3>
+<p><code>passwd</code></p>
+<h3 id="ripozitoriatupudeto">リポジトリアップデート</h3>
+<p><code>pacman -Syy</code></p>
+<h3 id="maikurokodoatupudeto-insutoru">マイクロコードアップデート　インストール</h3>
+<p><code>pacman -S intel-ucode</code></p>
+<h3 id="boot-loader">boot-loader</h3>
+<pre><code>pacman -S grub efibootmgr
+mkdir &#x2F;boot&#x2F;efi
+mount &#x2F;dev&#x2F;nvme0n1p1 &#x2F;boot&#x2F;efi
+grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=&#x2F;boot&#x2F;efi
+grub-mkconfig -o &#x2F;boot&#x2F;grub&#x2F;grub.cfg
+</code></pre>
+<h3 id="zhong-liao-zai-qi-dong">終了・再起動</h3>
+<pre><code>exit
+umount -R &#x2F;mnt
+shutdown now
+</code></pre>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://github.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>

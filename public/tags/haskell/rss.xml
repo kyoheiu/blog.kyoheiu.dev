@@ -1,0 +1,1002 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>tudurikata - Haskell</title>
+        <link>https://tudurikata.com</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://tudurikata.com/tags/haskell/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Wed, 08 Sep 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>関数型的に入門するC++</title>
+            <pubDate>Wed, 08 Sep 2021 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/getting-started-functional-cpp/</link>
+            <guid>https://tudurikata.com/post/getting-started-functional-cpp/</guid>
+            <description>&lt;p&gt;C++に興味が出てきて勉強中。参考としているのは&lt;a href=&quot;https:&#x2F;&#x2F;ezoeryou.github.io&#x2F;cpp-intro&#x2F;#%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0&quot;&gt;江添亮の C++入門&lt;&#x2F;a&gt;。わかりやすく、ユーモアもところどころあって楽しい。とりあえずアルゴリズムについて、関数型（というか Haskell）的な視点でまとめておく。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;yi-lan&quot;&gt;一覧&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;ezoeryou.github.io&#x2F;cpp-intro&#x2F;#%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0&quot;&gt;アルゴリズム&lt;&#x2F;a&gt;の章で紹介されている各関数は高階関数として捉えると理解が捗る。とくにこの場合、イテレータから説明が続いているので、&lt;code&gt;Foldable a&lt;&#x2F;code&gt;に対して適用される&lt;code&gt;Data.List&lt;&#x2F;code&gt;収録の関数として変換していくととても覚えやすいと思う。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;for_each -&amp;gt; map || foldr
+all_of -&amp;gt; all
+any_of -&amp;gt; any
+none_of -&amp;gt; !all
+find -&amp;gt; elem
+find_if -&amp;gt; head . filter f
+count -&amp;gt; length . filter (==x)
+count_if -&amp;gt; length . filter f
+equal -&amp;gt; [a] == [b] || f([a]) == f([b])　 &amp;#x2F;&amp;#x2F;関数をとる場合もある
+search -&amp;gt; ???
+transform -&amp;gt; map
+
+&amp;#x2F;&amp;#x2F;ラムダ式
+[](a x) -&amp;gt; b {...}
+\x -&amp;gt; f(x) :: a -&amp;gt; b
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;練習も兼ねて書いてみよう。上が Haskell、下が main 関数で記述した C++（厳密には対応していないので悪しからず）。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;for-each&quot;&gt;for_each&lt;&#x2F;h4&gt;
+&lt;pre&gt;&lt;code&gt;map (*2) [1..4]
+
+-----
+
+void f(int x)
+{
+    x = x * 2;
+    std::cout &amp;lt;&amp;lt; x &amp;lt;&amp;lt; &amp;quot;\n&amp;quot;;
+}
+
+int main()
+{
+    std::vector&amp;lt;int&amp;gt; v = {1, 2, 3, 4};
+    for_each(std::begin(v), std::end(v), f);
+}
+
+&amp;#x2F;&amp;#x2F;ラムダ式
+for_each(std::begin(v), std::end(v), [](auto x)
+             { std::cout &amp;lt;&amp;lt; x * 2 &amp;lt;&amp;lt; &amp;quot;\n&amp;quot;; });
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;all-of&quot;&gt;all_of&lt;&#x2F;h4&gt;
+&lt;pre&gt;&lt;code&gt;all (even) [2,4,6,8]
+
+-----
+
+int main()
+{
+    std::vector&amp;lt;int&amp;gt; v = {2, 4, 6, 8};
+    std::cout &amp;lt;&amp;lt; std::boolalpha;
+    std::cout &amp;lt;&amp;lt; all_of(std::begin(v), std::end(v), [](auto value)
+                        { return value % 2 == 0; });
+}
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;find&quot;&gt;find&lt;&#x2F;h4&gt;
+&lt;pre&gt;&lt;code&gt;3 `elem` [1..4] &amp;#x2F;&amp;#x2F; True
+5 `elem` [1..4] &amp;#x2F;&amp;#x2F; False
+
+-----
+
+int main()
+{
+    std::vector&amp;lt;int&amp;gt; v = {2, 4, 6, 8};
+    if (std::end(v) == find(std::begin(v), std::end(v), 4))
+    {
+        std::cout &amp;lt;&amp;lt; &amp;quot;Not found.\n&amp;quot;;
+    }
+    else
+    {
+        std::cout &amp;lt;&amp;lt; &amp;quot;Found.\n&amp;quot;;
+    }
+}
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;find(first, last, value)&lt;&#x2F;code&gt;の場合、value が見つからなかったときに返るのは last だが、出力時に要素の&lt;code&gt;0&lt;&#x2F;code&gt;と区別がつかなくなってしまうので、&lt;code&gt;std::end(v)&lt;&#x2F;code&gt;との比較でケースを分けている。パターンマッチングでもっとシンプルにしたいが…？&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;count&quot;&gt;count&lt;&#x2F;h4&gt;
+&lt;pre&gt;&lt;code&gt;(length . filter (==1)) [1,2,1,1,2,1,3]
+
+-----
+
+int main()
+{
+    std::vector&amp;lt;int&amp;gt; v = {1, 2, 1, 1, 2, 1, 3};
+    std::cout &amp;lt;&amp;lt; count(v.begin(), v.end(), 1);
+}
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;search&quot;&gt;search&lt;&#x2F;h4&gt;
+&lt;pre&gt;&lt;code&gt;import qualified Data.List as L
+
+search :: Eq a =&amp;gt; [a] -&amp;gt; [a] -&amp;gt; Maybe Int
+search xs ys =
+  case L.elemIndex (head xs) ys of
+    Just n -&amp;gt;
+      if take (length xs) (drop n ys) == xs
+        then Just n
+        else (+) &amp;lt;$&amp;gt; Just (n + 1) &amp;lt;*&amp;gt; search xs (drop (n + 1) ys)
+    Nothing -&amp;gt; Nothing
+
+-----
+
+int main()
+{
+    std::vector&amp;lt;int&amp;gt; v1 = {1, 2, 3, 4, 5, 6};
+    std::vector&amp;lt;int&amp;gt; v2 = {2, 3, 4};
+
+    std::cout &amp;lt;&amp;lt; *search(v1.begin(), v1.end(), v2.begin(), v2.end());
+}
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;search(first1,last1,first2,last2)&lt;&#x2F;code&gt;は、[first1,last1)の範囲に[first2,last2)があれば、見つかったサブシークエンスの先頭のイテレータを返す関数。微妙に複雑だ。&lt;br &#x2F;&gt;
+これを Haskell で実装してみると…。単に「含むかどうか」を&lt;code&gt;Bool&lt;&#x2F;code&gt;で返すなら&lt;code&gt;isInfixOf&lt;&#x2F;code&gt;があるが、最初の要素となると、先頭がマッチするだけでなく、そのあとの並びがきちんと求めるリストと一致しているかどうかを見た上で、&lt;code&gt;drop&lt;&#x2F;code&gt;した数と足していかないといけない。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;c-mian-bai-i&quot;&gt;C++、面白い&lt;&#x2F;h4&gt;
+&lt;p&gt;「C++で関数型プログラミングをする」ために書かれた本もいくつかあるようだ。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.manning.com&#x2F;books&#x2F;functional-programming-in-c-plus-plus&quot;&gt;Manning | Functional Programming in C++&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.amazon.co.jp&#x2F;dp&#x2F;B07MTBCCV5&quot;&gt;Amazon | Hands-On Functional Programming with C++: An effective guide to writing accelerated functional code using C++17 and C++20 (English Edition) [Kindle edition] by Bolboaca, Alexandru | Hardware | Kindle ストア&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;上の Manning の本を読み始めているが、関数合成的（？）なことができるパイプというものがあるらしく、色々できそうで楽しみです。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>rewind - A CLI tool to downgrade packages using local Pacman cache</title>
+            <pubDate>Sun, 08 Aug 2021 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/rewind-downgrade-cli/</link>
+            <guid>https://tudurikata.com/post/rewind-downgrade-cli/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kyoheiu&#x2F;rewind&quot;&gt;kyoheiu&#x2F;rewind&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;sample.gif&quot; alt=&quot;gif&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;installation&quot;&gt;Installation&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;git clone https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;kyoheiu&amp;#x2F;rewind.git
+cd rewind
+cabal install
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;usage&quot;&gt;Usage&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;rewind [package name you want to downgrade]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;like &lt;code&gt;rewind neovim&lt;&#x2F;code&gt;.
+You can use mutliple arguments like &lt;code&gt;rewind neovim emacs&lt;&#x2F;code&gt; as well.&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>reme - A simple CLI tool to create slack reminder</title>
+            <pubDate>Tue, 03 Aug 2021 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/reme-slack-reminder-cli/</link>
+            <guid>https://tudurikata.com/post/reme-slack-reminder-cli/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kyoheiu&#x2F;reme&quot;&gt;kyoheiu&#x2F;reme&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;sample.gif&quot; alt=&quot;gif&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;installation&quot;&gt;Installation&lt;&#x2F;h2&gt;
+&lt;pre&gt;&lt;code&gt;git clone https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;kyoheiu&amp;#x2F;reme.git
+cd reme
+cabal install
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You need &lt;code&gt;~&#x2F;.config&#x2F;reme.dhall&lt;&#x2F;code&gt; file to store the slack authentication token.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dhall&quot; class=&quot;language-dhall &quot;&gt;&lt;code class=&quot;language-dhall&quot; data-lang=&quot;dhall&quot;&gt;{ slackToken = &amp;quot;xoxp-xxxxxx...&amp;quot;
+}
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;If you&#x27;d like to change the file path, replace &lt;code&gt;path&lt;&#x2F;code&gt; in Main.hs.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;usage&quot;&gt;Usage&lt;&#x2F;h3&gt;
+&lt;p&gt;To set reminder,&lt;code&gt;reme &amp;quot;[text]&amp;quot; &amp;quot;[time]&amp;quot;&lt;&#x2F;code&gt; will work.&lt;br &#x2F;&gt;
+&lt;code&gt;reme &amp;quot;[text]&amp;quot;&lt;&#x2F;code&gt; will ask you the time to send reminder.&lt;br &#x2F;&gt;
+&lt;code&gt;reme&lt;&#x2F;code&gt; shows this help.&lt;&#x2F;p&gt;
+&lt;p&gt;For example,&lt;br &#x2F;&gt;
+&lt;code&gt;reme &amp;quot;foo&amp;quot; &amp;quot;in 1 hour&amp;quot;&lt;&#x2F;code&gt; sets the reminder for &amp;quot;foo&amp;quot; in 1 hour.&lt;br &#x2F;&gt;
+&lt;code&gt;reme &amp;quot;foo&amp;quot;&lt;&#x2F;code&gt; asks you the time to send reminder for &amp;quot;foo&amp;quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;For the token and argument for the time detail, see &lt;a href=&quot;https:&#x2F;&#x2F;api.slack.com&#x2F;methods&#x2F;reminders.add&quot;&gt;reminders.add method | Slack&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>各パーサーコンビネータにおけるtry&#x2F;eof(endOfInput)の挙動</title>
+            <pubDate>Sat, 31 Jul 2021 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/try-and-eof-in-parser-combinators/</link>
+            <guid>https://tudurikata.com/post/try-and-eof-in-parser-combinators/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;adventofcode.com&#x2F;2020&#x2F;day&#x2F;19&quot;&gt;Advent of Code 2020のDay 19&lt;&#x2F;a&gt;を解いていて、複数パーサーの選択でしばらくつまずいていたのでメモ。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;tl-dr&quot;&gt;TL;DR&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;MegaparsecおよびParsecでは、tryでくるんだパーサー内でeofを使うと正常に動かない場合がある？&lt;&#x2F;li&gt;
+&lt;li&gt;Attoparsecではchoice内でも問題なくendOfInputが動く。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;tekisutowozhi-he-xing-norisutonipasusuru&quot;&gt;テキストを直和型のリストにパースする&lt;&#x2F;h3&gt;
+&lt;p&gt;Day 19では次のようなテキストを適切にパースすることが求められる。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;0: 4 1 5
+1: 2 3 | 3 2
+2: 4 4 | 5 5
+3: 4 5 | 5 4
+4: &amp;quot;a&amp;quot;
+5: &amp;quot;b&amp;quot;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;これを、ひとまず次のような型としてパースしたい。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;data Rule = Zero [Int]
+          | Pairs Int [(Int,Int)]
+          | Key Int Char
+          deriving Show
+
+-- expected result
+[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &amp;#x27;a&amp;#x27;,Key 5 &amp;#x27;b&amp;#x27;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;ul&gt;
+&lt;li&gt;０から始まる行は「特殊ルール」として、Zero [Int]で拾う。&lt;&#x2F;li&gt;
+&lt;li&gt;それ以外の行は、
+&lt;ul&gt;
+&lt;li&gt;数字と&amp;quot;|&amp;quot;のみの行についてはPairsで、&lt;&#x2F;li&gt;
+&lt;li&gt;アルファベットが含まれる行はKeyで拾う。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;magaparsec-trydeshi-bai-sitekurenai&quot;&gt;Magaparsec - &lt;code&gt;try&lt;&#x2F;code&gt;で失敗してくれない？&lt;&#x2F;h3&gt;
+&lt;p&gt;最初に使ったのはMegaparsec。このソースコードから始めよう。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;import qualified Data.Map.Strict as M
+import Text.Megaparsec
+import Text.Megaparsec.Char
+import qualified Data.Text as T
+import Data.Void
+import Data.Either (rights)
+
+type Parser = Parsec Void String
+
+readInt x = read x :: Int
+
+data Rule = Zero [Int]
+          | Pairs Int [(Int,Int)]
+          | Key Int Char
+          deriving Show
+
+zero :: Parser Rule
+zero = do
+  string &amp;quot;0: &amp;quot;
+  list &amp;lt;- sepBy1 (many alphaNumChar) (char &amp;#x27; &amp;#x27;)
+  return $ Zero (map readInt list)
+
+pair :: Parser (Int,Int)
+pair = do
+  y &amp;lt;- many digitChar
+  char &amp;#x27; &amp;#x27;
+  z &amp;lt;- many digitChar
+  return (readInt y, readInt z)
+
+pairs :: Parser Rule
+pairs = do
+  n &amp;lt;- readInt &amp;lt;$&amp;gt; many alphaNumChar
+  string &amp;quot;: &amp;quot;
+  p &amp;lt;- sepBy1 pair (string &amp;quot; | &amp;quot;)
+  return $ Pairs n p
+
+key :: Parser Rule
+key = do
+  n &amp;lt;- readInt &amp;lt;$&amp;gt; many alphaNumChar
+  string &amp;quot;: \&amp;quot;&amp;quot;
+  c &amp;lt;- letterChar
+  char &amp;#x27;\&amp;quot;&amp;#x27;
+  return $ Key n c
+
+rules = try zero &amp;lt;|&amp;gt; key &amp;lt;|&amp;gt; pairs
+
+main = readFile &amp;quot;day19e.txt&amp;quot; &amp;gt;&amp;gt;= print . rights . map (parse rules &amp;quot;&amp;quot;) . lines
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;cabal repl&lt;&#x2F;code&gt;で&lt;code&gt;main&lt;&#x2F;code&gt;を実行すると、結果はこうなる。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;[Zero [4,1,5],Key 4 &amp;#x27;a&amp;#x27;,Key 5 &amp;#x27;b&amp;#x27;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;Data.Either&lt;&#x2F;code&gt;の&lt;code&gt;rights&lt;&#x2F;code&gt;で強制的に&lt;code&gt;Right&lt;&#x2F;code&gt;のみを抽出しているので分かりにくいが、２〜４行めはパースに失敗している。ちなみにエラーメッセージはかなり難解。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;Right (Zero [4,1,5]),Left (ParseErrorBundle {bundleErrors = TrivialError 1 (Just (Tokens (&amp;#x27;:&amp;#x27; :| &amp;quot; 2&amp;quot;))) (fromList [Tokens (&amp;#x27;:&amp;#x27; :| &amp;quot; \&amp;quot;&amp;quot;),Label (&amp;#x27;a&amp;#x27; :| &amp;quot;lphanumeric character&amp;quot;)]) :| [], bundlePosState = PosState {pstateInput = &amp;quot;1: 2 3 | 3 2&amp;quot;, pstateOffset = 0, pstateSourcePos = SourcePos {sourceName = &amp;quot;&amp;quot;, sourceLine = Pos 1, sourceColumn = Pos 1}, pstateTabWidth = Pos 8, pstateLinePrefix = &amp;quot;&amp;quot;}}),Left (ParseErrorBundle {bundleErrors = TrivialError 1 (Just (Tokens (&amp;#x27;:&amp;#x27; :| &amp;quot; 4&amp;quot;))) (fromList [Tokens (&amp;#x27;:&amp;#x27; :| &amp;quot; \&amp;quot;&amp;quot;),Label (&amp;#x27;a&amp;#x27; :| &amp;quot;lphanumeric character&amp;quot;)]) :| [], bundlePosState = PosState {pstateInput = &amp;quot;2: 4 4 | 5 5&amp;quot;, pstateOffset = 0, pstateSourcePos = SourcePos {sourceName = &amp;quot;&amp;quot;, sourceLine = Pos 1, sourceColumn = Pos 1}, pstateTabWidth = Pos 8, pstateLinePrefix = &amp;quot;&amp;quot;}}),Left (ParseErrorBundle {bundleErrors = TrivialError 1 (Just (Tokens (&amp;#x27;:&amp;#x27; :| &amp;quot; 4&amp;quot;))) (fromList [Tokens (&amp;#x27;:&amp;#x27; :| &amp;quot; \&amp;quot;&amp;quot;),Label (&amp;#x27;a&amp;#x27; :| &amp;quot;lphanumeric character&amp;quot;)]) :| [], bundlePosState = PosState {pstateInput = &amp;quot;3: 4 5 | 5 4&amp;quot;, pstateOffset = 0, pstateSourcePos = SourcePos {sourceName = &amp;quot;&amp;quot;, sourceLine = Pos 1, sourceColumn = Pos 1}, pstateTabWidth = Pos 8, pstateLinePrefix = &amp;quot;&amp;quot;}}),Right (Key 4 &amp;#x27;a&amp;#x27;),Right (Key 5 &amp;#x27;b&amp;#x27;)]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;色々と試行錯誤した結果わかったのは、&lt;code&gt;try&lt;&#x2F;code&gt;でくるんでいるからといって必ず適切なパーサーを選択してくれるわけではない（適切に選択してもらうためには工夫が必要）ということ。&lt;&#x2F;p&gt;
+&lt;p&gt;たとえば２行目の&lt;code&gt;1: 2 3 | 3 2&lt;&#x2F;code&gt;のみをパースしてみると、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;*Main&amp;gt; parseTest rules &amp;quot;1: 2 3 | 3 2&amp;quot;
+1:2:
+  |
+1 | 1: 2 3 | 3 2
+  |  ^^^
+unexpected &amp;quot;: 2&amp;quot;
+expecting &amp;quot;: &amp;quot;&amp;quot; or alphanumeric character
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;try&lt;&#x2F;code&gt;でくるんでいるから最終的にはpairsを使ってパースしてくれるはずなのに、そうなっていない。&lt;br &#x2F;&gt;
+ちなみに&lt;code&gt;pairs&lt;&#x2F;code&gt;単体でパースすると、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;*Main&amp;gt; parseTest pairs &amp;quot;1: 2 3 | 3 2&amp;quot;
+Pairs 1 [(2,3),(3,2)]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;となって正しい結果が出るので、&lt;code&gt;pairs&lt;&#x2F;code&gt;自体にミスがあるわけではなさそうだ。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;rules&lt;&#x2F;code&gt;はまず&lt;code&gt;zero&lt;&#x2F;code&gt;をトライするが、&lt;code&gt;string &amp;quot;0: &amp;quot;&lt;&#x2F;code&gt;にマッチしないので失敗し、backtrackが発生する。&lt;br &#x2F;&gt;
+次に&lt;code&gt;key&lt;&#x2F;code&gt;をトライする。そうすると、最初の&lt;code&gt;many alphaNumChar&lt;&#x2F;code&gt;は成功するが、次の&lt;code&gt;string &amp;quot;: \&amp;quot;&amp;quot;&lt;&#x2F;code&gt;は失敗するのでまたbacktrackが発生する…はずなのだがそうならず、パースは失敗に終わる。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;tryyi-jiang-noxuan-ze-zhi-noshun-fan-nanoka&quot;&gt;&lt;code&gt;try&lt;&#x2F;code&gt;以降の選択肢の順番なのか？&lt;&#x2F;h3&gt;
+&lt;p&gt;最初に、&lt;code&gt;try&lt;&#x2F;code&gt;のくるみ方に問題があるのかもしれないと考えて、&lt;code&gt;try&lt;&#x2F;code&gt;のあとを色々と変えてみた。すると実際、&lt;code&gt;rules = try key &amp;lt;|&amp;gt; zero &amp;lt;|&amp;gt; pairs&lt;&#x2F;code&gt;とした場合は、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &amp;#x27;a&amp;#x27;,Key 5 &amp;#x27;b&amp;#x27;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;となり成功している。&lt;&#x2F;p&gt;
+&lt;p&gt;さらに、&lt;code&gt;rules = try key &amp;lt;|&amp;gt; pairs &amp;lt;|&amp;gt; zero&lt;&#x2F;code&gt;の場合。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;[Pairs 0 [(4,1)],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &amp;#x27;a&amp;#x27;,Key 5 &amp;#x27;b&amp;#x27;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;一見成功しているように見えるが、第１行めが&lt;code&gt;Zero&lt;&#x2F;code&gt;ではなく&lt;code&gt;Pairs&lt;&#x2F;code&gt;でのパースになってしまっているので間違っている。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;zero&lt;&#x2F;code&gt;, &lt;code&gt;pairs&lt;&#x2F;code&gt;, &lt;code&gt;key&lt;&#x2F;code&gt;の順番を入れ替えて試した結果は以下の通り。&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th align=&quot;left&quot;&gt;order&lt;&#x2F;th&gt;&lt;th align=&quot;left&quot;&gt;result&lt;&#x2F;th&gt;&lt;th align=&quot;center&quot;&gt;T&#x2F;F&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;zero key pairs&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;[Zero [4,1,5],Key 4 &#x27;a&#x27;,Key 5 &#x27;b&#x27;]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;F&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;zero pairs key&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)]]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;F&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;pairs zero key&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;[Pairs 0 [(4,1)],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &#x27;a&#x27;,Key 5 &#x27;b&#x27;]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;F&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;pairs key zero&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;[Pairs 0 [(4,1)],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &#x27;a&#x27;,Key 5 &#x27;b&#x27;]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;F&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;key zero pairs&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &#x27;a&#x27;,Key 5 &#x27;b&#x27;]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;T&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;key pairs zero&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;[Pairs 0 [(4,1)],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &#x27;a&#x27;,Key 5 &#x27;b&#x27;]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;F&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;このあたりで薄々ストーリーが見えてくる。&lt;code&gt;zero&lt;&#x2F;code&gt;で拾いたいのに&lt;code&gt;pairs&lt;&#x2F;code&gt;になってしまっているのは、&lt;code&gt;0: 4 1 5&lt;&#x2F;code&gt;で言うと&amp;quot;1&amp;quot;までは&lt;code&gt;pairs&lt;&#x2F;code&gt;で拾えてしまえることがまず発端になっている。それだけなら残りを失敗するのでいいじゃないか、となりそうだが、途中でパースが止まっても成功扱いとなり、次の行に進んでしまう。&lt;&#x2F;p&gt;
+&lt;p&gt;実際、&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;pairs :: Parser Rule
+pairs = do
+  n &amp;lt;- readInt &amp;lt;$&amp;gt; many alphaNumChar
+  string &amp;quot;: &amp;quot;
+  p &amp;lt;- sepBy pair (string &amp;quot; | &amp;quot;)
+  return $ Pairs n p
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;と、&lt;code&gt;sepBy1&lt;&#x2F;code&gt;から&lt;code&gt;sepBy&lt;&#x2F;code&gt;にしてみると、結果は&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Pairs 4 [],Pairs 5 []]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;となって最後の２行が&lt;code&gt;pairs&lt;&#x2F;code&gt;で拾われてしまっていることがわかる。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;megaparsecdenoeofnoju-dong&quot;&gt;Megaparsecでのeofの挙動&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;4: &amp;quot;a&amp;quot;&lt;&#x2F;code&gt;が&lt;code&gt;pairs&lt;&#x2F;code&gt;ではなく&lt;code&gt;key&lt;&#x2F;code&gt;で拾うべき行だということをプログラムに伝えるには、&lt;code&gt;try&lt;&#x2F;code&gt;以降のパーサーの順番をあれこれいじるよりも&lt;code&gt;eof&lt;&#x2F;code&gt;を使えばよいのではないか、と思いつき、以下のようにしてみる。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;zero :: Parser Rule
+zero = do
+  string &amp;quot;0: &amp;quot;
+  list &amp;lt;- sepBy1 (many alphaNumChar) (char &amp;#x27; &amp;#x27;)
+  eof
+  return $ Zero (map readInt list)
+
+pair :: Parser (Int,Int)
+pair = do
+  y &amp;lt;- readInt &amp;lt;$&amp;gt; many alphaNumChar
+  char &amp;#x27; &amp;#x27;
+  z &amp;lt;- readInt &amp;lt;$&amp;gt; many alphaNumChar
+  return (y,z)
+
+pairs :: Parser Rule
+pairs = do
+  n &amp;lt;- readInt &amp;lt;$&amp;gt; many alphaNumChar
+  string &amp;quot;: &amp;quot;
+  p &amp;lt;- sepBy1 pair (string &amp;quot; | &amp;quot;)
+  eof
+  return $ Pairs n p
+
+key :: Parser Rule
+key = do
+  n &amp;lt;- readInt &amp;lt;$&amp;gt; many alphaNumChar
+  string &amp;quot;: \&amp;quot;&amp;quot;
+  c &amp;lt;- letterChar
+  char &amp;#x27;\&amp;quot;&amp;#x27;
+  eof
+  return $ Key n c
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;しかし結果は変わらず、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;-- try zero &amp;lt;|&amp;gt; pairs &amp;lt;|&amp;gt; key
+[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)]]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;入力の終了にのみマッチするはずの&lt;code&gt;eof&lt;&#x2F;code&gt;が動いていない。&lt;&#x2F;p&gt;
+&lt;p&gt;念のため、テストパーサーを書いてみるとこちらはちゃんと機能する。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;test :: Parser String
+test = do
+  s &amp;lt;- many alphaNumChar
+  eof
+  return s
+
+---
+
+*Main&amp;gt; parseTest test &amp;quot;aaa&amp;quot;
+&amp;quot;aaa&amp;quot;
+*Main&amp;gt; parseTest test &amp;quot;aaa111&amp;quot;
+&amp;quot;aaa111&amp;quot;
+*Main&amp;gt; parseTest test &amp;quot;aaa111+++&amp;quot;
+1:7:
+  |
+1 | aaa111+++
+  |       ^
+unexpected &amp;#x27;+&amp;#x27;
+expecting alphanumeric character or end of input
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;attoparsecdenoju-dong&quot;&gt;Attoparsecでの挙動&lt;&#x2F;h3&gt;
+&lt;p&gt;つまり、&lt;code&gt;try&lt;&#x2F;code&gt;でくるんだパーサーにおいて&lt;code&gt;eof&lt;&#x2F;code&gt;がちゃんと動いていないのではないか？ということだ。&lt;br &#x2F;&gt;
+どこかのコードが間違っている可能性も十分あるし、ソースコードを読んでいないのでMegaparsecの調査としてはここまでなのだが、本来であれば、&lt;code&gt;try&lt;&#x2F;code&gt;以降のパーサーの順序は極力考慮せず組み立てられるのが理想…だと思うので、これは困る。ちなみに、後に検証してみたところ、Parsecの&lt;code&gt;try&lt;&#x2F;code&gt;&#x2F;&lt;code&gt;eof&lt;&#x2F;code&gt;でも同じ問題が発生する。&lt;&#x2F;p&gt;
+&lt;p&gt;そこで、試しにAttoparsecを使ってみるとこちらはうまくいった。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;import Data.Attoparsec.Text
+import qualified Data.Text as T
+import qualified Data.Text.IO as TIO
+import Data.Either (rights)
+
+readInt x = read x :: Int
+
+data Rule = Zero [Int]
+          | Pairs Int [(Int,Int)]
+          | Key Int Char
+          deriving Show
+
+zero :: Parser Rule
+zero = do
+  string &amp;quot;0: &amp;quot;
+  list &amp;lt;- many1 digit `sepBy1` char &amp;#x27; &amp;#x27;
+  endOfInput
+  return $ Zero (map readInt list)
+
+pair :: Parser (Int,Int)
+pair = do
+  x &amp;lt;- readInt &amp;lt;$&amp;gt; many1 digit
+  space
+  y &amp;lt;- readInt &amp;lt;$&amp;gt; many1 digit
+  return (x,y)
+
+pairs :: Parser Rule
+pairs = do
+  n &amp;lt;- readInt &amp;lt;$&amp;gt; many1 digit
+  string &amp;quot;: &amp;quot;
+  p &amp;lt;- sepBy1 pair (string &amp;quot; | &amp;quot;)
+  endOfInput
+  return $ Pairs n p
+
+key :: Parser Rule
+key = do
+  n &amp;lt;- readInt &amp;lt;$&amp;gt; many1 digit
+  string &amp;quot;: \&amp;quot;&amp;quot;
+  c &amp;lt;- letter
+  char &amp;#x27;\&amp;quot;&amp;#x27;
+  endOfInput
+  return $ Key n c
+
+rules = choice [pairs, key, zero]
+
+main = TIO.readFile &amp;quot;day19e.txt&amp;quot; &amp;gt;&amp;gt;= print . rights . map (parseOnly rules) . T.lines
+
+---
+
+*Main&amp;gt; main
+[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &amp;#x27;a&amp;#x27;,Key 5 &amp;#x27;b&amp;#x27;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;もちろん、&lt;code&gt;choice&lt;&#x2F;code&gt;以降のリスト内の順序をどのパターンにしても、結果は変わらなかった。&lt;&#x2F;p&gt;
+&lt;p&gt;ちなみに各パーサーの&lt;code&gt;endOfInput&lt;&#x2F;code&gt;を外すと、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;-- rules = choice [pairs, key, zero]
+[Pairs 0 [(4,1)],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &amp;quot;a&amp;quot;,Key 5 &amp;quot;b&amp;quot;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;となって１行目を&lt;code&gt;pairs&lt;&#x2F;code&gt;で拾ってしまっているので、やっぱり&lt;code&gt;endOfInput&lt;&#x2F;code&gt;が機能していることがわかる。&lt;&#x2F;p&gt;
+&lt;p&gt;コード自体はほぼ変わらない。主な変更点としては、&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th align=&quot;center&quot;&gt;Megaparsec&lt;&#x2F;th&gt;&lt;th align=&quot;center&quot;&gt;Attoparsec&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td align=&quot;center&quot;&gt;&lt;code&gt;try&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;&lt;code&gt;choice&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td align=&quot;center&quot;&gt;&lt;code&gt;eof&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;&lt;code&gt;endOfInput&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;まず１点め、&lt;code&gt;try&lt;&#x2F;code&gt;でなく&lt;code&gt;choice&lt;&#x2F;code&gt;を使うというのは、Attoparsecがデフォルトで失敗時backtrackをする仕様のためで、これは素晴らしい（&lt;code&gt;try&lt;&#x2F;code&gt;も実装されているが、これはParsecとの互換性のためと&lt;a href=&quot;https:&#x2F;&#x2F;hackage.haskell.org&#x2F;package&#x2F;attoparsec-0.14.1&#x2F;docs&#x2F;Data-Attoparsec-ByteString.html#v:try&quot;&gt;明記されている&lt;&#x2F;a&gt;）。&lt;br &#x2F;&gt;
+そしてMegaparsecの&lt;code&gt;eof&lt;&#x2F;code&gt;とAttoparsecの&lt;code&gt;endOfInput&lt;&#x2F;code&gt;は、どうやら局所的に違う挙動をするらしい。（MegaparsecとParsecがこの点で同じ動きをしたのは、MegaparsecがParsecのフォークだからかもしれない）&lt;&#x2F;p&gt;
+&lt;p&gt;同じようなディテールで頭を悩ませている人がいたら、参考になれば幸いです。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>Haskell環境再構築</title>
+            <pubDate>Wed, 05 May 2021 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/restart-haskell/</link>
+            <guid>https://tudurikata.com/post/restart-haskell/</guid>
+            <description>&lt;p&gt;ここ数ヶ月、ずっとimperative programmingをしていてちょっと疲れてきたのと、今Haskellに戻ったら前よりはもう少し書ける／わかるようになっているかもしれないという期待で、あらためてHaskellに入門してみる。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;huan-jing-gou-zhu&quot;&gt;環境構築&lt;&#x2F;h3&gt;
+&lt;p&gt;前にやっていたときは確か存在していなかったような気がするのだが、&lt;code&gt;ghcup&lt;&#x2F;code&gt;という&lt;code&gt;rustup&lt;&#x2F;code&gt;的なツールが登場していたのでさっそく入れてみる。&lt;br &#x2F;&gt;
+これはghc, cabal, haskell-language-server(HLS)のインストール・バージョン管理を行ってくれるありがたいツールで、途中２回ほどコマンド入力する場面があるので完全放置では完了まで行かないが、スムーズにインストールが可能。以前はstackを使っていたが、cabalがだいぶフレンドリーになってきているという噂を見かけたのでcabal一本でやってみようかと思っている。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;gui-men-haskell-language-server&quot;&gt;鬼門・haskell-language-server&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;hie&lt;&#x2F;code&gt;の頃からHaskellのLSPにはいい思い出がなく、ビルド時間が地獄のように長いとか、頑張って入れても全然動かないとかで、この辺の環境構築周りのもどかしさもあっていったん離れることに決めたのだった。今はというと、ほぼ公式のLSPであるHLSがghcupでツルッと入ってくる。これを使えばいい。&lt;&#x2F;p&gt;
+&lt;p&gt;ただ、Arch Linux系のディストロを使っている人は、HLSとVS Codeのインテグレーションでおそらく引っかかるだろう。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;haskell&#x2F;haskell-language-server&#x2F;issues&#x2F;236&quot;&gt;VSCode extension not detecting Cabal&#x2F;Stack due to incomplete $PATH in &lt;code&gt;&#x2F;etc&#x2F;profile&lt;&#x2F;code&gt; · Issue #236 · haskell&#x2F;haskell-language-server&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;このissueで指摘されているが、Arch系の場合、&lt;code&gt;.bashrc&lt;&#x2F;code&gt;にghcupのPATHを書いてもVS Codeが認識せず、&lt;code&gt;etc&#x2F;profile&lt;&#x2F;code&gt;に書かないと動かない。&lt;del&gt;そして僕の場合は、&lt;code&gt;etc&#x2F;profile&lt;&#x2F;code&gt;に書いた上で、（ランチャーからではなく）ターミナルから&lt;code&gt;code&lt;&#x2F;code&gt;とコマンドを打って起動しないとHLSが動かなかった。ここまでわかるのに半日費やしてしまった…。&lt;&#x2F;del&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;(2021-05-22追記)&lt;code&gt;etc&#x2F;profile&lt;&#x2F;code&gt;への記述が間違っていた模様。以下のようにすればVS Codeでバッチリ動いてくれました。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;# etc&amp;#x2F;profile
+PATH=~&amp;#x2F;.ghcup&amp;#x2F;bin&amp;#x2F;:$PATH
+PATH=~&amp;#x2F;.cabal&amp;#x2F;bin&amp;#x2F;:$PATH
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;ランチャーからの起動が実質できないのは良くないので、これを機にneovimでの編集に移行してみる。&lt;br &#x2F;&gt;
+ただしvim&#x2F;neovimであっても、Arch系であれば&lt;code&gt;etc&#x2F;profile&lt;&#x2F;code&gt;にPATHを書かなければならないのは同じ（記入後、要再起動）。その上で、HLS公式のイントロダクションに書いてあるとおり、CocでHLSを設定すれば、動く。&lt;&#x2F;p&gt;
+&lt;p&gt;久々にHaskellを書くと、頭も指も全然動かなくて逆に面白い。&lt;br &#x2F;&gt;
+以前いじっていたときには存在に気づかなかったパイプライン演算子を使って、Project Eulerの２問め。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;import Data.Function
+
+fib:: Integer -&amp;gt; Integer -&amp;gt; Integer -&amp;gt; Integer
+fib a b count
+    | count == 1 || count == 0 = b
+    | count &amp;gt;= 2 = fib b (a+b) (count-1)
+    | otherwise = 0
+
+makeFib = fib 1 1
+
+euler2FibList:: Integer -&amp;gt; Integer
+euler2FibList n = takeWhile (\x -&amp;gt; makeFib x &amp;lt; n) [1..] &amp;amp; map makeFib &amp;amp; filter even &amp;amp; sum
+
+main = print $ euler2FibList 4000000
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;makeFib&lt;&#x2F;code&gt;を２回使っているのがかっこよくないですね。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>HaskellでSlackに投稿する</title>
+            <pubDate>Mon, 24 Aug 2020 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/posttoslack/</link>
+            <guid>https://tudurikata.com/post/posttoslack/</guid>
+            <description>&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;tudurikata.com&#x2F;post&#x2F;haskellscraping01&#x2F;&quot;&gt;HaskellによるWebスクレイピング&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;HaskellでSlackに投稿する（この記事）&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;tudurikata.com&#x2F;post&#x2F;systemd-service&#x2F;&quot;&gt;systemdを使ってプログラムを定期実行する&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;scalpelで更新情報を抽出した後、保存されているテキストデータと異なっていた場合は、その旨をSlackへ通知を入れたい。
+そのための関数は&lt;code&gt;Main.hs&lt;&#x2F;code&gt;とは別に&lt;code&gt;Lib.hs&lt;&#x2F;code&gt;へ保存する。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;Lib.hs&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;{-# LANGUAGE OverloadedStrings #-}
+
+module Lib where
+
+import Network.Curl as NC
+
+webhookurl :: URLString
+webhookurl = &amp;quot;https:&amp;#x2F;&amp;#x2F;hooks.slack.com&amp;#x2F;services&amp;#x2F;xxxx&amp;#x2F;xxxxxxxxxxxxxxxxx&amp;quot;
+
+message :: [String]
+message = [&amp;quot;payload={\&amp;quot;text\&amp;quot;: \&amp;quot;UPDATE: Check http:&amp;#x2F;&amp;#x2F;example.com&amp;#x2F;\&amp;quot; }&amp;quot;]
+
+sendUDMessage = curlPost webhookurl message
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;最初は&lt;code&gt;slack-api&lt;&#x2F;code&gt;あたりを使おうかと色々探っていたのだが、単にSlack内のチャンネルに投稿するだけであれば、Incoming Webhooksを使って投稿するのが一番手っ取り早い。&lt;&#x2F;p&gt;
+&lt;p&gt;cf: &lt;a href=&quot;https:&#x2F;&#x2F;api.slack.com&#x2F;messaging&#x2F;webhooks&quot;&gt;Sending messages using Incoming Webhooks | Slack&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;コード内でWebhooksのURLが丸裸になるのが微妙だが、セキュリティ面を厳密に考慮する必要のない私的ミニプロジェクトなのでよしとする。&lt;br &#x2F;&gt;
+Webhooksを叩くには、たとえばlinuxのターミナルからであれば&lt;code&gt;curl post&lt;&#x2F;code&gt;でいける。これをHaskellで実現するには、&lt;code&gt;Network.Curl&lt;&#x2F;code&gt;ライブラリの&lt;code&gt;curlPost&lt;&#x2F;code&gt;で十分。&lt;br &#x2F;&gt;
+&lt;code&gt;message&lt;&#x2F;code&gt;の形式はSlackの仕様に合わせる必要があるが、投稿内容自体は件のWebサイトへのリンクがあれば事足りるので、全体として非常にシンプルにモジュールを作れた。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>HaskellによるWebスクレイピング</title>
+            <pubDate>Sun, 23 Aug 2020 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/haskellscraping01/</link>
+            <guid>https://tudurikata.com/post/haskellscraping01/</guid>
+            <description>&lt;p&gt;RSSを吐かず、実際に訪れないと更新されたかどうか確認できないWebサイトの情報を追うために、ささやかだがスクレイピング・プロジェクトを作った。
+流れとしてはこういう感じになる。&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Haskell(&lt;code&gt;scalpel&lt;&#x2F;code&gt;)により、更新情報の通知エリアのみを抜き出す&lt;&#x2F;li&gt;
+&lt;li&gt;抜き出してきた情報をローカルの&lt;code&gt;update.txt&lt;&#x2F;code&gt;の中身と比較し、同一であれば何もしない、異なっていればそれを&lt;code&gt;update.txt&lt;&#x2F;code&gt;に上書きした上でSlackのチャンネルへ通知（投稿）&lt;&#x2F;li&gt;
+&lt;li&gt;このプログラムを、linux起動時にネットワークを確保した上で走るように&lt;code&gt;systemd&lt;&#x2F;code&gt;を使って.serviceを作成&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;この記事では(1)と(2)の&lt;code&gt;update.txt&lt;&#x2F;code&gt;の上書きまでをまとめる。続く部分は以下の記事に。&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;HaskellによるWebスクレイピング（この記事）&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;tudurikata.com&#x2F;post&#x2F;posttoslack&#x2F;&quot;&gt;HaskellでSlackに投稿する&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;tudurikata.com&#x2F;post&#x2F;systemd-service&#x2F;&quot;&gt;systemdを使ってプログラムを定期実行する&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;&lt;code&gt;Main.hs&lt;&#x2F;code&gt;は以下の通り。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;{-#LANGUAGE OverloadedStrings#-}
+
+module Main where
+
+import qualified Data.ByteString.Char8 as B
+import Text.HTML.Scalpel
+import Data.Maybe
+import Lib
+
+url :: URL
+url = &amp;quot;http:&amp;#x2F;&amp;#x2F;example.com&amp;quot;
+
+filePath :: FilePath
+filePath = &amp;quot;update.txt&amp;quot;
+
+data NewsText
+    = NewsText { time :: B.ByteString
+               , contents :: B.ByteString } deriving (Show,Read,Eq)
+
+main = do
+    new &amp;lt;- scrapeURL url information
+    old &amp;lt;- B.readFile filePath
+    let new2 = B.pack $ show $ fromJust new
+    if new2 == old then print &amp;quot;no update.&amp;quot;
+                   else do
+                       Lib.sendUDMessage
+                       B.writeFile filePath new2
+    where
+            information :: Scraper B.ByteString [NewsText]
+            information = chroots (&amp;quot;div&amp;quot; @: [hasClass &amp;quot;information&amp;quot;]) newsTexts
+
+            newsTexts :: Scraper B.ByteString NewsText
+            newsTexts = do
+                time &amp;lt;- text $ &amp;quot;dt&amp;quot;
+                contents &amp;lt;- text $ &amp;quot;dd&amp;quot;
+                return $ NewsText time contents
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;HaskellにおけるWebスクレイピング用のライブラリは他にいくつかあるようだけれど、&lt;code&gt;scalpel&lt;&#x2F;code&gt;は豊富な機能を持ち、たいていのことは可能という印象を受ける。今回の作業においてはオーバーキル気味かもしれないが、一回いじっておくとわりとすんなり他のケースに対しても応用できる、素直なライブラリのように感じた。&lt;br &#x2F;&gt;
+&lt;code&gt;scalpel&lt;&#x2F;code&gt;を使う部分は初心者にも大して難しくなかった。&lt;code&gt;div&lt;&#x2F;code&gt;の&lt;code&gt;class&lt;&#x2F;code&gt;でまず絞り、さらにそこからタグで絞って抜き出す、という感じだ。きちんとやるならもっとエラーケースについて考えないといけないはずだが今回はパス。&lt;code&gt;scrapeURL&lt;&#x2F;code&gt;は&lt;code&gt;StringLike str =&amp;gt; URL -&amp;gt; Scraper str a -&amp;gt; IO (Maybe a)&lt;&#x2F;code&gt;となっているので、仮に該当するタグが消失していても&lt;code&gt;Nothing&lt;&#x2F;code&gt;が返ってくる。シンプルだが&lt;code&gt;Maybe&lt;&#x2F;code&gt;の威力を感じる部分。&lt;br &#x2F;&gt;
+結局未解決なのは、抜き出してくるテキストに日本語が含まれている場合、&lt;code&gt;Data.Text&lt;&#x2F;code&gt;系を採用しても正確に日本語を拾えない点。これはこちらの文字列の拾い方が悪いのか、対象のWebサイトの仕様なのかよくわからない（要調査）。今回の狙いは更新の有無のみをテキストの「イコールorノットイコール」で判別し、通知する、というものなので、文字化けは許容範囲と判断した。&lt;br &#x2F;&gt;
+その上で、&lt;code&gt;Data.Bytestring.Char8&lt;&#x2F;code&gt;を採用しているのは、&lt;code&gt;String&lt;&#x2F;code&gt;はパフォーマンス上一応避けておきたいというのと、過去のテキストと現在のテキストそれぞれを読み込む際のすり合わせのしやすさから。&lt;code&gt;now&lt;&#x2F;code&gt;と&lt;code&gt;old&lt;&#x2F;code&gt;の型が違っていると、内容が同じでも違うものと判断してしまうので、型をちゃんと見なくてはいけない。Visual Studio Codeのエクステンション&lt;code&gt;Haskell&lt;&#x2F;code&gt;に最近&lt;code&gt;haskell-ide-engine&lt;&#x2F;code&gt;が統合されたので、型チェックにはとても有用だった。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>リストモナドの非決定性／可能性について</title>
+            <pubDate>Sun, 24 May 2020 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/listmonad/</link>
+            <guid>https://tudurikata.com/post/listmonad/</guid>
+            <description>&lt;p&gt;勉強中、リストモナドの挙動が興味深かったので、ざっくり調べてみた結果をとりあえずまとめてみる。&lt;&#x2F;p&gt;
+&lt;p&gt;リストは次のように実装される。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;Data List = Empty | cons a (List a)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;そして、&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;Prelude&amp;gt; zipWith (+) [1,2,3] [4,5,6]
+[5,7,9]
+
+Prelude&amp;gt; concatMap (\x -&amp;gt; [x, x^2]) [1,2,3]
+[1,1,2,4,3,9]
+
+Prelude&amp;gt; [1,2,3] ++ [4,5,6]
+[1,2,3,4,5,6]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;まずはその中に入っているものはとにかく入っているのだという前提で学んでいく。&lt;br &#x2F;&gt;
+こうしたリストの使い勝手の良さはHaskellのよいところの１つだと思うが、さらに面白いのは、実は&lt;code&gt;Fanctor, Applicative, Monad&lt;&#x2F;code&gt;各クラスのインスタンスであるという点。つまり、（&lt;a href=&quot;https:&#x2F;&#x2F;www.amazon.co.jp&#x2F;dp&#x2F;B07SFCMP66&#x2F;&quot;&gt;入門Haskellプログラミング&lt;&#x2F;a&gt;の表現をまず借りると）上記したような「コンテナとしてのリスト」という側面と別に、「コンテクストとしてのリスト」が存在している。&lt;&#x2F;p&gt;
+&lt;p&gt;「コンテクストとしてのリスト」、つまりモナドリストは、たとえば次のような使い方をされる。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;Prelude&amp;gt; (+) &amp;lt;$&amp;gt; [1,2,3] &amp;lt;*&amp;gt; [4,5,6]
+[5,6,7,6,7,8,7,8,9]
+
+Prelude&amp;gt; (++) &amp;lt;$&amp;gt; [&amp;quot;white &amp;quot;,&amp;quot;black &amp;quot;] &amp;lt;*&amp;gt; [&amp;quot;cat&amp;quot;,&amp;quot;dog&amp;quot;] 
+[&amp;quot;white cat&amp;quot;,&amp;quot;white dog&amp;quot;,&amp;quot;black cat&amp;quot;,&amp;quot;black dog&amp;quot;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Will Kurtによると、モナドとしてのリストを理解するには「非決定論的な計算」という考え方をするのが最善だという。&lt;code&gt;&amp;lt;*&amp;gt;&lt;&#x2F;code&gt;でつながれたそれぞれのリストは「そのうちのどれであるかが決定されていない」ものであり、計算結果はありうる結果すべてを表現している…。&lt;br &#x2F;&gt;
+プログラミングの世界で非決定論的、なんていう言葉を目にするとは思っていなかっただけに、これには驚かされた。&lt;&#x2F;p&gt;
+&lt;p&gt;コンテクストという言葉は、おそらく厳密に言えば圏論をしっかり理解しないと腑に落ちないワードだと思う（圏論を理解していないので断言もできない）のだが、Haskellでのモナドを頭に入れるだけであれば次のように考えるとよさそうだ。&lt;&#x2F;p&gt;
+&lt;p&gt;コンテナとコンテクスト、という二種類のデータのあり方は、pure function 純粋関数とunpure function 非純粋関数にそれぞれ対応している。&lt;br &#x2F;&gt;
+関数が純粋であるとはこの場合、side effectを持たず、その関数にある引数を与えたとき、必ず同じ返り値が出てくる、という意味だ。これは、関数の役割が、ただその関数の定義と引数のみから完全に表現できる、ということでもある。&lt;br &#x2F;&gt;
+それは数学の純粋性にどこか似ている。定義、命題、そういったクリアーなモジュールとして在るのが純粋関数、そういう風に考える。&lt;br &#x2F;&gt;
+では非純粋とはなにかといえば、「それ自体」以外の役割、something elseを持つかもしれないもの、ということになる。関数と引数が持つデータ以外に何かを引き連れていたり、何かを生んだり、何かを表示したり…といった、つまりside effectを持つかもしれないものが非純粋関数だ。これを扱うために&lt;code&gt;Fanctor, Applicative, Monad&lt;&#x2F;code&gt;という考え方がある。&lt;&#x2F;p&gt;
+&lt;p&gt;次に、純粋なものとしてのリストと、非純粋なものとしてのリスト、それぞれをコンテナ／コンテクストとして呼ぶ「意味」は何か、ということを考える。どちらも、ある種の比喩を含む表現だと思う。この比喩が面白いと思うのだが、まずコンテナのほうは「箱」だ。しかもフタが空いていて、何かを追加したり取り出したりするのは自由だが、とにかく中にはこれこれが入っているということが「確定している」。だから計算結果にはゆらぎがない（ように見える）。&lt;br &#x2F;&gt;
+一方、コンテクストとは、「何かを理解するために役立つ、状況や事象、情報」のことである。つまり、その何かというのは、コンテクスト(=something else)なしでは完全には意味をとれない。意味が決定されていない。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;Prelude&amp;gt; (++) &amp;lt;$&amp;gt; [&amp;quot;white &amp;quot;,&amp;quot;black &amp;quot;] &amp;lt;*&amp;gt; [&amp;quot;cat&amp;quot;,&amp;quot;dog&amp;quot;] 
+[&amp;quot;white cat&amp;quot;,&amp;quot;white dog&amp;quot;,&amp;quot;black cat&amp;quot;,&amp;quot;black dog&amp;quot;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;上の式は、白か黒かが決定されておらず、犬か猫かも決定されていない、というように読むこともできる。結果は、すべてのあり得る可能性を拾い尽くしたものになる。&lt;&#x2F;p&gt;
+&lt;p&gt;もちろんこれは、あえて文学的に表現すれば…ということで、実際にはこの式は&lt;code&gt;do&lt;&#x2F;code&gt;構文を用いると次のようになる。&lt;br &#x2F;&gt;
+（参考: &lt;a href=&quot;https:&#x2F;&#x2F;kazu-yamamoto.hatenablog.jp&#x2F;entry&#x2F;20090313&#x2F;1236935179&quot;&gt;リストモナドの動作原理を考える - あどけない話&lt;&#x2F;a&gt;）&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;sample = do
+    x &amp;lt;- [&amp;quot;white &amp;quot;,&amp;quot;black &amp;quot;]
+    y &amp;lt;- [&amp;quot;cat&amp;quot;,&amp;quot;dog&amp;quot;]
+    return (x ++ y)
+
+*Main&amp;gt; sample
+[&amp;quot;white cat&amp;quot;,&amp;quot;white dog&amp;quot;,&amp;quot;black cat&amp;quot;,&amp;quot;black dog&amp;quot;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;上の&lt;code&gt;sample&lt;&#x2F;code&gt;関数を脱糖するとこうなる。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;sample = [&amp;quot;white &amp;quot;,&amp;quot;black &amp;quot;] &amp;gt;&amp;gt;= \x -&amp;gt; [&amp;quot;cat&amp;quot;,&amp;quot;dog&amp;quot;] &amp;gt;&amp;gt;= \y -&amp;gt; return (x ++ y)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;リストモナドにおいて、&lt;code&gt;return&lt;&#x2F;code&gt;と&lt;code&gt;&amp;gt;&amp;gt;=&lt;&#x2F;code&gt;はそれぞれ&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;return x = [x]
+l &amp;gt;&amp;gt;= f = concatMap f l
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;このように定義されているから、&lt;code&gt;sample&lt;&#x2F;code&gt;関数はさらに&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;sample = concatMap (\x -&amp;gt; [&amp;quot;cat&amp;quot;,&amp;quot;dog&amp;quot;] &amp;gt;&amp;gt;= \y -&amp;gt; [x ++ y]) [&amp;quot;white &amp;quot;,&amp;quot;black &amp;quot;]
+       = concatMap (\x -&amp;gt; concatMap (\y -&amp;gt; [x ++ y]) [&amp;quot;cat&amp;quot;,&amp;quot;dog&amp;quot;]) [&amp;quot;white &amp;quot;,&amp;quot;black &amp;quot;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;と変形できる。&lt;br &#x2F;&gt;
+これを内側、外側の順に計算すると、&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;sample = concatMap (\x -&amp;gt; [x ++ &amp;quot;cat&amp;quot;, x ++ &amp;quot;dog&amp;quot;]) [&amp;quot;white &amp;quot;,&amp;quot;black &amp;quot;]
+       = [&amp;quot;white cat&amp;quot;,&amp;quot;white dog&amp;quot;,&amp;quot;black cat&amp;quot;,&amp;quot;black dog&amp;quot;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;リストモナドの計算に非決定性／すべてのありうる可能性…といったsomething elseが現れる根拠は、この式変換でいうと&lt;code&gt;concatMap&lt;&#x2F;code&gt;の存在だろう。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;:t concatMap
+concatMap :: Foldable t =&amp;gt; (a -&amp;gt; [b]) -&amp;gt; t a -&amp;gt; [b]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;ところで、&lt;code&gt;&amp;gt;&amp;gt;=&lt;&#x2F;code&gt;の型は&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;:t (&amp;gt;&amp;gt;=)
+(&amp;gt;&amp;gt;=) :: Monad m =&amp;gt; m a -&amp;gt; (a -&amp;gt; m b) -&amp;gt; m b
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;こうなっている。&lt;br &#x2F;&gt;
+&lt;code&gt;concatMap&lt;&#x2F;code&gt;とは引数の順番が違うが、&lt;code&gt;flip&lt;&#x2F;code&gt;を使ってもよいと考えると&lt;code&gt;concatMap&lt;&#x2F;code&gt;のほうはこうなる。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;:t flip concatMap
+flip concatMap :: Foldable t =&amp;gt; t a -&amp;gt; (a -&amp;gt; [b]) -&amp;gt; [b]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;これを&lt;code&gt;&amp;gt;&amp;gt;=&lt;&#x2F;code&gt;と見比べてみると、&lt;code&gt;&amp;gt;&amp;gt;=&lt;&#x2F;code&gt;の&lt;code&gt;m a&#x2F;m b&lt;&#x2F;code&gt;がconcatMapでは&lt;code&gt;t a&#x2F;[b]&lt;&#x2F;code&gt;になっているだけで、構造としては同じだ。「モナドな何かについて、モナドでない何かをとってモナドな何かを返す関数を適用することで、モナドな何かを返す」…これが&lt;code&gt;&amp;gt;&amp;gt;=&lt;&#x2F;code&gt;だとすれば、「&lt;code&gt;Foldable&lt;&#x2F;code&gt;な何かについて、リストでない何かをとってリストを返す関数を適用することで、リストを返す」ものが&lt;code&gt;concatMap&lt;&#x2F;code&gt;だというわけだ。一般論としての&lt;code&gt;&amp;gt;&amp;gt;=&lt;&#x2F;code&gt;と&lt;code&gt;concatMap&lt;&#x2F;code&gt;の関連性（正確ではないかもしれないが、抽象／具体の関係と呼んでみる）が、こう表現すると明らかになってくる。つまり、要素をリストに入れ、リストを返すという「リスト化」が、&lt;code&gt;&amp;lt;*&amp;gt;&lt;&#x2F;code&gt;でつながれたそれぞれの引数について不足なく行われる結果、可能性全体を表現するかのようなリストが生成される、というふうに考えることができる。&lt;&#x2F;p&gt;
+&lt;p&gt;ここで文学的な解釈にあえて戻ってみると、結局、非決定性／可能性とは全体性なのだ、ということができるような気がする。こぼさずすべてを取り尽くすことが非決定性／可能性を生む。逆に言えば、その一部をとらないーすくわず、捨て去るたび毎に、それは凝固し、決定的になっていく。同時に、可能性がなくなり、固定されていく。こんな風に言い換えることもできるかもしれない。決まっていないことは可能性であり、決めることはゆらぎがなくなっていくことだと。当たり前といえば当たり前なのだが、あまりにも豊かすぎる表現のように感じられる。モナドという概念は、やっぱり面白い。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>フィボナッチ数列（memoization）</title>
+            <pubDate>Mon, 04 May 2020 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/memofib/</link>
+            <guid>https://tudurikata.com/post/memofib/</guid>
+            <description>&lt;h2 id=&quot;memoization&quot;&gt;memoization(?)&lt;&#x2F;h2&gt;
+&lt;p&gt;次に、memoizationによるフィボナッチ数列関数の作成にトライしてみる。&lt;br &#x2F;&gt;
+memoizationとは日本語だとメモ化とも呼ばれるプログラミングの手法で、「一度計算したものを記録しておき、必要なときに取り出すようにする」効率化のこと、らしい。&lt;&#x2F;p&gt;
+&lt;p&gt;前回のslowFibが遅い理由は、一度計算してしまえばそのあと再利用できる項を愚直に展開して項数を増やしているからだ。これを解決するのに、memoizationの発想は有用ではないだろうか、というわけ。&lt;br &#x2F;&gt;
+&lt;a href=&quot;https:&#x2F;&#x2F;wiki.haskell.org&#x2F;Memoization&quot;&gt;wiki.haskell.org&lt;&#x2F;a&gt;を参考に、memoizationを実装してみる。リストに計算結果を記録しておき、都度それを取り出す、というものだ。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;memoFib1 = (map fib [0..] !!)
+            where
+                fib 0 = 1
+                fib 1 = 1
+                fib n = memoFib1 (n-1) + memoFib1 (n-2)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre&gt;&lt;code&gt;*Main&amp;gt; memoFib1 30
+1346269
+(0.01 secs, 120,256 bytes)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;これは確かに速い。&lt;br &#x2F;&gt;
+ところが、次のように少しだけ変形をすると、結果は全く異なるものになる。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;memoFib2 n = (map fib [0..]) !! n
+            where
+                fib 0 = 1
+                fib 1 = 1
+                fib n = memoFib2 (n-1) + memoFib2 (n-2)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre&gt;&lt;code&gt;*Main&amp;gt; memoFib2 30
+1346269
+(1.46 secs, 2,312,682,608 bytes)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;実は最初自分なりに実装したのが&lt;code&gt;memoFib2&lt;&#x2F;code&gt;のほうだったので、だいぶ混乱した。なぜこのような違いが出るのか理解ができなければ、他のケースでmemoizationを使っていくことができない。&lt;br &#x2F;&gt;
+どうしてもわからなかったので、r&#x2F;Haskellで質問してみたら、あっさり&lt;a href=&quot;https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;haskell&#x2F;comments&#x2F;a3va9p&#x2F;why_pointfree_makes_difference_to_this_simple&#x2F;&quot;&gt;過去ログの回答&lt;&#x2F;a&gt;をもらえた。感謝。&lt;br &#x2F;&gt;
+以下、まずこの回答について。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;ramudaji-suan-biao-xian-niyorubian-xing&quot;&gt;ラムダ計算表現による変形（？）&lt;&#x2F;h2&gt;
+&lt;p&gt;上記の回答によると、それぞれの&lt;code&gt;memoFibx&lt;&#x2F;code&gt;はラムダ計算表現を用いて次のように変形できる。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;memoFib1 = let fibList = map fib [0..] in (fibList !!)
+&amp;lt;-&amp;gt; memoFib1 = let fibList = map fib [0..] in \n -&amp;gt; fibList !! n
+
+memoFib2 n = let fibList = map fib [0..] in fibList !! n
+&amp;lt;-&amp;gt; memoFib2 n = \n -&amp;gt; let fibList = map fib [0..] in fibList !! n
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;したがって、結局&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;(memoFib1) let fibList = map fib [0..] in \n -&amp;gt; fibList !! n
+(memoFib2) \n -&amp;gt; let fibList = map fib [0..] in fibList !! n
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;この２つの式の差はなにか、ということになる。&lt;br &#x2F;&gt;
+&lt;code&gt;Fib1&lt;&#x2F;code&gt;では&lt;code&gt;map fib [0..]&lt;&#x2F;code&gt;が一度だけ計算されるが、Fib2では[0..n]までその都度計算されてしまう。これが上記回答の趣旨だった。&lt;&#x2F;p&gt;
+&lt;p&gt;しかしこれがよく分からない。&lt;code&gt;Fib2&lt;&#x2F;code&gt;でnが２回出てきているあたりが怪しいようにも思うが、そもそも最初の関数定義に&lt;code&gt;fibList&lt;&#x2F;code&gt;が登場していないので、いまいち腑に落ちない感じがある。もちろん、ラムダ計算表現に慣れていないから飲み込みづらいということも否定できない。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;guan-shu-ben-ti-towherejie-noguan-xi-karakao-ezhi-su&quot;&gt;関数本体とwhere節の関係から考え直す&lt;&#x2F;h2&gt;
+&lt;p&gt;そこで、最初の&lt;code&gt;memoFib2&lt;&#x2F;code&gt;を、次のように&lt;code&gt;where&lt;&#x2F;code&gt;節を用いて表現し直してみる。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;memoFib3 n = fibList !! n
+    where
+        fibList = map fib [0..] 
+        fib 0 = 1
+        fib 1 = 1
+        fib n = (fibList !! (n-1)) + (fibList !! (n-2))
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre&gt;&lt;code&gt;*Main&amp;gt; memoFib3 30
+1346269
+(0.01 secs, 121,112 bytes)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;redditの回答にヒントを得て、&lt;code&gt;map fib [0..]&lt;&#x2F;code&gt;を１行目から外し、実質の中身をすべて&lt;code&gt;where&lt;&#x2F;code&gt;節内でまとめようとしたものだ。この&lt;code&gt;memoFib3&lt;&#x2F;code&gt;は問題なく計算を行える。&lt;br &#x2F;&gt;
+これを、次の関数定義と見比べると、何が問題なのかが見えてくるように思う。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;memoFib4 n = (map fib [0..]) !! n
+    where
+        fib 0 = 1
+        fib 1 = 1
+        fib n = (map fib [0..] !! (n-1)) + (map fib [0..] !! (n-2))
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre&gt;&lt;code&gt;*Main&amp;gt; memoFib4 30
+1346269
+(1.31 secs, 2,075,739,480 bytes)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Fib3では、&lt;code&gt;map fib [0..]&lt;&#x2F;code&gt;が一度だけ計算され、&lt;code&gt;fibList&lt;&#x2F;code&gt;に保存される。&lt;code&gt;fib n&lt;&#x2F;code&gt;も&lt;code&gt;memoFib3&lt;&#x2F;code&gt;も、この&lt;code&gt;fibList&lt;&#x2F;code&gt;から値をとってきているので、計算が速くなる。&lt;br &#x2F;&gt;
+一方、&lt;code&gt;Fib4&lt;&#x2F;code&gt;は&lt;code&gt;map fib [0..]&lt;&#x2F;code&gt;が３回登場している。これはその都度&lt;code&gt;map fib [0..]&lt;&#x2F;code&gt;を計算しているということだから、遅い。&lt;&#x2F;p&gt;
+&lt;p&gt;これを踏まえて元の定義をもう一度見てみると、話は実は非常に単純で、最初の&lt;code&gt;Fib2&lt;&#x2F;code&gt;では、&lt;code&gt;fib&lt;&#x2F;code&gt;は&lt;code&gt;memoFib2&lt;&#x2F;code&gt;に、そして&lt;code&gt;memoFib2&lt;&#x2F;code&gt;は&lt;code&gt;map fib [0..]&lt;&#x2F;code&gt;に結びついている。したがって&lt;code&gt;map fib [0..]&lt;&#x2F;code&gt;が最低限以上の回数計算されている。一方、&lt;code&gt;memoFib1&lt;&#x2F;code&gt;がポイントフリーで表現されているということは、&lt;code&gt;map fib [0..]&lt;&#x2F;code&gt;は最終的に必要になった段階でようやく評価される、ということを実質的に意味している。このポイントフリーと遅延評価の関係を意識できていないと、大変混乱する羽目になる、というわけだった。&lt;br &#x2F;&gt;
+適当に人のコードを写経すると理解不足なところが出てくる、という教訓。&lt;&#x2F;p&gt;
+&lt;p&gt;ところでmemoizationに話を戻すと、この場合、&lt;code&gt;fibList = map fib [0..]&lt;&#x2F;code&gt; がその役割を担っている。&lt;code&gt;slowfib&lt;&#x2F;code&gt;からスタートしてみると、&lt;code&gt;map f xs&lt;&#x2F;code&gt;で計算結果を記録していくmemoizationのやり方はとても自然に感じられる。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>フィボナッチ数列（Haskellタプリング法）</title>
+            <pubDate>Sun, 03 May 2020 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/tuplingfib/</link>
+            <guid>https://tudurikata.com/post/tuplingfib/</guid>
+            <description>&lt;h2 id=&quot;naive-fib&quot;&gt;naive fib&lt;&#x2F;h2&gt;
+&lt;p&gt;まずnaiveな定義から。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;slowFib 0 = 1
+slowFib 1 = 1
+slowFib n = slowFib (n-1) + slowFib (n-2)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;*Main&amp;gt; slowFib 30
+1346269
+(1.54 secs, 929,853,032 bytes)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;n=30くらいまではなんとか耐えられるが、びっくりするくらい遅い。&lt;a href=&quot;https:&#x2F;&#x2F;www.amazon.co.jp&#x2F;dp&#x2F;B004VB3V0K&#x2F;&quot;&gt;Learn You a Haskell for Great Good&lt;&#x2F;a&gt;に特に注釈無しで記載されているので、学習中の人は一度は試してみたことがあると思う。Haskellってもしかして遅いのかな？ と学習者を不安にさせる遅さだ。&lt;br &#x2F;&gt;
+&lt;a href=&quot;https:&#x2F;&#x2F;www.amazon.co.jp&#x2F;dp&#x2F;4048930532&#x2F;&quot;&gt;Haskellによる関数プログラミングの思考法&lt;&#x2F;a&gt;によると、この関数の計算量はO(Φ^n)（Φ=(1+√5)&#x2F;2, 黄金律）なので、指数オーダーで計算量が増えていくことになるが、黄金律と言われてもあまりピンとこないのでもう少しこねてみる。&lt;br &#x2F;&gt;
+計算を分解してみると、たぶん次のようになるはずだ。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;slowFib n
+= slowFib (n-1) + slowFib (n-2)
+= (slowFib (n-2) + slowFib (n-3)) + (slowFib (n-3) + slowFib (n-4))
+= (slowFib (n-3) + slowFib (n-4)) + (slowFib (n-4) + slowFib (n-5)) + (slowFib (n-4) + slowFib (n-5)) + (slowFib (n-5) + slowFib (n-6))
+...
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;２行めでは２項だったのが３行めでは４項、４行めで８項になっているので、ここまでは項数は^2で増えていく。もちろんすべての項が一律に倍の項数になるわけではなく、前の項から順番に、いずれ&lt;code&gt;slowFib 1(0)&lt;&#x2F;code&gt;に達するので、それ以上は項数は増えない。そして全体でみると、２より少し小さいくらいの数字（＝黄金律）の指数オーダーで項数が増えていく。…ということだと思う。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;tapuringufa&quot;&gt;タプリング法&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.amazon.co.jp&#x2F;dp&#x2F;B07SFCMP66&#x2F;&quot;&gt;入門Haskellプログラミング&lt;&#x2F;a&gt;にあったヒントをもとに実装したもの。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;fasterFib 1 (a,b) = a
+fasterFib n (a,b) = fasterFib (n-1) (a+b,a)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;*Main&amp;gt; fasterFib 30 (1,1)
+1346269
+(0.01 secs, 117,312 bytes)
+
+*Main&amp;gt; fasterFib 50 (1,1)
+20365011074
+(0.01 secs, 127,296 bytes)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;第一引数はカウンタで、これが1になるまで1つずつ減らしていく。減らしていく過程で第二引数のペアが足され、次のペアを生成する。これは（たぶん）タプリング法と呼ばれる手法なのだが、なぜこれが速いのか、自分で実装しておきながら理屈がいまいちピンとこなかったので、分解してみる。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;fasterFib 30 (1,1)
+= fasterFib 29 (2,1)
+= fasterFib 28 (3,2)
+= fasterFib 27 (5,3)
+...
+= fasterFib 1 (1346269,832040)
+= 1346269
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;項数がどの行も同じ１つで済んでいるということが、こういうふうに書いてみれば明らかだ。
+&lt;a href=&quot;http:&#x2F;&#x2F;https:&#x2F;&#x2F;www.amazon.co.jp&#x2F;dp&#x2F;4048930532&#x2F;&quot; title=&quot;Haskellによる関数プログラミングの思考法&quot;&gt;Haskellによる関数プログラミングの思考法&lt;&#x2F;a&gt;は少し違う形で実装していて、&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;--fib2 n = (fib n, fib (n+1))と考えて
+fib2 0 = (0,1)
+fib2 n = (b,a+b)
+	where
+		(a,b) = fib 2 (n-1)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;としている。著者によると、「タプリング法では引数を追加して関数を一般化するのではなく、結果を追加して関数を一般化する」(p.161)。&lt;br &#x2F;&gt;
+&lt;code&gt;fasterFib&lt;&#x2F;code&gt;は引数（左辺）のほうに追加しているが、実質的には&lt;code&gt;fib n = fib (n-1) + fib (n-2)&lt;&#x2F;code&gt;という計算の結果を引数として追加しているので、変形タプリング法と呼べる、かもしれない。&lt;code&gt;fib2&lt;&#x2F;code&gt;のほうは逆に、式の右辺にペアの形で追加している。タプル（ペア）の形で計算の結果をまとめて関数内で用いる、というのがタプリング法の肝であるようだ。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>Haskellの素因数分解</title>
+            <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/primefactors/</link>
+            <guid>https://tudurikata.com/post/primefactors/</guid>
+            <description>&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;headPrimeFactor :: Integer -&amp;gt; Integer
+headPrimeFactor n = if fstprime == []
+                    then n
+                    else head fstprime
+                        where
+                            fstprime = filter primes [2..sqrt&amp;#x27;]
+                            primes x = n `mod` x == 0
+                            sqrt&amp;#x27; = floor $ sqrt $ fromIntegral n
+
+primeFactorsList :: Integer -&amp;gt; [Integer]
+primeFactorsList 1 = []
+primeFactorsList n = (headPrimeFactor n) : primeFactorsList (n `div` (headPrimeFactor n))
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;memo&quot;&gt;メモ&lt;&#x2F;h2&gt;
+&lt;p&gt;たとえば&lt;code&gt;primeFactorsList 24 = [2, 2, 2, 3]&lt;&#x2F;code&gt;となるような関数&lt;code&gt;primeFactorsList&lt;&#x2F;code&gt;を作りたい。&lt;br &#x2F;&gt;
+このリストがどう定義できるかを考えると、まず先頭の2というのは、24を[2..]で順番に割っていったときの最初の約数とおくことができる。さらにその次の2は、最初の約数である2で24を割った12について、[2..]で順番に割っていったときの最初の約数である。&lt;br &#x2F;&gt;
+つまり、リストの&lt;code&gt;head&lt;&#x2F;code&gt;をとっていき、それを再帰でコンスしていくというのが、Haskellによる素因数分解の素朴な解法となるはずだ。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;headPrimeFactor&lt;&#x2F;code&gt;は&lt;code&gt;primeFactorsList&lt;&#x2F;code&gt;の補助関数で、nの平方根の整数部分までの整数のうち、nの約数となるものを&lt;code&gt;filter primes&lt;&#x2F;code&gt;で抽出し、その先頭の数字を返すもの。ただし、nが素数の場合はリストが空になるので、よく考えず&lt;code&gt;head&lt;&#x2F;code&gt;を使うとエラーが出てしまう（というか出た）。これを回避するために、リストが空である場合とそうでない場合で分岐を作らないといけない（&lt;code&gt;maybeHead&lt;&#x2F;code&gt;で&lt;code&gt;Nothing | Just Integer&lt;&#x2F;code&gt;を返すバージョンも書いてみたが、&lt;code&gt;head&lt;&#x2F;code&gt;を使う場合と使わない場合で分けたほうが当然ながらシンプル）。空の場合はnを、そうでない場合は最も小さい約数を返す関数となる。&lt;br &#x2F;&gt;
+これを再帰的にコンスしていくのが&lt;code&gt;primeFactorsList&lt;&#x2F;code&gt;で、仕組みとしては上に書いた通り。&lt;&#x2F;p&gt;
+&lt;p&gt;適当な整数を素因数分解してみると、次のようになる。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;*Main&amp;gt; primeFactorsList 2039801
+[23,131,677]
+(0.01 secs, 170,624 bytes)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;bash&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;*Main&amp;gt; primeFactorsList 2380479237540923
+[29,82085490949687]
+(3.48 secs, 2,754,399,560 bytes)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;ひとつの整数の素因数分解として速いか遅いか、まだよくわからないけれど…。 
+もう少し工夫したやり方があるような気もするなぁ。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>Haskellで種類の数を数える（重複の削除）</title>
+            <pubDate>Fri, 01 May 2020 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/dataset/</link>
+            <guid>https://tudurikata.com/post/dataset/</guid>
+            <description>&lt;p&gt;複数の要素を扱うための基礎的なライブラリをいろいろテストしてみる題材として、こちらの問題を使用させてもらう。&lt;&#x2F;p&gt;
+&lt;p&gt;At Coder abc164 C - gacha &lt;&#x2F;p&gt;
+&lt;p&gt;https:&#x2F;&#x2F;atcoder.jp&#x2F;contests&#x2F;abc164&#x2F;tasks&#x2F;abc164_c&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;実行時間制限: 2 sec &#x2F; メモリ制限: 1024 MB
+配点 : 300点
+問題文
+くじ引きをN回行い、i回目には種類が文字列Siで表される景品を手に入れました。
+何種類の景品を手に入れましたか？&lt;&#x2F;p&gt;
+&lt;p&gt;制約
+1 &amp;lt;= N &amp;lt;= 2*(10^5)
+Siは英小文字のみからなり、長さは1以上10以下&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;たとえば入力が&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;3
+apple
+orange
+apple
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;の場合は、appleとorangeの２種類を入手することになるので、正解の出力は2となる。&lt;&#x2F;p&gt;
+&lt;p&gt;結局のところ、「種類の数」をどう定義するか（Haskellではどう定義できるか）を考えるわけだが、&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;ひとつひとつの要素が、すでにあるリストに含まれていないかを、再帰関数でチェックしていった結果生成されるリストのlength&lt;&#x2F;li&gt;
+&lt;li&gt;要素のかたまりを、同じ要素のかたまりに分けたときの、そのかたまりの数&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;たとえばこういったふうにおくことができると思う。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;zai-gui-guan-shu-dejie-ku&quot;&gt;再帰関数で解く&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;risutowoyong-itazai-gui-guan-shu&quot;&gt;リストを用いた再帰関数&lt;&#x2F;h3&gt;
+&lt;p&gt;まずリストで再帰関数を作ったバージョン。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;--TLE
+import Control.Monad
+
+delDupe :: [String] -&amp;gt; [String] -&amp;gt; [String]
+delDupe [] _ = []
+delDupe (x:xs) lst
+    | x `notElem` lst = x : delDupe xs (x : lst)
+    | otherwise       = delDupe xs lst
+
+main = do
+    n &amp;lt;- readLn
+    s &amp;lt;- replicateM n getLine
+    print $ length $ delDupe s []
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;delDupe&lt;&#x2F;code&gt;は、与えられるリストを&lt;code&gt;(x:xs)&lt;&#x2F;code&gt;とし、重複がなければ&lt;code&gt;x&lt;&#x2F;code&gt;を第二引数の&lt;code&gt;lst&lt;&#x2F;code&gt;に加えつつ、&lt;code&gt;x&lt;&#x2F;code&gt;を含むリストを返す再帰関数。
+しかしこれでは遅く、18の入力のうち７つがTLEとなってしまう。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;nubnozheng-ti&quot;&gt;nubの正体&lt;&#x2F;h3&gt;
+&lt;p&gt;あとで気づいたのだが、Preludeにはリストの重複を削除する関数&lt;code&gt;nub&lt;&#x2F;code&gt;が標準でついているので、次のように書けることは書ける。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;import Control.Monad
+
+main = do
+    n &amp;lt;- readLn
+    s &amp;lt;- replicateM n getLine
+    print $ length $ nub s
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;が、これは実は最初の「再帰での重複チェック→新たなリストの生成」と実行時間・メモリ使用量ともに変わらなかった。Preludeの&lt;code&gt;nub&lt;&#x2F;code&gt;の定義はこちら。&lt;&#x2F;p&gt;
+&lt;p&gt;https:&#x2F;&#x2F;hackage.haskell.org&#x2F;package&#x2F;base-4.12.0.0&#x2F;docs&#x2F;src&#x2F;Data.OldList.html#nub&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;-- | &amp;#x2F;O(n^2)&amp;#x2F;. The &amp;#x27;nub&amp;#x27; function removes duplicate elements from a list.
+-- In particular, it keeps only the first occurrence of each element.
+-- (The name &amp;#x27;nub&amp;#x27; means \`essence\&amp;#x27;.)
+-- It is a special case of &amp;#x27;nubBy&amp;#x27;, which allows the programmer to supply
+-- their own equality test.
+--
+-- &amp;gt;&amp;gt;&amp;gt; nub [1,2,3,4,3,2,1,2,4,3,5]
+-- [1,2,3,4,5]
+nub                     :: (Eq a) =&amp;gt; [a] -&amp;gt; [a]
+nub                     =  nubBy (==)
+
+-- | The &amp;#x27;nubBy&amp;#x27; function behaves just like &amp;#x27;nub&amp;#x27;, except it uses a
+-- user-supplied equality predicate instead of the overloaded &amp;#x27;==&amp;#x27;
+-- function.
+--
+-- &amp;gt;&amp;gt;&amp;gt; nubBy (\x y -&amp;gt; mod x 3 == mod y 3) [1,2,4,5,6]
+-- [1,2,6]
+nubBy                   :: (a -&amp;gt; a -&amp;gt; Bool) -&amp;gt; [a] -&amp;gt; [a]
+#if defined(USE_REPORT_PRELUDE)
+nubBy eq []             =  []
+nubBy eq (x:xs)         =  x : nubBy eq (filter (\ y -&amp;gt; not (eq x y)) xs)
+#else
+-- stolen from HBC
+nubBy eq l              = nubBy&amp;#x27; l []
+  where
+    nubBy&amp;#x27; [] _         = []
+    nubBy&amp;#x27; (y:ys) xs
+       | elem_by eq y xs = nubBy&amp;#x27; ys xs
+       | otherwise       = y : nubBy&amp;#x27; ys (y:xs)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;これは最初に作った再帰関数そのものだから、結果が同じになって当然なのだった。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;sortsitemiru&quot;&gt;sortしてみる&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;sortsitegroup-risuto&quot;&gt;sortしてgroup（リスト）&lt;&#x2F;h3&gt;
+&lt;p&gt;そこで２つめの、&lt;code&gt;sort&lt;&#x2F;code&gt;して重複をまとめる方法。
+まずはリストを用いると、このようになる。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;--AC
+import Control.Monad
+import Data.List as List
+
+main = do
+    n &amp;lt;- readLn
+    s &amp;lt;- replicateM n getLine
+    print $ length . group $ List.sort s
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Data.Listの&lt;code&gt;sort&lt;&#x2F;code&gt;関数をかませたリストに、隣接する同要素をリスト内リストにまとめる&lt;code&gt;group&lt;&#x2F;code&gt;関数をさらにかませてリスト内要素の長さをとるという手順。
+かなり泥臭いやり方だが、再帰や&lt;code&gt;nub&lt;&#x2F;code&gt;よりも速いというのはちょっとおもしろい。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;data-vectornouniqguan-shu-woyong-iru&quot;&gt;Data.Vectorのuniq関数を用いる&lt;&#x2F;h3&gt;
+&lt;p&gt;リスト以外のデータ構造ではどうだろう。&lt;br &#x2F;&gt;
+まずData.Vectorから。普通に入門書を読んでいるだけだとまず遭遇しないライブラリだが、海外のQ&amp;amp;AサイトではSequenceとどっちがいいの、といった質問でたまに見かける名前だ。&lt;&#x2F;p&gt;
+&lt;p&gt;Data.Vector&lt;br &#x2F;&gt;
+https:&#x2F;&#x2F;hackage.haskell.org&#x2F;package&#x2F;vector-0.12.0.1&#x2F;docs&#x2F;Data-Vector.html&lt;&#x2F;p&gt;
+&lt;p&gt;これはポリフォーミックなarrayで、リスト操作とarray操作のいいとこどりをしたものである、とHackageでは説明されている。
+一通りの標準的な関数は装備されているが、ここで用いたいのは&lt;code&gt;uniq&lt;&#x2F;code&gt;関数。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;uniq :: Eq a =&amp;gt; Vector a -&amp;gt; Vector a
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;隣接した同じ要素を&lt;code&gt;drop&lt;&#x2F;code&gt;できるものだが、「隣接している」ことが条件なのでsortedが前提となる。
+そこで&lt;code&gt;sort&lt;&#x2F;code&gt;関数と組み合わせて次のようにする。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;--AC
+import Control.Monad
+import qualified Data.Vector as V
+import qualified Data.List as L
+
+main = do
+    n &amp;lt;- readLn
+    s &amp;lt;- replicateM n getLine
+    print $ length . V.uniq . V.fromList $ L.sort s
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;これでも一応問題はクリアだが、実はリストによる&lt;code&gt;group . sort&lt;&#x2F;code&gt;のほうが若干早いということも分かった。
+感覚的には必要のない重複を&lt;code&gt;drop&lt;&#x2F;code&gt;できる&lt;code&gt;uniq&lt;&#x2F;code&gt;関数のほうがmake senseではあるのだけれど、&lt;code&gt;V.fromList&lt;&#x2F;code&gt;でO(n)かかってしまっているので致し方ないというところだろうか。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;data-setnosizeguan-shu&quot;&gt;Data.Setのsize関数&lt;&#x2F;h2&gt;
+&lt;p&gt;もうひとつ、Data.Setを見てみる。その名の通り、集合論をベースにした、同型の要素のSetを扱えるライブラリだ。&lt;&#x2F;p&gt;
+&lt;p&gt;Data.Set&lt;br &#x2F;&gt;
+https:&#x2F;&#x2F;hackage.haskell.org&#x2F;package&#x2F;containers-0.6.2.1&#x2F;docs&#x2F;Data-Set.html&lt;&#x2F;p&gt;
+&lt;p&gt;このライブラリが楽しいのは、&lt;code&gt;Set.fromList&lt;&#x2F;code&gt;でリストからSetを生成する過程で、重複要素が自動的に&lt;code&gt;drop&lt;&#x2F;code&gt;される点。この自動&lt;code&gt;drop&lt;&#x2F;code&gt;がいかにも自然に感じられるところがmake senseだ。&lt;br &#x2F;&gt;
+Data.Setを用いたコードは次のようになる。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;--AC
+import Control.Monad
+import qualified Data.Set as Set
+ 
+main = do
+    n &amp;lt;- readLn
+    s &amp;lt;- replicateM n getLine
+    print $ Set.size $ Set.fromList s
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;Set.size&lt;&#x2F;code&gt;はリストでいう&lt;code&gt;length&lt;&#x2F;code&gt;だが、これはO(1)。&lt;br &#x2F;&gt;
+実行結果も、リスト版&lt;code&gt;group . sort&lt;&#x2F;code&gt;と大差がつくわけではないものの、最速。&lt;br &#x2F;&gt;
+集合論的な発想を武器にできれば、色々な場面でかなり効率的にデータ処理ができそうな予感がする。&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

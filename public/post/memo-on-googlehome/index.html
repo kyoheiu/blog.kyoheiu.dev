@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>Google Assistantに話しかけた内容をメールで自分に送信する | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;penguin.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+  
+
+<script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.png"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+
+    
+
+  </div>
+</div>
+
+<body onload = "getTheme()">
+  <section class="section">
+    <div class="container">
+      
+<p>
+  <div class="title_postpage">Google Assistantに話しかけた内容をメールで自分に送信する</div>
+</p>
+<p>
+  <div class="date_postpage">2020-10-06</div>
+  <div class="taxonomies_postpage">
+  
+      
+      <a href="https://tudurikata.com/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/google-assistant/">#Google Assistant</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/gas/">#GAS</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/ifttt/">#IFTTT</a>
+      
+  
+  </div>
+</p>
+
+<p>
+  <p>Google Assistantに話しかけると、スプレッドシートに入力され、さらに内容がメールで自分に送られてくる、という仕組みを作ったのでメモ。要するに音声メモ。</p>
+<p>流れは以下の通り。<br />
+Google Assistant -&gt; [IFTTT] -&gt; スプレッドシート -&gt; [GAS] -&gt; Gmail送信</p>
+<p>最初はIFTTTでSlackへの直接投稿を狙っていたのだが、自宅のGoogle homeでは機能しなかった。スマートフォンのAssistantでは問題なかったので、homeの仕様かもしれないが、似た症例を見つけられず、結果的に送信部分はGAS、という今の形をとることに。IFTTTとGASに分ければ、Gmailでなく他の手段に切り替えたいときも比較的イージーに変更できそう、という点もメリット。</p>
+<p>まず、IFTTT経由でのスプレッドシートへの入力について。<br />
+THISは以下の通り。</p>
+<p><img src="a.png" alt="IFTTT_THIS" /></p>
+<p>THATはこちら。</p>
+<p><img src="b.png" alt="IFTTT_THAT" /></p>
+<p>日付の<code>CreatedAt</code>、text ingredientが代入される<code>TextField</code>に加えて、定形であるunsentを入力しておく。<br />
+スプレットシートはこのようになる。</p>
+<p><img src="c.png" alt="IFTTT_THIS" /></p>
+<p>このスプレッドシートからスクリプトエディタを起動。<br />
+コードはこちら。</p>
+<pre data-lang="htc" class="language-htc "><code class="language-htc" data-lang="htc">var recipient = &#x27;mailaddress&#x27;;
+var subject = &#x27;memo from Google Assistant&#x27;;
+var sheet = SpreadsheetApp.getActiveSheet();
+var last_row = sheet.getLastRow();
+
+function main() {
+  for(var i = 2; i &lt;= last_row; i++){
+    let isSent = sheet.getRange(i, 3);
+    if(isSent.getValue() == &#x27;unsent&#x27;){
+      var body = sheet.getRange(i, 2).getValue();
+      GmailApp.sendEmail(recipient, subject, body);
+      isSent.setValue(&#x27;sent&#x27;);
+    }
+  }
+}
+</code></pre>
+<p>GAS、というかJavaScriptを触ったことがほとんどないので変なところがありそうだが、今のところ動いている。</p>
+<p>家事をしているときに忘れていた用事や入れておいたほうがいいtodoを思いつきがちなので、すぐにGoogle nest等に話しかけることでメモがとれるのはかなり使い勝手がいい。</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://github.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>

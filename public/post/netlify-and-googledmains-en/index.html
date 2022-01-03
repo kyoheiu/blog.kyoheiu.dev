@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>How to use Google Domains with Netlify | tudurikata</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;penguin.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+  
+
+<script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;tudurikata.com&#x2F;images&#x2F;penguin.png"
+      alt="tudurikata" width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;tudurikata</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+
+    
+
+  </div>
+</div>
+
+<body onload = "getTheme()">
+  <section class="section">
+    <div class="container">
+      
+<p>
+  <div class="title_postpage">How to use Google Domains with Netlify</div>
+</p>
+<p>
+  <div class="date_postpage">2021-04-30</div>
+  <div class="taxonomies_postpage">
+  
+      
+      <a href="https://tudurikata.com/categories/blog/">/blog</a>
+      
+  
+  
+      
+      &emsp;<a href="https://tudurikata.com/tags/netlify/">#Netlify</a>
+      
+      &emsp;<a href="https://tudurikata.com/tags/google-domains/">#Google Domains</a>
+      
+  
+  </div>
+</p>
+
+<p>
+  <p>I recently jumped into Netlify-hosted from other server. This article is about how to use Google Domains with Netlify (and why GitLab pages with custom domain is <em>bad</em>).</p>
+<p>First of all, Options of hosting service I had in mind were:</p>
+<ul>
+<li>Firebase</li>
+<li>GitLab pages</li>
+<li>Netlify</li>
+</ul>
+<p>Firebase seemed good for dynamic site, but this site is powered by Zola (a fantastic static site generator) so, well, I don't use it for now.</p>
+<p>Next, GitLab pages. OK I use GitLab for my main repository-hosting service, and it's been great. So I thought GitLab pages with custom domain was natural and might be easy.</p>
+<p>It was not. Using custom domain in GitLab pages is hard. I do not recommend this setup.</p>
+<h3 id="why">Why?</h3>
+<p>Because its document is broken.</p>
+<p>In <a href="https://docs.gitlab.com/ee/user/project/pages/custom_domains_ssl_tls_certification/">official tutorial</a>, they say &quot;set the A record to foo, and TXT record to bar.&quot; But in the settings page of custom domain, I'm told to set CNAME and TXT. What's going on?</p>
+<p>Actually I tried both. Neither did work. Though time might solve this (due to TTL? Note that I've waited for 1 day), I felt like, OK this is enough.</p>
+<h3 id="resource-records-for-netlify">resource records for Netlify</h3>
+<p>So, I went to Netlify, which I've used as an example site for my Zola theme. In <code>DNS &gt;&gt; resource records</code> set as following and, voila, it's done:</p>
+<table><thead><tr><th align="left">name</th><th align="left">type</th><th align="left">TTL</th><th align="left">data</th></tr></thead><tbody>
+<tr><td align="left">@</td><td align="left">A</td><td align="left">10m(or whatever you like)</td><td align="left">75.2.60.5</td></tr>
+<tr><td align="left">www</td><td align="left">CNAME</td><td align="left">same as above</td><td align="left">YOURSITENAME.netlify.app.</td></tr>
+</tbody></table>
+<p>Netlify automatically set the TLS certificate with Let's Encrypt a few minutes after check for DNS configuration. This was a good experience, so I highly recommend Netlify over GitLab pages, at least for now.</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">tudurikata</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a href="https://github.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>

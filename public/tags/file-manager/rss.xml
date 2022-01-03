@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>tudurikata - file manager</title>
+        <link>https://tudurikata.com</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://tudurikata.com/tags/file-manager/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Thu, 25 Nov 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>felix - a tui file manager written in Rust</title>
+            <pubDate>Thu, 25 Nov 2021 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/felix-file-manager/</link>
+            <guid>https://tudurikata.com/post/felix-file-manager/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;felix&quot;&gt;&lt;img src=&quot;https:&#x2F;&#x2F;img.shields.io&#x2F;crates&#x2F;v&#x2F;felix&quot; alt=&quot;crates.io&quot; &#x2F;&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;A tui file manager with vim-like key mapping, written in Rust.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;sample.gif&quot; alt=&quot;sample gif&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;While heavliy inspired by the great &lt;code&gt;vifm&lt;&#x2F;code&gt; and trying to implement its pleasant experience in Rust, at the same time this project focuses on the following points:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;simple and fast&lt;&#x2F;li&gt;
+&lt;li&gt;easy to configure how to open files&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;status&quot;&gt;Status&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Linux : works well&lt;&#x2F;li&gt;
+&lt;li&gt;MacOS : &lt;em&gt;should&lt;&#x2F;em&gt; work, though some unusual errors may occur&lt;&#x2F;li&gt;
+&lt;li&gt;Windows: almost unavailable due to file-name encoding error&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;installation&quot;&gt;Installation&lt;&#x2F;h2&gt;
+&lt;p&gt;Before you do the following, make sure &lt;code&gt;gcc&lt;&#x2F;code&gt; is installed.&lt;&#x2F;p&gt;
+&lt;p&gt;from crates.io:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;cargo install felix
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;or from GitHub repository:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;kyoheiu&amp;#x2F;felix.git
+cd felix
+cargo install --path .
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;usage&quot;&gt;Usage&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;command&lt;&#x2F;th&gt;&lt;th&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;fx&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;Show items in the current directory.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;fx &amp;lt;directory path&amp;gt;&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;Show items in the path. Both relative and absolute available.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h2 id=&quot;key-manual&quot;&gt;Key manual&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Key&lt;&#x2F;th&gt;&lt;th&gt;Explanation&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;j &#x2F; Key Up&lt;&#x2F;td&gt;&lt;td&gt;Go up. If the list exceeds max-row, list &amp;quot;scrolls&amp;quot; before the top of the list.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;k &#x2F; Key Down&lt;&#x2F;td&gt;&lt;td&gt;Go down. If the list exceeds max-row, list &amp;quot;scrolls&amp;quot; before the bottom of the list.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;h &#x2F; Key Left&lt;&#x2F;td&gt;&lt;td&gt;Go to parent directory if exists.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;l &#x2F; Key Right &#x2F; Enter&lt;&#x2F;td&gt;&lt;td&gt;Open file or change directory. Commands for execution can be managed in config file.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;gg&lt;&#x2F;td&gt;&lt;td&gt;Go to the top.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;G&lt;&#x2F;td&gt;&lt;td&gt;Go to the bottom.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;dd&lt;&#x2F;td&gt;&lt;td&gt;Delete and yank item (item will go to the trash directory).&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;yy&lt;&#x2F;td&gt;&lt;td&gt;Yank item. If you yanked other item before, its information is replaced by this one.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;p&lt;&#x2F;td&gt;&lt;td&gt;Put yanked item(s) in the current directory. If item with same name exists, copied item will be renamed with the suffix &amp;quot;_copied&amp;quot;.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;V&lt;&#x2F;td&gt;&lt;td&gt;Switch to select mode, where you can move cursor to select items.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;d (select mode)&lt;&#x2F;td&gt;&lt;td&gt;Delete and yank selected items, and return to normal mode.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;y (select mode)&lt;&#x2F;td&gt;&lt;td&gt;Yank selected items, and return to normal mode.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;t&lt;&#x2F;td&gt;&lt;td&gt;Toggle sort order (by name &amp;lt;-&amp;gt; by modified time). This change remains until the program ends (sort order will be restored as configured).&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;:&lt;&#x2F;td&gt;&lt;td&gt;Switch to shell mode (&lt;em&gt;&lt;strong&gt;experimantal&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt;). Type command and press Enter to execute it. You can use any command in the displayed directory, but it may fail to execute the command (e.g. &lt;code&gt;cd&lt;&#x2F;code&gt; doesn&#x27;t work for now), and also the display of items may collapse during execution.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;c&lt;&#x2F;td&gt;&lt;td&gt;Switch to rename mode (enter new name and press Enter to rename the item).&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&#x2F;&lt;&#x2F;td&gt;&lt;td&gt;Switch to filter mode (enter keyword and press Enter to go to filtered list).&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Esc&lt;&#x2F;td&gt;&lt;td&gt;Return to normal mode.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;:e&lt;&#x2F;td&gt;&lt;td&gt;Reload the current directory. Useful when something goes wrong in filter mode (e.g. no matches) or shell mode.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;:empty&lt;&#x2F;td&gt;&lt;td&gt;Empty the trash directory. &lt;strong&gt;Please think twice before using this command.&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;:h&lt;&#x2F;td&gt;&lt;td&gt;Show help.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;:q &#x2F; ZZ&lt;&#x2F;td&gt;&lt;td&gt;Exit the program.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;Note that items moved to the trash directory are prefixed with Unix time (like &lt;code&gt;1633843993&lt;&#x2F;code&gt;) to avoid name conflict. This prefix will be removed when paste.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;settings&quot;&gt;Settings&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;&#x2F;th&gt;&lt;th&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;config file&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;$XDG_CONFIG_HOME&#x2F;felix&#x2F;config.toml&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;trash directory&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;$XDG_CONFIG_HOME&#x2F;felix&#x2F;trash&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;Default config file, which is &lt;a href=&quot;config.toml&quot;&gt;here&lt;&#x2F;a&gt;, will be created automatically when you launch the program for the first time.&lt;&#x2F;p&gt;
+&lt;p&gt;In config.toml, you can set:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;color of directories, files, and symlinks separatively&lt;&#x2F;li&gt;
+&lt;li&gt;default key for sorting item list (&amp;quot;Name&amp;quot; or &amp;quot;Time&amp;quot;)&lt;&#x2F;li&gt;
+&lt;li&gt;how to open files&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;command-setting&quot;&gt;Command setting&lt;&#x2F;h3&gt;
+&lt;p&gt;If you write&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;default = &amp;quot;nvim&amp;quot;
+
+[exec]
+feh = [&amp;quot;jpg&amp;quot;, &amp;quot;jpeg&amp;quot;, &amp;quot;png&amp;quot;, &amp;quot;gif&amp;quot;, &amp;quot;svg&amp;quot;]
+zathura = [&amp;quot;pdf&amp;quot;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;then, .jpg, .jpeg, .png, .gif and .svg files are opened by &lt;code&gt;feh &amp;lt;file-name&amp;gt;&lt;&#x2F;code&gt;, .pdf files by &lt;code&gt;zathura &amp;lt;file-name&amp;gt;&lt;&#x2F;code&gt; and others by &lt;code&gt;nvim &amp;lt;file-name&amp;gt;&lt;&#x2F;code&gt; .&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

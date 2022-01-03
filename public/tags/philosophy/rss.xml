@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>tudurikata - philosophy</title>
+        <link>https://tudurikata.com</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://tudurikata.com/tags/philosophy/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Fri, 06 Dec 2019 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>ピーター・シンガーの生命倫理を考える</title>
+            <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/intolerance/</link>
+            <guid>https://tudurikata.com/post/intolerance/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.amazon.co.jp&#x2F;dp&#x2F;B07YKCCXX8&#x2F;&quot;&gt;この国の不寛容の果てに:相模原事件と私たちの時代&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;2016年に相模原の知的障害者福祉施設で起きた大量殺人事件には、この国の今の空気がこれ以上ないほど反映されている。これは、そうした「空気」を共通認識として、編著者が６人の識者と対談した本。事件を真正面から受け止めつつ、それでも「よりよい社会」を自分たちが作っていくにはどうしたらよいのか？を、飛躍も決めつけもなくそれぞれが語っていて、おおむね好感触の内容だったのだが、読んでいて気になる箇所が１つあった。４章、杉田俊介と雨宮処凛の対談の章で、杉田がピーター・シンガーについて以下のように言及しているところ。&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;杉田 [...] ピーター・シンガーという哲学者は、権利を享受する人格主体の根拠を、自己意識の有無に置くという議論をしています。これはパーソン論といいますが、この理屈でいうと重度の知的障害者や脳死状態の人、胎児といった、通常の意味でのコミュニケーションの不可能な人間には100%の権利を認める必要はない、という議論になります。知的障害者よりも、ある種の動物たちの生命を優先するべきだ、という話にもなっていく。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;シンガーは多くの本を出しているが、僕自身はこれまで『生と死の倫理』『あなたが世界のためにできるたったひとつのこと 〈効果的な利他主義〉のすすめ』&lt;em&gt;Ethics in the Real World: 82 Brief Essays on Things That Matter&lt;&#x2F;em&gt;（たぶん未邦訳）の３冊しか読んでいなかった。しかもこの３冊のうち、トピックに最も関連していそうな『生と死の倫理』を読んだのはもうだいぶ前で、内容はほとんど覚えていない。一方、&lt;em&gt;Ethics in the Real World&lt;&#x2F;em&gt;は一般向けの短い記事をまとめたものだが、生命倫理について述べている章もあり、それを読む限りでは、杉田がシンガーの生命倫理の正確なところを語っているとは素直に思えないところがあった。まあ興味も沸いたことだし、とパーソン論およびシンガーの生命倫理の理屈について英語版をベースに調べてみることにした。そのとりあえずの結果がこのテキストということになる。正直とても面倒な作業だった。そして怖かった。&lt;&#x2F;p&gt;
+&lt;p&gt;本題に入る前に言っておきたいのだけれど、このテキストは杉田を批判するために書いたものじゃない。杉田と雨宮の対談は豊富なトピックを含んでいて広がりの可能性を感じさせてくれるものだったし、引用した箇所に杉田が込めていたのは哲学的な理屈への反駁ではなくて、知的障害者の権利をいたずらに奪うようなことはあってはならない、という想いだろう。その感情そのものには共感するところもある。&lt;br &#x2F;&gt;
+ただし、このあと述べるように、「論理的に生命倫理を構築していく」という行為は、「感情的にありとあらゆる（人間）生命の絶対的な平等性を主張する」という行為と、ときに衝突する。前者は、つまりこの場合はシンガーの論理構成だが、後者が論理的に齟齬を抱えているのみならず、ある種の人間にとっては害悪にすらなりうる、ということを指摘している。&lt;br &#x2F;&gt;
+このことを認めるにせよ認めないにせよ、論理的に自分の頭で考えていくために必要な土台というのは、ここで羅列しようとしている、過去生み出された議論だと思う。だから今回の件で僕が批判的な気持ちを抱いているのは唯一、大月書店の編集部に対してだ。他者を差別主義者であると糾弾する行為には大きな責任が伴う。それによって相手が、誤解による暴力の被害者になってしまう可能性もあるからだ。実際、シンガーその人がそうした暴力を受けた経験を、&lt;em&gt;Practical Ethics&lt;&#x2F;em&gt;の序文で綴っている。だから、この杉田の言葉には註をつけて、この本のこのページでシンガーはこういうことを言っている、だから杉田が言っていることには根拠がある、と示さなくてはならなかった。それはアカデミックな論文でもエッセイでも対談でも（そしてブログであっても）同じ、最低限の義務だと思う。これを怠った編集部の態度は、現実と丁寧に向き合っていく、というこの本の姿勢と矛盾している。その上僕のような、ちょっと興味を持った程度の素人がまず資料探しからスタートしなくてはいけないというデメリットもある。本当に洒落にならないから、ありとあらゆるノンフィクションは可能な限り註をつけるべきだと思う。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;singanopasonlun&quot;&gt;シンガーのパーソン論&lt;&#x2F;h2&gt;
+&lt;p&gt;まずパーソン論について。パーソン論とは、1972年にトゥーリーが発表した論文&amp;quot;Abortion and Infanticide&amp;quot;での主張をベースにした生命倫理の１つの学説である。ざっくり言うと、生存権（a right to life）を持っていると見なされる存在をパーソン（person）と呼んだ上で、パーソンであれば自己意識を持っているはずであると主張するものだ。論理の展開をかなり省いているので、詳細を知りたい人は該当論文を読んでみてほしい。&lt;br &#x2F;&gt;
+この主張は確かに杉田の言うパーソン論の定義と一致するように見える。もっとも「権利享受の主体」あたりの言い回しが、ちょっと怪しい感じはするが、対談の中で詳細に解説するわけにもいかないからまず妥当な表現だろう。&lt;br &#x2F;&gt;
+では、シンガーは実際このようなパーソン論を用いているのだろうか。「シンガーがトゥーリー流のパーソン論を一切用いていない」と証明することはきわめて難しいので、シンガーがパーソン論に言及しているところを拾いながらシンガーの態度を確認していく、という方法を採ってみる。&lt;&#x2F;p&gt;
+&lt;p&gt;ここではとりあえず、生命倫理関連でシンガーの主著だと思われるPractical Ethicsを読む。
+まず読み落としてはならないのは、この本がベンサム以来の功利主義を基本的な足場として書かれている、という点だ。&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The universal aspect of ethics, I suggest, does provide a ground for at least starting with a broadly utilitarian position. If we are going to move beyond utilitarianism, we need to be given good reasons why we should do so.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;その上で、この本で最初に「特別な意味を持った言葉」としてpersonが使われるのは、生命倫理の議論のために「human 人間」という言葉が含む２つの意味を分けて考えようという提案がなされる箇所である。まず１つめの意味は、「ホモ・サピエンスという種のメンバー」という純粋に生物学的な意味の「人間」であり、これを文字通りmember of the species Homo sapiensと呼ぶことにする。そして、&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;There is another use of the term ‘human’, one proposed by Joseph Fletcher, a major figure in the development of bioethics. Fletcher compiled a list of what he called ‘Indicators of Humanhood’ that includes the following: self-awareness, self-control, a sense of the future, a sense of the past, the capacity to relate to others, concern for others, communication and curiosity.[...]&lt;br &#x2F;&gt;
+John Locke defines a person as ‘a thinking intelligent being that has reason and reflection and can consider itself as itself, the same thinking thing, in different times and places’.&lt;br &#x2F;&gt;
+This definition makes ‘person’ close to what Fletcher meant by ‘human’, except that it selects two crucial characteristics – rationality and self-consciousness – as the core of the concept. Quite possibly, Fletcher would have agreed that these two are central and the others more or less follow from them. In any case, I propose to use ‘person’, in the sense of a rational and self-aware being, to capture those elements of the popular sense of ‘human being’ that are not covered by ‘member of the species Homo sapiens’. (I take ‘self-conscious’ and ‘self-aware’ to mean the same thing.)&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;引用が長くて申し訳ないが、つまり、本書でシンガーが最初に用いるpersonという単語は、トゥーリー的な（パーソン論における）personでは全然なく、種としてのホモ・サピエンスとオーバーラップしつつも定義の異なるa rational and self-aware beingを指す言葉なのである。種としてのホモ・サピエンスとself-aware beingをあえて分けるのはなぜか？　これは、この先に動物の権利、胎児の中絶、安楽死の是非といった議論が待っており、そのための準備が必要だからだ（たとえば中絶の是非を議論するなら、「胎児は人か？」という質問に応えるための準備をしなければならない）。&lt;br &#x2F;&gt;
+パーソン論におけるpersonをシンガーが扱うのは、この定義に続く、&#x27;Killing a Person&#x27;という小見出しのついたパートである（この小見出しのpersonがa rational and self-aware beingを指すことは言うまでもない）。ここでシンガーは、理性的な、自己意識を持つ存在を殺すのが間違ったことであるとしたら、その理由は何かを議論している。提出される「理由」は４つ。&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;[...] the hedonistic utilitarian concern with others; the preference utilitarian concern with the frustration of the victim&#x27;s desires and plans for the future; the argument that the capacity to conceive of oneself as existing over time is a necessary condition of a right to life; and respect for autonomy.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;１つめと２つめは功利主義的観点からのもの、４つめはカント来のもの。3つめのthe argument- だけがトゥーリーのパーソン論に触れている部分である。ここのところでシンガーが何を言っているかを見てみると、まずシンガーが、a moral rightという概念の有用性に疑問を投げかけているのがわかる。&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I am not convinced that the notion of a moral right is a helpful or meaningful one, except when it is used as a shorthand way of referring to more fundamental moral considerations, such as the view that – for the reasons offered in the preceding section – for all normal circumstances we should we put the idea of killing people who want to go on living completely out our minds.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;より根本的な道徳についての検討に手っ取り早く言及するためならまだしも、それ以外では有用なものとは思えない、と述べているわけだ。生存権 a right to lifeはもちろんthe notion of moral rightに含まれているから、そもそもシンガーはトゥーリー流の「生存権を持つ存在としてのパーソン」論には懐疑的であると言える。ただし、「生存権を持つとか持たないとかいう議論はなじみ深いものだから、生存権を持つpersonと持たないそれ以外の存在、という主張に根拠があるかどうか、検討してみる価値はある」という。&lt;br &#x2F;&gt;
+ここからシンガーは72年のトゥーリーの論文を検討・批判した上で、72年版ではなく、83年にトゥーリーが出した同名の著書のほうで展開されている以下の主張を、a rational and self-aware beingを殺すのが間違っている理由の１つとして提出する。&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;To have a right to life, one must have, or at least at one time have had, the concept of having a continuing existence.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;実はトゥーリーは72年の論文で、数々のツッコミを受けている（たとえば睡眠中の人間の権利はどうなるのか？といった単純なものから、十分条件の妥当性にいたるまで）。この批判に応える形で、トゥーリー自身が83年に同名の著書を出して修正を加えている。つまり、シンガーが依拠しているのは、72年版ではなく、83年版のトゥーリーのパーソン論である、と言ったほうが正しい。&lt;br &#x2F;&gt;
+いったんまとめると、シンガーの言うpersonとは、まずa rational and self-aware beingであり、さらにそれを腑分けしていったときに登場する&amp;quot;可能性&amp;quot;の１つが、83年版トゥーリーのpersonである。前述したように杉田の言うパーソン論は、72年にトゥーリーが提出したパーソン論を指していることは確かなのだが、このパーソン論と、シンガーの言うpersonとは、すれ違って一致しない。また、シンガーが「権利を享受する人格主体の根拠を、自己意識の有無に置くという議論をしてい」るという杉田の指摘も間違っている。むしろ、先にも述べたように、動物や胎児、安楽死を求める人々の権利を考えるベースとして、まず「自己意識を持つ存在」について検討している、というのが正しい。&lt;&#x2F;p&gt;
+&lt;p&gt;なぜこのような誤解が生まれてしまったのか、については、以下の論文が詳しい。これは「シンガー　パーソン論」などで検索すればすぐに出てくる。素人の僕からしても、全体の見取り図をイメージするのに大変役に立った。 &lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;http:&#x2F;&#x2F;repo.kyoto-wu.ac.jp&#x2F;dspace&#x2F;bitstream&#x2F;11173&#x2F;401&#x2F;1&#x2F;0130_010_007.pdf&quot;&gt;国内の生命倫理学における「パーソン論」の受容&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;概 要&lt;br &#x2F;&gt;
+本稿では、国内の生命倫理学研究者の間ではマイケル・トゥーリーらに代表される「パーソン論」と呼ばれる考え方が正確に理解されておらず、それが国内の生命倫理学の健全な発展を阻害している可能性があることを指摘する。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;読みやすいのですぐに内容をつかめるが、要するに、国内の多くの生命倫理学研究者は「パーソン論」という言葉で以て、トゥーリーやシンガーらが展開している論理的に（哲学的に）構築されたパーソン論と、エンゲルハートに代表されるような「雰囲気パーソン論」をごっちゃにしており、エンゲルハートのほうの「雰囲気パーソン論」がパーソン論そのものであるかのように考えている。この状況というのは、厳密なパーソン論およびそこから展開されるはずの豊かな議論をそもそも排除してしまっているという点でとても残念なことである。これがこの論文の内容である。&lt;br &#x2F;&gt;
+具体的な誤訳の指摘などについては検証する時間も余力もないので江口の書いているところをうのみにするしかないが、素直に読むと、国内での「パーソン論」という言葉の使われ方、受容状況というのはかなり歪んでしまっているな、と思わざるを得ない。&lt;br &#x2F;&gt;
+そして、江口が指摘している通りに、トゥーリー・シンガーらのパーソン論と、エンゲルハートのパーソン論がいっしょくたに受容され、語られている…というのが本当であれば、杉田俊介の「シンガーのパーソン論」理解が二重の意味でずれていたことにも納得がいく。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;duan-jie-de-namorarusutetasu&quot;&gt;段階的なモラル・ステータス&lt;&#x2F;h2&gt;
+&lt;p&gt;ここで本稿冒頭の引用に戻り、上記で検討した箇所に続く「この理屈でいうと重度の知的障害者や脳死状態の人、胎児といった、通常の意味でのコミュニケーションの不可能な人間には100%の権利を認める必要はない、という議論になります。知的障害者よりも、ある種の動物たちの生命を優先するべきだ、という話にもなっていく」という指摘について見ていく。結論から言うと、これも額面通り受け取ることはできない、というのが答えになる。&lt;br &#x2F;&gt;
+&lt;em&gt;Cognitive Disability and Its Challenge to Moral Philosophy&lt;&#x2F;em&gt;という論文集に収録されているシンガーの2009年の論文&amp;quot;SPECIESISM AND MORAL STATUS&amp;quot;が、この点について非常にコンパクトにまとまっているので見ていこう。&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Abstract: Many people believe that all human life is of equal value. Most of them also believe that all human beings have a moral status superior to that of nonhuman animals. But how are these beliefs to be defended? The mere difference of species cannot in itself determine moral status. The most obvious candidate for regarding human beings as having a higher moral status than animals is the superior cognitive capacity of humans. People with profound mental retardation pose a problem for this set of beliefs, because their cognitive capacities are not superior to those of many animals. I argue that we should drop the belief in the equal value of human life, replacing it with a graduated view that applies to animals as well as to humans.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;この論文は主に、「人間はみな絶対的に平等である」という主張、および「人間は絶対的に動物よりも高等なものである」という主張への反論、という形で展開していく（この議論展開自体はPractical Ethicsでも用いられているが、複数のトピックを時に行き来しながら進むPractical Ethicsに対して、テーマが絞られているのがこの論文の特徴）。シンガーがこれらの主張の根拠だと指摘するのは3つ、(1)宗教的（特にカトリック的）根拠、(2)種主義的根拠、(3)高等な認知能力、である（種主義 speciesim というのは人種主義とパラレルな概念で、種の違いだけを根拠に利害関係を考慮したりしなかったりする一種の差別主義、というニュアンスで使われている）。このうち、(1)と(2)は（やや複雑な議論が展開されるものの）根拠不十分ということで棄却される。そして(3)は、より高等な認知能力 superior cognitive abilityを根拠として人間と動物とを分けるカント以来の考え方だ。シンガーは次のようにまとめている。&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;quot;Animals are not self-conscious and are there merely as a means to an end. That end is man.&amp;quot; Kant’s argument for why human beings are ends-in-themselves is that they are autonomous beings, which, in terms of Kantian philosophy, means that they are capable of reasoning.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;しかし、「理性」を根拠に人間と動物を区別する、ということはつまり、そうした理性を持たないかもしれない&amp;quot;profoundly mentally retarded&amp;quot;な人間を、人間というカテゴリから排除する、ということでもある（そして同時に、ある種の高度な認知能力を持つ動物たちは「人間」として扱われるべきだ、ということにもなる）。人間と動物を分けるはずのキーだった「理性」によって、人間が動物になり、動物が人間にもなる。その結果、最重度の知的障害者は相対的に低い道徳的地位に置かれてしまうことになりかねない。杉田が「通常の意味でのコミュニケーションの不可能な人間には100%の権利を認める必要はない、という議論」「知的障害者よりも、ある種の動物たちの生命を優先するべきだ、という話」という言い方で批判しているのはまさにこうした、認知能力を根拠とした権利の付与を指していると言える。&lt;br &#x2F;&gt;
+シンガーはとりあえず、これをよしとしない。「人間はみな絶対的に平等である」という主張、および「人間は絶対的に動物よりも高等なものである」という主張がそもそも間違っているのだ、とシンガーは指摘し、ここで3つのオルタナティブを提出する。&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;preserve equality by raising the status of animals, granting them the same status we now grant to humans; or&lt;br &#x2F;&gt;
+preserve equality by lowering the status of humans to that which we now grant to animals; or&lt;br &#x2F;&gt;
+abandon the idea of the equal value of all humans, replacing that with a more graduated view in which moral status depends on some aspects of cognitive ability, and that graduated view is applied both to humans and nonhumans. &lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;「すべての人間の生命は絶対的に平等である」という主張を保持したいなら、1か2しかない。このうち2は誰もが拒否するだろう。そして1については、シンガー自身がある程度共感する考え方ではあるけれども、受け入れられない部分もある、という（これはこれで当然だろう）。では3はどうか。&lt;br &#x2F;&gt;
+ここでcognitive abilityという言葉に何を含ませるかで、議論の展開は大きく変わることになる。これをカント流の「理性」と定義すると、議論は戻ってしまう。&lt;br &#x2F;&gt;
+しかしシンガーはカントを採用しない。功利主義者の彼が依拠するのはベンサムだ。&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;quot;The question is not, ‘Can they reason?’ nor, ‘Can they talk?’ but, ‘Can they suffer?’&amp;quot; That is indeed a crucial question to ask whenever we are talking about beings who are capable of suffering and one that is clearly relevant to how we should treat both humans and nonhuman animals. Can they suffer? Can they enjoy life? If so, they have interests that we should take into account, and we should give those interests equal weight with the interests of all other beings with similar interests.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;功利主義で考えれば、もしある存在が苦しむことがあるなら、その存在は考慮すべき利害関係を持つ、ということになる。動物も人間も、もちろん重度の障害者も。そしてその上で、それぞれの利害が衝突するのであれば、それを解決するためにa graduated view より段階的な道徳的地位についての見方が必要になってくる、と言っているわけだ。考えてみればこれはほとんど当たり前のことだ。杉田が胎児に（しかしどの時期の胎児だろうか）100%の権利があると考えること自体は自由だが、それは中絶については100%許されないと考えることと同義だ。この考え方は全然現実的ではない、ということはほとんどの人が同意すると思う。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;xiang-mo-yuan-noshi-jian-tosinga&quot;&gt;相模原の事件とシンガー&lt;&#x2F;h2&gt;
+&lt;p&gt;ここで終わってもよかったのだが、片手落ちな気がしたのでもう少し書いてみる。&lt;br &#x2F;&gt;
+調べていて印象的だったのは、ひとつひとつ貼り付けることはしないが、シンガーの展開する議論と、相模原の大量殺人事件とを結びつける、つまり思想に類似性を見ようとする国内外の声が予想外に多かったことだった。これは妥当な指摘なのだろうか？　このことをきちんと論じる力は僕にはないのだけれど、とりあえず考えてみることはできる。&lt;br &#x2F;&gt;
+シンガーと相模原の事件の接点があり得るとしたら、それはeuthanasia 安楽死を巡る議論だろう。シンガーはPractical Ethicsの中で、安楽死を３つのパターンに分けている。殺される者自身が望むvoluntary, 殺される者自身が安楽死に合意できる状態であるにも関わらず同意しない状況で行われるinvoluntary, そして殺される者が合意できる状態にないまま行われるnonvoluntaryの３つだ。２つめのinvoluntaryが正当化されることはまずないから、１つめと３つめに比較的長い議論が費やされている。そしてnonvoluntaryについては、正当化されるケースがしばしばある、と結論を出している。&lt;br &#x2F;&gt;
+これを踏まえて、シンガーの議論が仮に相模原の事件そのものを正当化するようなことがあり得るとすれば、結局それは次のような道筋でしかないのではないか。&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;相模原の事件は「安楽死処置」か否か。&lt;&#x2F;li&gt;
+&lt;li&gt;「安楽死処置」だとするならば、それはinvoluntaryなものか、それともnonvoluntaryなものか。&lt;&#x2F;li&gt;
+&lt;li&gt;nonvoluntaryなものだとするならば、それは正当化されるか。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;1に対してYESと答え、2に対してnonvoluntaryであると答え、3に対してYESと答えることで初めて、シンガーと相模原の事件との思想的類似性を認めることができる。しかしシンガーによるeuthanasiaの定義は当然、この事件の殺人行為とはまったく異なるし、シンガーがnonvoluntaryの例として挙げている実際の安楽死事件のケースは、事件の被害者の状況とは似ても似つかないものである。だから普通に考えれば、この事件とシンガーに思想的類似性を見るのは端的に間違っている。&lt;br &#x2F;&gt;
+それでもなお結びつけようとする言葉が散見されるのは、一つには、nonvoluntary euthanasiaをすべてではないにせよ許容するシンガーの議論が強いインパクトを持っており、そこにばかり注目が集まりがちで、しかも拒否反応を含め人々から感情的なものを引き出さずにいない、ということがあると思う。&lt;br &#x2F;&gt;
+でも本当に理由はそれだけだろうか？&lt;br &#x2F;&gt;
+安楽死措置ではありえないものを安楽死措置だとつい思いたくなってしまう心の動き、障害者が苦しみを感じ、考えを持つということをつい忘れてしまうような心の動き。そういうものが、僕らの中に、僕自身の中にないだろうかと、これを書いている最中、何度も不安になった。&lt;&#x2F;p&gt;
+&lt;p&gt;僕らは深淵を覗き込んでいるのだろうか？&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

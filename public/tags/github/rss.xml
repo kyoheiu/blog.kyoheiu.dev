@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>tudurikata - GitHub</title>
+        <link>https://tudurikata.com</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://tudurikata.com/tags/github/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Sat, 01 May 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>OSSのREADME.md更新について</title>
+            <pubDate>Sat, 01 May 2021 00:00:00 +0000</pubDate>
+            <link>https://tudurikata.com/post/update-readme/</link>
+            <guid>https://tudurikata.com/post/update-readme/</guid>
+            <description>&lt;p&gt;先日publicリポジトリに移したmarkdownパーサ&lt;code&gt;nmark&lt;&#x2F;code&gt;をちまちま更新しているのだが、更新するたびに以下のような作業が発生していてだんだん面倒になってきた。&lt;&#x2F;p&gt;
+&lt;script&gt;window.addEventListener(&quot;message&quot;, function(e) {var i = e.data.split(&quot;:&quot;)[1];var h = e.data.split(&quot;:&quot;)[2];if (e.data.split(&quot;:&quot;)[0] == &quot;swimlanes-io&quot; &amp;&amp; i &amp;&amp; h) {document.getElementById(&quot;__sw-io-&quot; + i).setAttribute(&quot;style&quot;,&quot;height:&quot; + h + &quot;px&quot;);}}, false);&lt;&#x2F;script&gt;&lt;div id=&quot;__sw-io-fZAw&quot;&gt;&lt;iframe style=&quot;border:none; width:100%; height:100%&quot; scrolling=&quot;no&quot; src=&quot;https:&#x2F;&#x2F;cdn.swimlanes.io&#x2F;dist&#x2F;embeded.html#fZA7D8IwDIT3&#x2F;ApvQKTC3gEJiYqJhYq9aWJoROpEeUj039MHUKlDN8v3new7zqkV&#x2F;gXJKRERvE1RE3LO2LTPjjAO+Y8ItsXYaHrOgBRBbMvyssuBEBVECx6lcDF5hBpJNgPJ&#x2F;tjCU5Fua4OgKURhzHSvWsVBQqZyjwZFwFFc4ZvOoX&#x2F;0qWCzPwwC1EkbtVlYvjGldR3g21kf+yjz98s67lMdt+J0vhbsAw==#fZAw&quot;&gt;&lt;&#x2F;iframe&gt;&lt;&#x2F;div&gt;
+&lt;p&gt;（さっき見つけた&lt;a href=&quot;https:&#x2F;&#x2F;swimlanes.io&#x2F;&quot;&gt;swimlane.io&lt;&#x2F;a&gt;を使ってみたかったのであえて作ってみた）&lt;&#x2F;p&gt;
+&lt;p&gt;今思いつく解決策としては、&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;ベンチマーク出力を２つの外部プログラム（静的サイトジェネレータ、hyperfine）に頼っているので、&lt;code&gt;nmark&lt;&#x2F;code&gt;内に実装し、SCFなりでREADME.mdを生成する関数も書いて更新する。&lt;&#x2F;li&gt;
+&lt;li&gt;ベンチマークを画像として出力し、リポジトリに含めて&lt;code&gt;git push&lt;&#x2F;code&gt;し、README.md内には画像リンクとして取り込む。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;git push&lt;&#x2F;code&gt;をトリガーとしてベンチマークをとってくれるCIを設定し、出力を取り込んでREADME.mdを更新する（もしくは更新するところまでGitHub Actionsなどで実装する）。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;という感じだが、&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;nmark&lt;&#x2F;code&gt;内に全部取り込むのは（可能だが）間違っている気がする&lt;&#x2F;li&gt;
+&lt;li&gt;数字を画像で出すのは嫌だ&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;で、CIを勉強してみようかなぁと思っている。最終的にはジェネレータを使わないという選択になりそうな気がする。&lt;&#x2F;p&gt;
+&lt;p&gt;こんなふうに、機能を追加したりバグを修正したりするたびにREADME.md内の細かい数字をアップデートしないといけない状況というのはあると思うのだけれど、何か効率的なやり方があるんだろうか。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zhui-ji&quot;&gt;追記&lt;&#x2F;h3&gt;
+&lt;p&gt;シェルスクリプトの代わりにNimscriptを書いて、パフォーマンス比較の詳細を記したmarkdownファイルをREADME.mdとは別に作り、そこに&lt;code&gt;hyperfine&lt;&#x2F;code&gt;の結果をコピーするというやり方にしてみた。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;nim&quot; class=&quot;language-nim &quot;&gt;&lt;code class=&quot;language-nim&quot; data-lang=&quot;nim&quot;&gt;mode = ScriptMode.Verbose
+
+const version = &amp;quot;0.1.6&amp;quot;
+
+const text = &amp;quot;&amp;quot;&amp;quot;
+# Perfomance comparison detail
+...
+### nmark@&amp;quot;&amp;quot;&amp;quot; 
+
+cd &amp;quot;..&amp;#x2F;casa&amp;quot;
+
+exec(&amp;quot;nimble install nmark&amp;quot;)
+exec(&amp;quot;nim c -d:release casa&amp;quot;)
+exec(&amp;quot;hyperfine &amp;#x27;.&amp;#x2F;casa build&amp;#x27; --export-markdown nmark.md&amp;quot;)
+let s = text &amp;amp; version &amp;amp; &amp;quot;&amp;quot;&amp;quot;
+&amp;gt;&amp;gt;
+&amp;quot;&amp;quot;&amp;quot; &amp;amp; readFile(&amp;quot;nmark.md&amp;quot;)
+
+cd &amp;quot;..&amp;#x2F;nmark&amp;quot;
+
+writeFile(&amp;quot;perfcmp.md&amp;quot;, s)
+
+echo &amp;quot;Done.&amp;quot;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;手動でいじるのは定数として入れているバージョン番号のみなのでだいぶ楽にはなった。この番号も、何らかのスクリプトで.nimbleファイルからとってきたいところだが、適当な関数が見つからないためとりあえずここまでにしている。tomlと見なしてパースすればいいような気もする。&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>
