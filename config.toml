@@ -1,9 +1,9 @@
 # The base URL of the site; the only required configuration variable.
-base_url = "https://tudurikata.com"
+base_url = "https://kyoheiu.gitlab.io"
 
 # The site title and description; used in feeds by default.
 description = "personal notes"
-title = "tudurikata"
+title = "kyoheiu.gitlab.io"
 
 # The default language; used in feeds.
 default_language = "ja"
@@ -172,6 +172,3 @@ emily_iconsize = 70
 
 # number of posts in index.html.
 emily_indexposts = 5
-
-# switch to dark-theme
-emily_dark_mode = true
