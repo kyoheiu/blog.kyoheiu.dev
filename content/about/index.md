@@ -15,10 +15,3 @@ template = "post-page.html"
 
 - [GitHub: kyoheiu](https://github.com/kyoheiu)
 - [Kyohei Uto's TED Translations](https://www.ted.com/profiles/14244197/translator)
-
-### Thanks
-- header icon made by <a href="https://www.flaticon.com/authors/vectors-market" title="Vectors Market">Vectors Market</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
-
-### Contact
-
-From [here](https://docs.google.com/forms/d/e/1FAIpQLSestthbBhmkRn7uDuhx7L11MCAhMK-OM8A0OLrdh_JFkhpwTQ/viewform?usp=sf_link).
