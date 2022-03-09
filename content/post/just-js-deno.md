@@ -1,5 +1,5 @@
 +++
-title "JavaScriptをdenoでシンプルに書く"
+title = "JavaScriptをdenoでシンプルに書く"
 date = 2022-03-09
 math = false
 [taxonomies]
