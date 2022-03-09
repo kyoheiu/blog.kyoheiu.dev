@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>systemdを使ってプログラムを定期実行する | kyoheiu.gitlab.io</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;icon.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+
+  <script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;kyoheiu.gitlab.io&#x2F;images&#x2F;icon.png" alt="kyoheiu.gitlab.io"
+          width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;kyoheiu.gitlab.io</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+  </div>
+</div>
+
+<body onload="getTheme()">
+  <section class="section">
+    <div class="container">
+      
+<p>
+  <div class="title_postpage">systemdを使ってプログラムを定期実行する</div>
+</p>
+<p>
+  <div class="date_postpage">2020-08-25</div>
+  <div class="taxonomies_postpage">
+  
+      
+      <a href="https://kyoheiu.gitlab.io/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://kyoheiu.gitlab.io/tags/linux/">#linux</a>
+      
+      &emsp;<a href="https://kyoheiu.gitlab.io/tags/systemd/">#systemd</a>
+      
+  
+  </div>
+</p>
+
+<p>
+  <ol>
+<li><a href="https://kyoheiu.gitlab.io/post/haskellscraping01/">HaskellによるWebスクレイピング</a></li>
+<li><a href="https://kyoheiu.gitlab.io/post/posttoslack/">HaskellでSlackに投稿する</a></li>
+<li>systemdを使ってプログラムを定期実行する（この記事）</li>
+</ol>
+<p>linux上でプログラムを定期実行する手段は主に<code>cron</code>(とそのフォーク）と<code>systemd</code>を使うものの２種類あるが、今回は<code>systemd</code>を使ってみた。<code>cron</code>のフォークである<code>cronie</code>も試してみたのだが、<code>/etc/</code>以下にさしあたり必要でないディレクトリが作られたり、設定ファイルが個人的に扱いづらかったりであまり肌に合わなかった。<br />
+<code>systemd</code>を使うメリットとしては、他のserviceと同様<code>systemd</code>管理下で一元的に扱え、動作状況などの<code>journal</code>も一覧で確認できること、依存関係を非常に簡単に設定できるので今回のようなネットワーク通信を前提とする実行ファイルの場合は特に取り回しが楽であること、あたりかと思う。デメリットは、ある程度込み入った定期実行設定をしたければ、.serviceとは別に.timerが必要であること。</p>
+<p>実際の.serviceの内容は以下のようになる。</p>
+<pre data-lang="toml" class="language-toml "><code class="language-toml" data-lang="toml">[Unit]
+Description=scraping
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=&#x2F;home&#x2F;user&#x2F;xxxx
+ExecStart=&#x2F;home&#x2F;user&#x2F;.local&#x2F;bin&#x2F;xxxx-exe
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<p>.service作成後、<code># systemctl enable</code>で起動時実行をオンにしておけばOK。<br />
+ネットワークがつながった後でないとスクレイピングに失敗するため、<code>[Unit]</code>の<code>Requires</code>と<code>After</code>は必須。逆に言うとここさえ押さえれば、システム起動 -&gt; ネットワーク確立 -&gt; 実行という流れを作れるので、実際にはこの依存関係の設定で実行時間をある程度コントロールできるとも言える。一日一回とりにいけば十分なので、今回は.timerは作成しなかった。</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">kyoheiu.gitlab.io</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a
+    href="https://github.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>

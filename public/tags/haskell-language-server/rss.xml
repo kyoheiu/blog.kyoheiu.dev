@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>kyoheiu.gitlab.io - haskell-language-server</title>
+        <link>https://kyoheiu.gitlab.io</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://kyoheiu.gitlab.io/tags/haskell-language-server/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Wed, 05 May 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>Haskell環境再構築</title>
+            <pubDate>Wed, 05 May 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/restart-haskell/</link>
+            <guid>https://kyoheiu.gitlab.io/post/restart-haskell/</guid>
+            <description>&lt;p&gt;ここ数ヶ月、ずっとimperative programmingをしていてちょっと疲れてきたのと、今Haskellに戻ったら前よりはもう少し書ける／わかるようになっているかもしれないという期待で、あらためてHaskellに入門してみる。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;huan-jing-gou-zhu&quot;&gt;環境構築&lt;&#x2F;h3&gt;
+&lt;p&gt;前にやっていたときは確か存在していなかったような気がするのだが、&lt;code&gt;ghcup&lt;&#x2F;code&gt;という&lt;code&gt;rustup&lt;&#x2F;code&gt;的なツールが登場していたのでさっそく入れてみる。&lt;br &#x2F;&gt;
+これはghc, cabal, haskell-language-server(HLS)のインストール・バージョン管理を行ってくれるありがたいツールで、途中２回ほどコマンド入力する場面があるので完全放置では完了まで行かないが、スムーズにインストールが可能。以前はstackを使っていたが、cabalがだいぶフレンドリーになってきているという噂を見かけたのでcabal一本でやってみようかと思っている。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;gui-men-haskell-language-server&quot;&gt;鬼門・haskell-language-server&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;hie&lt;&#x2F;code&gt;の頃からHaskellのLSPにはいい思い出がなく、ビルド時間が地獄のように長いとか、頑張って入れても全然動かないとかで、この辺の環境構築周りのもどかしさもあっていったん離れることに決めたのだった。今はというと、ほぼ公式のLSPであるHLSがghcupでツルッと入ってくる。これを使えばいい。&lt;&#x2F;p&gt;
+&lt;p&gt;ただ、Arch Linux系のディストロを使っている人は、HLSとVS Codeのインテグレーションでおそらく引っかかるだろう。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;haskell&#x2F;haskell-language-server&#x2F;issues&#x2F;236&quot;&gt;VSCode extension not detecting Cabal&#x2F;Stack due to incomplete $PATH in &lt;code&gt;&#x2F;etc&#x2F;profile&lt;&#x2F;code&gt; · Issue #236 · haskell&#x2F;haskell-language-server&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;このissueで指摘されているが、Arch系の場合、&lt;code&gt;.bashrc&lt;&#x2F;code&gt;にghcupのPATHを書いてもVS Codeが認識せず、&lt;code&gt;etc&#x2F;profile&lt;&#x2F;code&gt;に書かないと動かない。&lt;del&gt;そして僕の場合は、&lt;code&gt;etc&#x2F;profile&lt;&#x2F;code&gt;に書いた上で、（ランチャーからではなく）ターミナルから&lt;code&gt;code&lt;&#x2F;code&gt;とコマンドを打って起動しないとHLSが動かなかった。ここまでわかるのに半日費やしてしまった…。&lt;&#x2F;del&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;(2021-05-22追記)&lt;code&gt;etc&#x2F;profile&lt;&#x2F;code&gt;への記述が間違っていた模様。以下のようにすればVS Codeでバッチリ動いてくれました。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;# etc&amp;#x2F;profile
+PATH=~&amp;#x2F;.ghcup&amp;#x2F;bin&amp;#x2F;:$PATH
+PATH=~&amp;#x2F;.cabal&amp;#x2F;bin&amp;#x2F;:$PATH
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;ランチャーからの起動が実質できないのは良くないので、これを機にneovimでの編集に移行してみる。&lt;br &#x2F;&gt;
+ただしvim&#x2F;neovimであっても、Arch系であれば&lt;code&gt;etc&#x2F;profile&lt;&#x2F;code&gt;にPATHを書かなければならないのは同じ（記入後、要再起動）。その上で、HLS公式のイントロダクションに書いてあるとおり、CocでHLSを設定すれば、動く。&lt;&#x2F;p&gt;
+&lt;p&gt;久々にHaskellを書くと、頭も指も全然動かなくて逆に面白い。&lt;br &#x2F;&gt;
+以前いじっていたときには存在に気づかなかったパイプライン演算子を使って、Project Eulerの２問め。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;import Data.Function
+
+fib:: Integer -&amp;gt; Integer -&amp;gt; Integer -&amp;gt; Integer
+fib a b count
+    | count == 1 || count == 0 = b
+    | count &amp;gt;= 2 = fib b (a+b) (count-1)
+    | otherwise = 0
+
+makeFib = fib 1 1
+
+euler2FibList:: Integer -&amp;gt; Integer
+euler2FibList n = takeWhile (\x -&amp;gt; makeFib x &amp;lt; n) [1..] &amp;amp; map makeFib &amp;amp; filter even &amp;amp; sum
+
+main = print $ euler2FibList 4000000
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;makeFib&lt;&#x2F;code&gt;を２回使っているのがかっこよくないですね。&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

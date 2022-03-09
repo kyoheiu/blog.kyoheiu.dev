@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>kyoheiu.gitlab.io - deno</title>
+        <link>https://kyoheiu.gitlab.io</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://kyoheiu.gitlab.io/tags/deno/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Wed, 09 Mar 2022 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>JavaScriptをdenoでシンプルに書く</title>
+            <pubDate>Wed, 09 Mar 2022 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/just-js-deno/</link>
+            <guid>https://kyoheiu.gitlab.io/post/just-js-deno/</guid>
+            <description>&lt;p&gt;ちょっとしたタスクでTwitter APIを叩かないといけなくなり、前は叩くところからデータフォーマットまで全部Rustのファイル１枚で書いたので、今度は別の言語にするかな～と、軽い気持ちでGoで書いてみたらなぜかうまくいかなかった。&lt;&#x2F;p&gt;
+&lt;p&gt;json.Unmarshalがよしなに動いてくれなかったのがうまくいかなかった理由（多分）。jsonの処理はあまりにも普遍的なのでどの言語でも一緒だろ～～とか思ってたら意外とそんなことはなかった…。Unmarshalが動かなかったときのデバッグってどうすればいいんだろう。&lt;&#x2F;p&gt;
+&lt;p&gt;Goに慣れていないので、全部をGoのStandard Libraryのせいにする気はないけれど、たとえばRustのserdeと比べてみると、Goのほうが一段高いレベルでざっくり抽象化されているような気がしていて、その分デバッグも微妙にやりにくいように思う。&lt;&#x2F;p&gt;
+&lt;p&gt;（最近ずっとRustを書いているという理由で別言語を選んだわけなので、そもそもGoを選んだのはちょっと違ったかな…とは思っている）&lt;&#x2F;p&gt;
+&lt;p&gt;ん～どうするかな…と３秒くらい考えて、どうせレスポンスのjsonをあれこれするならもうJs&#x2F;Tsでいいのでは？となり、Jsを50行くらい書いて&lt;code&gt;deno run&lt;&#x2F;code&gt;したら一瞬でタスクが終わったので、denoいいね…となった。HTTPリクエスト送る系のタスクはこれでいいのかもしれない。データ量が膨大だったり後処理が複雑だと話は変わってくるのだろうけど。シェルスクリプトの代替としてのJs&#x2F;Tsというのも案外ありなのかな、とも思った。zxというのもあるけど、別に文法を変えなくても生Jsで良くないかな？&lt;&#x2F;p&gt;
+&lt;p&gt;あと、この程度の規模だと型なくても全然いいね…というのも実感としてあった。Haskellから入ったくらいなので、型がないともうどうしていいか分からないくらいuntyped langへの苦手意識があったのだが、アロー記法とか高階関数のおかげでかなり息がしやすくなっていて良かった。denoのエラーメッセージもけっこう親切で、シンプルにJsそのものに向き合える感じがあるというか。&lt;&#x2F;p&gt;
+&lt;p&gt;denoはTs、というイメージが強いように思うが、Jsも普通に書けるので、ちょっとしたタスクにJsを使ってみようかなという向きには非常におすすめの組み合わせです。&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

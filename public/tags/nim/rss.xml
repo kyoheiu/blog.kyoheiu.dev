@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>kyoheiu.gitlab.io - Nim</title>
+        <link>https://kyoheiu.gitlab.io</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://kyoheiu.gitlab.io/tags/nim/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Sat, 01 May 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>OSSのREADME.md更新について</title>
+            <pubDate>Sat, 01 May 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/update-readme/</link>
+            <guid>https://kyoheiu.gitlab.io/post/update-readme/</guid>
+            <description>&lt;p&gt;先日publicリポジトリに移したmarkdownパーサ&lt;code&gt;nmark&lt;&#x2F;code&gt;をちまちま更新しているのだが、更新するたびに以下のような作業が発生していてだんだん面倒になってきた。&lt;&#x2F;p&gt;
+&lt;script&gt;window.addEventListener(&quot;message&quot;, function(e) {var i = e.data.split(&quot;:&quot;)[1];var h = e.data.split(&quot;:&quot;)[2];if (e.data.split(&quot;:&quot;)[0] == &quot;swimlanes-io&quot; &amp;&amp; i &amp;&amp; h) {document.getElementById(&quot;__sw-io-&quot; + i).setAttribute(&quot;style&quot;,&quot;height:&quot; + h + &quot;px&quot;);}}, false);&lt;&#x2F;script&gt;&lt;div id=&quot;__sw-io-fZAw&quot;&gt;&lt;iframe style=&quot;border:none; width:100%; height:100%&quot; scrolling=&quot;no&quot; src=&quot;https:&#x2F;&#x2F;cdn.swimlanes.io&#x2F;dist&#x2F;embeded.html#fZA7D8IwDIT3&#x2F;ApvQKTC3gEJiYqJhYq9aWJoROpEeUj039MHUKlDN8v3new7zqkV&#x2F;gXJKRERvE1RE3LO2LTPjjAO+Y8ItsXYaHrOgBRBbMvyssuBEBVECx6lcDF5hBpJNgPJ&#x2F;tjCU5Fua4OgKURhzHSvWsVBQqZyjwZFwFFc4ZvOoX&#x2F;0qWCzPwwC1EkbtVlYvjGldR3g21kf+yjz98s67lMdt+J0vhbsAw==#fZAw&quot;&gt;&lt;&#x2F;iframe&gt;&lt;&#x2F;div&gt;
+&lt;p&gt;（さっき見つけた&lt;a href=&quot;https:&#x2F;&#x2F;swimlanes.io&#x2F;&quot;&gt;swimlane.io&lt;&#x2F;a&gt;を使ってみたかったのであえて作ってみた）&lt;&#x2F;p&gt;
+&lt;p&gt;今思いつく解決策としては、&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;ベンチマーク出力を２つの外部プログラム（静的サイトジェネレータ、hyperfine）に頼っているので、&lt;code&gt;nmark&lt;&#x2F;code&gt;内に実装し、SCFなりでREADME.mdを生成する関数も書いて更新する。&lt;&#x2F;li&gt;
+&lt;li&gt;ベンチマークを画像として出力し、リポジトリに含めて&lt;code&gt;git push&lt;&#x2F;code&gt;し、README.md内には画像リンクとして取り込む。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;git push&lt;&#x2F;code&gt;をトリガーとしてベンチマークをとってくれるCIを設定し、出力を取り込んでREADME.mdを更新する（もしくは更新するところまでGitHub Actionsなどで実装する）。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;という感じだが、&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;nmark&lt;&#x2F;code&gt;内に全部取り込むのは（可能だが）間違っている気がする&lt;&#x2F;li&gt;
+&lt;li&gt;数字を画像で出すのは嫌だ&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;で、CIを勉強してみようかなぁと思っている。最終的にはジェネレータを使わないという選択になりそうな気がする。&lt;&#x2F;p&gt;
+&lt;p&gt;こんなふうに、機能を追加したりバグを修正したりするたびにREADME.md内の細かい数字をアップデートしないといけない状況というのはあると思うのだけれど、何か効率的なやり方があるんだろうか。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zhui-ji&quot;&gt;追記&lt;&#x2F;h3&gt;
+&lt;p&gt;シェルスクリプトの代わりにNimscriptを書いて、パフォーマンス比較の詳細を記したmarkdownファイルをREADME.mdとは別に作り、そこに&lt;code&gt;hyperfine&lt;&#x2F;code&gt;の結果をコピーするというやり方にしてみた。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;nim&quot; class=&quot;language-nim &quot;&gt;&lt;code class=&quot;language-nim&quot; data-lang=&quot;nim&quot;&gt;mode = ScriptMode.Verbose
+
+const version = &amp;quot;0.1.6&amp;quot;
+
+const text = &amp;quot;&amp;quot;&amp;quot;
+# Perfomance comparison detail
+...
+### nmark@&amp;quot;&amp;quot;&amp;quot; 
+
+cd &amp;quot;..&amp;#x2F;casa&amp;quot;
+
+exec(&amp;quot;nimble install nmark&amp;quot;)
+exec(&amp;quot;nim c -d:release casa&amp;quot;)
+exec(&amp;quot;hyperfine &amp;#x27;.&amp;#x2F;casa build&amp;#x27; --export-markdown nmark.md&amp;quot;)
+let s = text &amp;amp; version &amp;amp; &amp;quot;&amp;quot;&amp;quot;
+&amp;gt;&amp;gt;
+&amp;quot;&amp;quot;&amp;quot; &amp;amp; readFile(&amp;quot;nmark.md&amp;quot;)
+
+cd &amp;quot;..&amp;#x2F;nmark&amp;quot;
+
+writeFile(&amp;quot;perfcmp.md&amp;quot;, s)
+
+echo &amp;quot;Done.&amp;quot;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;手動でいじるのは定数として入れているバージョン番号のみなのでだいぶ楽にはなった。この番号も、何らかのスクリプトで.nimbleファイルからとってきたいところだが、適当な関数が見つからないためとりあえずここまでにしている。tomlと見なしてパースすればいいような気もする。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>nmark - a markdown parser written in Nim</title>
+            <pubDate>Tue, 27 Apr 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/nmark/</link>
+            <guid>https://kyoheiu.gitlab.io/post/nmark/</guid>
+            <description>&lt;p&gt;Fast markdown parser, based on CommonMark, written in Nim.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kyoheiu&#x2F;nmark&quot;&gt;kyoheiu&#x2F;nmark&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;usage&quot;&gt;Usage&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;nim&quot; class=&quot;language-nim &quot;&gt;&lt;code class=&quot;language-nim&quot; data-lang=&quot;nim&quot;&gt;import nmark
+
+let txt = &amp;quot;&amp;quot;&amp;quot;
+&amp;gt; Lorem ipsum dolor
+sit amet.
+&amp;gt; - Qui *quodsi iracundia*
+&amp;gt; - aliquando id
+&amp;quot;&amp;quot;&amp;quot;
+
+echo txt.markdown
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;...and it&#x27;s done.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;# output
+&amp;lt;blockquote&amp;gt;
+&amp;lt;p&amp;gt;Lorem ipsum dolor
+sit amet.&amp;lt;&amp;#x2F;p&amp;gt;
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;Qui &amp;lt;em&amp;gt;quodsi iracundia&amp;lt;&amp;#x2F;em&amp;gt;&amp;lt;&amp;#x2F;li&amp;gt;
+&amp;lt;li&amp;gt;aliquando id&amp;lt;&amp;#x2F;li&amp;gt;
+&amp;lt;&amp;#x2F;ul&amp;gt;
+&amp;lt;&amp;#x2F;blockquote&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You can use tables in &lt;code&gt;nmark&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;| abc | defghi |
+:-: | -----------:
+bar | baz
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;is converted to:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;table&amp;gt;
+&amp;lt;thead&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;th align=&amp;quot;center&amp;quot;&amp;gt;abc&amp;lt;&amp;#x2F;th&amp;gt;
+&amp;lt;th align=&amp;quot;right&amp;quot;&amp;gt;defghi&amp;lt;&amp;#x2F;th&amp;gt;
+&amp;lt;&amp;#x2F;tr&amp;gt;
+&amp;lt;&amp;#x2F;thead&amp;gt;
+&amp;lt;tbody&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td align=&amp;quot;center&amp;quot;&amp;gt;bar&amp;lt;&amp;#x2F;td&amp;gt;
+&amp;lt;td align=&amp;quot;right&amp;quot;&amp;gt;baz&amp;lt;&amp;#x2F;td&amp;gt;
+&amp;lt;&amp;#x2F;tr&amp;gt;
+&amp;lt;&amp;#x2F;tbody&amp;gt;
+&amp;lt;&amp;#x2F;table&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;(Tables need to be separated from other blocks by empty line.)&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;performance-comparison&quot;&gt;Performance comparison&lt;&#x2F;h3&gt;
+&lt;p&gt;One of the reason I&#x27;m working on this parser is that other markdown parser librarys written in Nim seemed relatively slow. Here is a comparison between &lt;code&gt;nim-markdown&lt;&#x2F;code&gt;, which I think is the standard Nim markdown parser, and &lt;code&gt;nmark&lt;&#x2F;code&gt;, through a static site generator(which, btw, I made) and &lt;code&gt;hyperfine&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;.&#x2F;casa build&lt;&#x2F;code&gt; generates 100 same htmls containing a lot of markdown delimiter. For detail please check my &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kyoheiu&#x2F;Casa&quot;&gt;repo&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;nim-markdown-0-8-5&quot;&gt;nim-markdown@0.8.5 &amp;gt;&amp;gt;&lt;&#x2F;h4&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th align=&quot;left&quot;&gt;Command&lt;&#x2F;th&gt;&lt;th align=&quot;right&quot;&gt;Mean [ms]&lt;&#x2F;th&gt;&lt;th align=&quot;right&quot;&gt;Min [ms]&lt;&#x2F;th&gt;&lt;th align=&quot;right&quot;&gt;Max [ms]&lt;&#x2F;th&gt;&lt;th align=&quot;right&quot;&gt;Relative&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;.&#x2F;casa build&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;right&quot;&gt;296.1 ± 12.2&lt;&#x2F;td&gt;&lt;td align=&quot;right&quot;&gt;287.6&lt;&#x2F;td&gt;&lt;td align=&quot;right&quot;&gt;322.4&lt;&#x2F;td&gt;&lt;td align=&quot;right&quot;&gt;1.00&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h4 id=&quot;nmark-0-1-3&quot;&gt;nmark@0.1.3 &amp;gt;&amp;gt;&lt;&#x2F;h4&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th align=&quot;left&quot;&gt;Command&lt;&#x2F;th&gt;&lt;th align=&quot;right&quot;&gt;Mean [ms]&lt;&#x2F;th&gt;&lt;th align=&quot;right&quot;&gt;Min [ms]&lt;&#x2F;th&gt;&lt;th align=&quot;right&quot;&gt;Max [ms]&lt;&#x2F;th&gt;&lt;th align=&quot;right&quot;&gt;Relative&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;.&#x2F;casa build&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;right&quot;&gt;53.1 ± 7.0&lt;&#x2F;td&gt;&lt;td align=&quot;right&quot;&gt;51.2&lt;&#x2F;td&gt;&lt;td align=&quot;right&quot;&gt;91.7&lt;&#x2F;td&gt;&lt;td align=&quot;right&quot;&gt;1.00&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h3 id=&quot;caution&quot;&gt;Caution&lt;&#x2F;h3&gt;
+&lt;p&gt;This is still work-in-progess project, and does not FULLY pass the &lt;a href=&quot;https:&#x2F;&#x2F;spec.commonmark.org&#x2F;0.29&#x2F;&quot;&gt;spec-test of CommonMark&lt;&#x2F;a&gt;. For example,&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; foo
+bar
+===
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;... is, by &lt;code&gt;nmark&lt;&#x2F;code&gt;, converted to:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;blockquote&amp;gt;
+&amp;lt;h1&amp;gt;foo
+bar&amp;lt;&amp;#x2F;h1&amp;gt;
+&amp;lt;&amp;#x2F;blockquote&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Though I believe &lt;code&gt;nmark&lt;&#x2F;code&gt; is enough for normal usage, I&#x27;m working on improving the accuracy and performance. And issues, pull requests always welcome.&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>Nimで静的サイトジェネレーターを実装する</title>
+            <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/nim-ssg/</link>
+            <guid>https://kyoheiu.gitlab.io/post/nim-ssg/</guid>
+            <description>&lt;p&gt;Rust製の静的サイトジェネレーターZolaでスクラッチからテーマを自作したことで、静的サイトジェネレーターそのものに興味が出てきた（以下、「ジェネレーター」と略す箇所が多々あります）。&lt;br &#x2F;&gt;
+そこで調べてみて初めて知ったのだが、実は世の中には無数といっていい数の静的サイトジェネレーターがある。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;jamstack.org&#x2F;generators&#x2F;&quot;&gt;Static Site Generators - Top Open Source SSGs | Jamstack&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;このページでは、GitHubのスターが多い順に322ものジェネレーターをリストアップしている。Next.js、Hugoに始まり、見たこともないジェネレーターも上のほうにけっこうあったりする。&lt;br &#x2F;&gt;
+中には、同じ言語・同じテンプレートエンジンで作られているものもある。たとえば[Pytyon, jinja2]の組み合わせはちょっと数えただけでも10以上ある。それぞれ実装している機能が異なるのだろうし、使い勝手も違うのだろうと思うが、それにしても静的サイトジェネレーターの機能というのはコアの部分はシンプルなはずなので、「ジェネレーターがたくさん作られている」というこの現象は面白い。&lt;br &#x2F;&gt;
+なぜなのか、少し考えてみたけれど、まず触っていて気持ちがいいというのは大きいと思う。バッとビルドすれば自分のホームが完成する。こうなるだろうと思ったところから外れることはほとんどない。それでいて、成果物は自分好みのページになっている。これは楽しい。&lt;br &#x2F;&gt;
+そして仕組みも、いじっているうちにだんだんわかってくる。テンプレートがあって、マークダウンのファイルがあって、組み合わせて…と、なんだか自分で作れそうな気持ちが湧いてくる。そんな風にして、すでに存在しているジェネレーターと機能は被っている（あるいは場合によっては劣っている）としても、みんなジェネレーターを作ってみたくなるんじゃないだろうか。&lt;&#x2F;p&gt;
+&lt;p&gt;僕も実装してみたところ、ざっくりしたプリミティブなジェネレーターが出来たので、紹介してみたい。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;gitlab.com&#x2F;kyoheiu&#x2F;casa&quot;&gt;Kyohei Uto &#x2F; Casa · GitLab&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;今回は、ただジェネレーターを実装するだけでなく、若い言語Nimを触りながら何かを作ってみる、という狙いもあった。&lt;br &#x2F;&gt;
+ちなみにNim製の静的サイトジェネレーターはすでに存在しているし、機能も今のところそちらのほうがずっと多い。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;nazenimnanoka&quot;&gt;なぜNimなのか&lt;&#x2F;h3&gt;
+&lt;p&gt;ジェネレーターを作るとして、言語の縛りはない。というかむしろ、自分の好きな言語／テンプレートエンジンでジェネレーターを実装する、というところが楽しいはずだ。&lt;br &#x2F;&gt;
+最初に検討したのはHaskell。Pandocがあるということ、自分がある程度慣れた言語であるということ、Haskell製のジェネレーターHakyllは公式のテーマリストが長らく更新されていないこと、が理由だったのだが、これは厳しかった。最近触る機会がなかったというのもあるけれど、やっぱりHaskellは難しい。Haskellは好きだけど、今回はできればあまり血と涙と時間を費やしたくなかったので、他の言語を検討することに。&lt;&#x2F;p&gt;
+&lt;p&gt;一方でなるべく新しい言語に触れたいという気持ちがあって最近ドキュメントを読んでいたのがJuliaとNimだったが、どちらかというとNimのほうが実行まわりで個人的に相性がよさそうだな…というくらいの感じで、Nimでジェネレーターを作ることに決めた。後述するがNimには言語付属のテンプレートエンジンがあり、これが実にサイトジェネレーター向けの仕様だった。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;gou-cheng&quot;&gt;構成&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;.
+├── casa
+├── casa.nim
+├── config.json
+├── content
+│   ├── 1
+│   │   ├── 1.json
+│   │   └── 1.md
+│   ...
+├── css
+├── public
+└── templates
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;全体のフローは非常にシンプルで、contentフォルダに対してforループをまわし、markdownファイルをパースしつつjsonで書いた各記事の設定ファイルを読み込んで、記事ページ、ランディングページおよびタクソノミーのテンプレートに必要な変数を渡す、という流れになる。&lt;&#x2F;p&gt;
+&lt;p&gt;テンプレートについては、Nim付属のSource Code Filtersと呼ばれるテンプレートエンジンを使った。たとえば各記事ページのテンプレートを用意したい場合は、こうなる。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;#? stdtmpl(subsChar = &amp;#x27;$&amp;#x27;, metaChar = &amp;#x27;#&amp;#x27;)
+#proc generatePageHtml(siteTitle, siteUrl, pageContent, pageDate, pageTitle: string, pageCategories, pageTags: seq): string =
+#  result = &amp;quot;&amp;quot;
+&amp;lt;!DOCTYPE html&amp;gt;
+&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
+
+&amp;lt;head&amp;gt;
+  &amp;lt;meta charset=&amp;quot;utf-8&amp;quot;&amp;gt;
+    &amp;lt;title&amp;gt;
+      $pageTitle | $siteTitle
+    &amp;lt;&amp;#x2F;title&amp;gt;
+
+  &amp;lt;link rel=&amp;quot;shortcut icon&amp;quot; type=&amp;quot;image&amp;#x2F;png&amp;quot; href=&amp;quot;$siteUrl&amp;#x2F;static&amp;#x2F;image&amp;#x2F;icon.png&amp;quot;&amp;gt;
+  &amp;lt;meta name=&amp;quot;viewport&amp;quot; content=&amp;quot;width=device-width,initial-scale=1&amp;quot;&amp;gt;
+  &amp;lt;link id=&amp;quot;style&amp;quot; rel=&amp;quot;stylesheet&amp;quot; type=&amp;quot;text&amp;#x2F;css&amp;quot; href=&amp;quot;..&amp;#x2F;..&amp;#x2F;main.css&amp;quot;&amp;gt;
+&amp;lt;&amp;#x2F;head&amp;gt;
+
+&amp;lt;h2&amp;gt;
+  $pageTitle
+&amp;lt;&amp;#x2F;h2&amp;gt;
+
+&amp;lt;div class=&amp;quot;date&amp;quot;&amp;gt;
+  $pageDate
+&amp;lt;&amp;#x2F;div&amp;gt;
+
+#for category in items(pageCategories) :
+  &amp;lt;a href=&amp;quot;$siteUrl&amp;#x2F;categories&amp;#x2F;$category&amp;quot;&amp;gt;&amp;#x2F;$category&amp;lt;&amp;#x2F;a&amp;gt;
+#end for
+
+#for tag in items(pageTags) :
+  &amp;lt;a href=&amp;quot;$siteUrl&amp;#x2F;tags&amp;#x2F;$tag&amp;quot;&amp;gt;#$tag&amp;lt;&amp;#x2F;a&amp;gt;
+#end for
+
+&amp;lt;p&amp;gt;
+  $pageContent
+&amp;lt;&amp;#x2F;p&amp;gt;
+
+&amp;lt;div class=&amp;quot;footer&amp;quot;&amp;gt;
+  &amp;lt;a href=&amp;quot;$siteUrl&amp;quot;&amp;gt;$siteTitle&amp;lt;&amp;#x2F;a&amp;gt; | built in Nim
+&amp;lt;&amp;#x2F;div&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;SCFのテンプレート内では、#を文頭につければNimのコードを動かせる。このMetaCharは自由に変更可能なので、#をテンプレート内の文頭で使いたいときは、たとえば+なり@なりを設定すればいい。ただし１行目の#?だけは変更不可なので注意して!!&lt;br &#x2F;&gt;
+これにpage_base.nimfと名前をつけ（拡張子は自由だがコンベンションとして.nimfが推奨されている）、.nimファイル内でincludeした上で、テンプレート内の関数を呼び出す。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;import markdown, ...
+
+include &amp;quot;templates&amp;#x2F;page_base.nimf&amp;quot;
+...
+
+let pageHtml   = generatePageHtml(siteTitle, siteUrl, pageContent,...
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;これでHTMLファイルとして生成できる。今の設定で生成できるpublicディレクトリの内容は以下の通り。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;.
+├── categories # サンプルとして色名をカテゴリに
+│   ├── blue
+│   ...
+│   └── yellow
+├── content # 1から100までのサンプル記事
+│   ├── 1
+│   ...
+│   └── 100
+├── index.html
+├── main.css
+└── tags　# サンプルとして色名をタグに
+    ├── blue
+    ...
+    └── yellow
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;ただしjinja2やTera Templateにおけるextendsのような拡張機能はまだ実装されていないので、各テンプレート毎に一から実装する必要がある、というのは難点といえば難点。headerやfooterをいじるとき、ちょっと面倒かも。&lt;br &#x2F;&gt;
+また、設定ファイルをいじったとき、ビルドし直さないと反映されない。&lt;br &#x2F;&gt;
+さらに、静的サイトジェネレーターというのはしばしば、サイト全体の設定ファイルに自前の変数を追加し、各テンプレートで使用する…ということをやるわけだが、このSCFを使う場合は、そもそもNimのコードから書き直して実装しなければならない。ここまでくると、お世辞にも手軽なテンプレートエンジンとは言えなさそう。その意味でも、HugoやZolaの拡張性の高さ・自由度は本当にすごいと思う。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;pahuomansu&quot;&gt;パフォーマンス&lt;&#x2F;h3&gt;
+&lt;p&gt;現在自分が使っているRust製ジェネレーターのZola、そして以前使っていたHugoと、自作ジェネレーターCasaのパフォーマンスを比較してみる。サンプルとして作成した100記事からなるサイトを生成するのにかかった時間は以下の通り。&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th align=&quot;center&quot;&gt;Casa（リリースビルド）&lt;&#x2F;th&gt;&lt;th align=&quot;center&quot;&gt;Casa(通常ビルド)&lt;&#x2F;th&gt;&lt;th align=&quot;center&quot;&gt;Zola&lt;&#x2F;th&gt;&lt;th align=&quot;center&quot;&gt;Hugo&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td align=&quot;center&quot;&gt;0.220s&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;0.600s&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;0.094s&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;0.101s&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;ちなみに、ジェネレーターの草分け的存在・Jekyllは、 &lt;a href=&quot;https:&#x2F;&#x2F;forestry.io&#x2F;blog&#x2F;hugo-vs-jekyll-benchmark&#x2F;&quot;&gt;Hugo vs Jekyll: Benchmarked | Forestry.io&lt;&#x2F;a&gt; こちらの記事によると100記事で3〜4s程度。&lt;&#x2F;p&gt;
+&lt;p&gt;ただし、サンプルに用いたファイルはわずかなmarkdownパースしか必要としない。複雑なmarkdownファイルを使うと、Zola&#x2F;Hugoへのビハインドはもっと大きくなる。&lt;&#x2F;p&gt;
+&lt;p&gt;ちなみに最初はさらに遅かったので、設定ファイルの形式を変更した。元々はZolaにならってmarkdownのテキストデータと各記事のフロントマター（toml形式）を１つのファイルに同居させ、あとでsplitしてそれぞれを読み込む…ということをしていたのだが、このsplit周りのコードがかなり汚くて微妙だったのと、パフォーマンス的にこの辺で時間を食ってそう、という感じがあったので、割り切って本文のmarkdownファイルとjsonファイルは分けて作る形に切り替えた。これでビルド時間を半減。&lt;&#x2F;p&gt;
+&lt;p&gt;markdownパーサはnim-markdownを使用。パフォーマンスのボトルネックがこのパーサなのでどうにかできるといいのだが、現状、Nimのパッケージライブラリにあるmarkdownパーサが実質的にはnim-markdownしかない。とりあえず高速化はここまで。&lt;br &#x2F;&gt;
+とはいえ、当然markdownファイルのパース以外にも色々処理をしているわけなので、全体としてNimが確かに速いということは実感できた。正直ここまでとは思っていなかった。まだコードの内容も未熟だから、きっともっと速くできる。&lt;br &#x2F;&gt;
+（ついでに言うと、やっぱりZolaはHugoよりもちょっとだけ速そうな気配）&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;nimza-gan&quot;&gt;Nim雑感&lt;&#x2F;h3&gt;
+&lt;p&gt;以前小さなスクリプトを書いたときに「素直な言語」という手応えを得たが、今回ジェネレーターを実装したことで、ただ単に素直なだけではない、「実直でパワフルな言語」という認識に変わった。コードの書き心地がとてもシンプルで、書いたことがそのまま反映されるし、しかも速い。forループをぶん回しても涼しい顔をしている。ライブラリのさらなる充実に期待（どこかでmarkdownパーサを書いてみたい…）。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>Parsing CSV file in Nim</title>
+            <pubDate>Wed, 20 Jan 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/nim-csv-en/</link>
+            <guid>https://kyoheiu.gitlab.io/post/nim-csv-en/</guid>
+            <description>&lt;p&gt;As an exercise, I wrote a small program in Nim, the programming language that I&#x27;m learning these days.
+Here, we use &lt;code&gt;parsecsv&lt;&#x2F;code&gt; library in standard lib.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;nim&quot; class=&quot;language-nim &quot;&gt;&lt;code class=&quot;language-nim&quot; data-lang=&quot;nim&quot;&gt;import parsecsv
+
+var p: CsvParser
+p.open(&amp;quot;sample1.csv&amp;quot;)
+p.readHeaderRow()
+while p.readRow():
+  echo &amp;quot;The average of &amp;quot;, p.row[0], &amp;quot; in &amp;quot;, 
+    p.headers[2], &amp;quot; is &amp;quot;, p.row[1]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;readHeaderRow&lt;&#x2F;code&gt; is a function that gets the first row of csv and makes table (in order to access to elements of the first row, use &lt;code&gt;header[i]&lt;&#x2F;code&gt;.)
+&lt;code&gt;readRow&lt;&#x2F;code&gt; sees whether we have next line or not, so we use this function in while expression to work on the entire csv.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;$ nim c -r csvparse.nim
+[...]
+The average of May in  &amp;quot;2005&amp;quot; is   0.1
+The average of Jun in  &amp;quot;2005&amp;quot; is   0.5
+The average of Jul in  &amp;quot;2005&amp;quot; is   0.7
+The average of Aug in  &amp;quot;2005&amp;quot; is   2.3
+The average of Sep in  &amp;quot;2005&amp;quot; is   3.5
+The average of Oct in  &amp;quot;2005&amp;quot; is   2.0
+The average of Nov in  &amp;quot;2005&amp;quot; is   0.5
+The average of Dec in  &amp;quot;2005&amp;quot; is   0.0
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;BTW, first exec time was 0.750s, second 0.013s, due to cache.&lt;&#x2F;p&gt;
+&lt;p&gt;Nim shines when we want to build a small but need-to-be-efficient program in daily use, though of course it can be used for more complex applications.&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>NimでCSVファイルをパースする</title>
+            <pubDate>Wed, 20 Jan 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/nim-csv/</link>
+            <guid>https://kyoheiu.gitlab.io/post/nim-csv/</guid>
+            <description>&lt;p&gt;最近勉強中の言語Nimで、ちょっとした作業用にプログラムを書いてみた。
+NimはPython風の文法で簡潔かつコンパクトに高速なプログラムを書ける言語。C &#x2F; C++ &#x2F; Objective-Cのコードにトランスパイルすることができ、Cのライブラリも使用することが可能。&lt;&#x2F;p&gt;
+&lt;p&gt;今回触ったのはStandard Libaryのparsecsv。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;import parsecsv
+
+var p: CsvParser
+p.open(&amp;quot;sample1.csv&amp;quot;)
+p.readHeaderRow()
+while p.readRow():
+  echo &amp;quot;The average of &amp;quot;, p.row[0], &amp;quot; in &amp;quot;, 
+       p.headers[2], &amp;quot; is &amp;quot;, p.row[1]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;readHeaderRowはcsvの最初の行を読み込んでテーブルを作る関数。最初の行の要素にアクセスしたいときはheaders[i]を使う。
+readRowは次の行があるかどうか判定してBoolを返してくれるので、whileの条件に使えばcsv全体に手続きを順に適用できる。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;[kyohei@myarch csvsample]$ nim c -r csvparse.nim
+Hint: used config file &amp;#x27;&amp;#x2F;home&amp;#x2F;kyohei&amp;#x2F;.choosenim&amp;#x2F;toolchains&amp;#x2F;nim-1.4.2&amp;#x2F;config&amp;#x2F;nim.cfg&amp;#x27; [Conf]
+Hint: used config file &amp;#x27;&amp;#x2F;home&amp;#x2F;kyohei&amp;#x2F;.choosenim&amp;#x2F;toolchains&amp;#x2F;nim-1.4.2&amp;#x2F;config&amp;#x2F;config.nims&amp;#x27; [Conf]
+..............CC: stdlib_assertions.nim
+CC: stdlib_io.nim
+CC: stdlib_system.nim
+CC: stdlib_streams.nim
+CC: stdlib_lexbase.nim
+CC: stdlib_parsecsv.nim
+CC: csvparse.nim
+Hint:  [Link]
+Hint: 35986 lines; 0.750s; 48.977MiB peakmem; Debug build; proj: &amp;#x2F;home&amp;#x2F;kyohei&amp;#x2F;nim&amp;#x2F;csvsample&amp;#x2F;csvparse.nim; out: &amp;#x2F;home&amp;#x2F;kyohei&amp;#x2F;nim&amp;#x2F;csvsample&amp;#x2F;csvparse [SuccessX]
+Hint: &amp;#x2F;home&amp;#x2F;kyohei&amp;#x2F;nim&amp;#x2F;csvsample&amp;#x2F;csvparse  [Exec]
+The average of May in  &amp;quot;2005&amp;quot; is   0.1
+The average of Jun in  &amp;quot;2005&amp;quot; is   0.5
+The average of Jul in  &amp;quot;2005&amp;quot; is   0.7
+The average of Aug in  &amp;quot;2005&amp;quot; is   2.3
+The average of Sep in  &amp;quot;2005&amp;quot; is   3.5
+The average of Oct in  &amp;quot;2005&amp;quot; is   2.0
+The average of Nov in  &amp;quot;2005&amp;quot; is   0.5
+The average of Dec in  &amp;quot;2005&amp;quot; is   0.0
+
+[kyohei@myarch csvsample]$ nim c -r csvparse.nim
+Hint: used config file &amp;#x27;&amp;#x2F;home&amp;#x2F;kyohei&amp;#x2F;.choosenim&amp;#x2F;toolchains&amp;#x2F;nim-1.4.2&amp;#x2F;config&amp;#x2F;nim.cfg&amp;#x27; [Conf]
+Hint: used config file &amp;#x27;&amp;#x2F;home&amp;#x2F;kyohei&amp;#x2F;.choosenim&amp;#x2F;toolchains&amp;#x2F;nim-1.4.2&amp;#x2F;config&amp;#x2F;config.nims&amp;#x27; [Conf]
+Hint: 7847 lines; 0.013s; 6.98MiB peakmem; Debug build; proj: &amp;#x2F;home&amp;#x2F;kyohei&amp;#x2F;nim&amp;#x2F;csvsample&amp;#x2F;csvparse.nim; out: &amp;#x2F;home&amp;#x2F;kyohei&amp;#x2F;nim&amp;#x2F;csvsample&amp;#x2F;csvparse [SuccessX]
+Hint: &amp;#x2F;home&amp;#x2F;kyohei&amp;#x2F;nim&amp;#x2F;csvsample&amp;#x2F;csvparse  [Exec]
+The average of May in  &amp;quot;2005&amp;quot; is   0.1
+The average of Jun in  &amp;quot;2005&amp;quot; is   0.5
+The average of Jul in  &amp;quot;2005&amp;quot; is   0.7
+The average of Aug in  &amp;quot;2005&amp;quot; is   2.3
+The average of Sep in  &amp;quot;2005&amp;quot; is   3.5
+The average of Oct in  &amp;quot;2005&amp;quot; is   2.0
+The average of Nov in  &amp;quot;2005&amp;quot; is   0.5
+The average of Dec in  &amp;quot;2005&amp;quot; is   0.0
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;１回めの実行は0.750sかかっているが、２回めは0.013sと短縮されている。&lt;&#x2F;p&gt;
+&lt;p&gt;個人的なNimの使用感としては、わずらわしいこと抜きにさくっとシンプルなプログラムを書きたいときにとても良い感じ（もちろんもっと複雑なプログラムも書けるだろうけれど）。「今時の簡潔言語」の中では一番しっくりきてます。&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

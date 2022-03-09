@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>OSSのREADME.md更新について | kyoheiu.gitlab.io</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;icon.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+
+  <script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;kyoheiu.gitlab.io&#x2F;images&#x2F;icon.png" alt="kyoheiu.gitlab.io"
+          width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;kyoheiu.gitlab.io</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+  </div>
+</div>
+
+<body onload="getTheme()">
+  <section class="section">
+    <div class="container">
+      
+<p>
+  <div class="title_postpage">OSSのREADME.md更新について</div>
+</p>
+<p>
+  <div class="date_postpage">2021-05-01</div>
+  <div class="taxonomies_postpage">
+  
+      
+      <a href="https://kyoheiu.gitlab.io/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://kyoheiu.gitlab.io/tags/nim/">#Nim</a>
+      
+      &emsp;<a href="https://kyoheiu.gitlab.io/tags/git/">#Git</a>
+      
+      &emsp;<a href="https://kyoheiu.gitlab.io/tags/github/">#GitHub</a>
+      
+  
+  </div>
+</p>
+
+<p>
+  <p>先日publicリポジトリに移したmarkdownパーサ<code>nmark</code>をちまちま更新しているのだが、更新するたびに以下のような作業が発生していてだんだん面倒になってきた。</p>
+<script>window.addEventListener("message", function(e) {var i = e.data.split(":")[1];var h = e.data.split(":")[2];if (e.data.split(":")[0] == "swimlanes-io" && i && h) {document.getElementById("__sw-io-" + i).setAttribute("style","height:" + h + "px");}}, false);</script><div id="__sw-io-fZAw"><iframe style="border:none; width:100%; height:100%" scrolling="no" src="https://cdn.swimlanes.io/dist/embeded.html#fZA7D8IwDIT3/ApvQKTC3gEJiYqJhYq9aWJoROpEeUj039MHUKlDN8v3new7zqkV/gXJKRERvE1RE3LO2LTPjjAO+Y8ItsXYaHrOgBRBbMvyssuBEBVECx6lcDF5hBpJNgPJ/tjCU5Fua4OgKURhzHSvWsVBQqZyjwZFwFFc4ZvOoX/0qWCzPwwC1EkbtVlYvjGldR3g21kf+yjz98s67lMdt+J0vhbsAw==#fZAw"></iframe></div>
+<p>（さっき見つけた<a href="https://swimlanes.io/">swimlane.io</a>を使ってみたかったのであえて作ってみた）</p>
+<p>今思いつく解決策としては、</p>
+<ul>
+<li>ベンチマーク出力を２つの外部プログラム（静的サイトジェネレータ、hyperfine）に頼っているので、<code>nmark</code>内に実装し、SCFなりでREADME.mdを生成する関数も書いて更新する。</li>
+<li>ベンチマークを画像として出力し、リポジトリに含めて<code>git push</code>し、README.md内には画像リンクとして取り込む。</li>
+<li><code>git push</code>をトリガーとしてベンチマークをとってくれるCIを設定し、出力を取り込んでREADME.mdを更新する（もしくは更新するところまでGitHub Actionsなどで実装する）。</li>
+</ul>
+<p>という感じだが、</p>
+<ul>
+<li><code>nmark</code>内に全部取り込むのは（可能だが）間違っている気がする</li>
+<li>数字を画像で出すのは嫌だ</li>
+</ul>
+<p>で、CIを勉強してみようかなぁと思っている。最終的にはジェネレータを使わないという選択になりそうな気がする。</p>
+<p>こんなふうに、機能を追加したりバグを修正したりするたびにREADME.md内の細かい数字をアップデートしないといけない状況というのはあると思うのだけれど、何か効率的なやり方があるんだろうか。</p>
+<h3 id="zhui-ji">追記</h3>
+<p>シェルスクリプトの代わりにNimscriptを書いて、パフォーマンス比較の詳細を記したmarkdownファイルをREADME.mdとは別に作り、そこに<code>hyperfine</code>の結果をコピーするというやり方にしてみた。</p>
+<pre data-lang="nim" class="language-nim "><code class="language-nim" data-lang="nim">mode = ScriptMode.Verbose
+
+const version = &quot;0.1.6&quot;
+
+const text = &quot;&quot;&quot;
+# Perfomance comparison detail
+...
+### nmark@&quot;&quot;&quot; 
+
+cd &quot;..&#x2F;casa&quot;
+
+exec(&quot;nimble install nmark&quot;)
+exec(&quot;nim c -d:release casa&quot;)
+exec(&quot;hyperfine &#x27;.&#x2F;casa build&#x27; --export-markdown nmark.md&quot;)
+let s = text &amp; version &amp; &quot;&quot;&quot;
+&gt;&gt;
+&quot;&quot;&quot; &amp; readFile(&quot;nmark.md&quot;)
+
+cd &quot;..&#x2F;nmark&quot;
+
+writeFile(&quot;perfcmp.md&quot;, s)
+
+echo &quot;Done.&quot;
+</code></pre>
+<p>手動でいじるのは定数として入れているバージョン番号のみなのでだいぶ楽にはなった。この番号も、何らかのスクリプトで.nimbleファイルからとってきたいところだが、適当な関数が見つからないためとりあえずここまでにしている。tomlと見なしてパースすればいいような気もする。</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">kyoheiu.gitlab.io</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a
+    href="https://github.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>

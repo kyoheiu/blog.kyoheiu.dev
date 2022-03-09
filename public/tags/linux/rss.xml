@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>kyoheiu.gitlab.io - Linux</title>
+        <link>https://kyoheiu.gitlab.io</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://kyoheiu.gitlab.io/tags/linux/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Wed, 29 Dec 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>fcitxが壊れたので設定を見直す</title>
+            <pubDate>Wed, 29 Dec 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/fcitx-does-not-work/</link>
+            <guid>https://kyoheiu.gitlab.io/post/fcitx-does-not-work/</guid>
+            <description>&lt;h3 id=&quot;huai-retayuan-yin&quot;&gt;壊れた原因&lt;&#x2F;h3&gt;
+&lt;p&gt;普段はMac bookでzoomを使っていたのだけれど、ちょっとした用事でメインのデスクトップにもzoomを入れることになり、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;yay -S zoom
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;でインストール（officialじゃなくてaurだよ）。&lt;&#x2F;p&gt;
+&lt;p&gt;しかしこのzoom、理由は不明だが依存パッケージにibusがあり、おそらくこいつが原因でfcitxが正常に動かなくなってしまった。多分何かしらのコンフリクトが発生している。状態としては、起動するけれど変換してくれない、というもの。&lt;&#x2F;p&gt;
+&lt;p&gt;明らかにzoomインストール後の不具合だったので、何とか依存パッケージごと削除してもとに戻そうとするも、どこかのファイルに変更が加えられてしまったのか、うまくいかない。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;koremade&quot;&gt;これまで&lt;&#x2F;h3&gt;
+&lt;p&gt;fcitxの起動はこれまで、&lt;code&gt;.xinitrc&lt;&#x2F;code&gt;に&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;と記述した上で、i3のスタート時起動 &lt;code&gt;exec --no-startup-id fcitx&lt;&#x2F;code&gt; を行っていた。&lt;br &#x2F;&gt;
+のだが、どうやら一連のexportは通常&lt;code&gt;.xprofile&lt;&#x2F;code&gt;に記述するほうが正しいみたい。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;.xprofile&lt;&#x2F;code&gt;への記述で、fcitx自体は無事動くようになった（なぜかは不明）。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zhui-jia-nowen-ti&quot;&gt;追加の問題&lt;&#x2F;h3&gt;
+&lt;p&gt;ただ、こうすると、fcitxが起動している状態でターミナルを立ち上げたとき、日本語のインプットが必ず先に入ってしまう（これまではなぜかターミナルではデフォルト英数だった）。自作ランチャーにも日本語が入るようになり、すごくわずらわしい。いちいち切り替えて入力するのも嫌だし…。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;dui-ce&quot;&gt;対策&lt;&#x2F;h3&gt;
+&lt;p&gt;exportの記述をすべて&lt;code&gt;.xprofile&lt;&#x2F;code&gt;に移した上で、思いきってスタート時のfcitx起動を削除した。
+代わりに、i3の設定で&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;#IME
+bindsym $mod+i exec fcitx
+bindsym $mod+k exec &amp;quot;killall fcitx&amp;quot;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;として、ショートカットでfcitxの起動／停止を行うようにした。IME自体をデフォルトで無効にして、どうしても必要なときに日本語入力を立ち上げる。こうなると「日本語入力ができる」ほうがむしろ特殊な状態になるので、「今日本語入力だっけ…？」的なわずらわしさがちょっと減り、わりと頭の中はスッキリする。&lt;br &#x2F;&gt;
+だいたい起動時に問答無用でfcitxを起動している人が多い印象ですが、むしろ使わないときはkillallしてしまったほうが快適ですね。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zui-hou-ni&quot;&gt;最後に&lt;&#x2F;h3&gt;
+&lt;p&gt;zoom(ibus)許すまじ。&lt;&#x2F;p&gt;
+&lt;p&gt;(本当は、日本語入力するデバイスと英語／コードを書くデバイスを思いきって分けてしまったほうが楽かもしれない)&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>starshipで絵文字を表示させる（Arch Linux）</title>
+            <pubDate>Wed, 31 Mar 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/starship-emoji/</link>
+            <guid>https://kyoheiu.gitlab.io/post/starship-emoji/</guid>
+            <description>&lt;p&gt;先日のArch Linux再インストールに伴い、色々とアプリケーションを入れ直していたのだけれど、&lt;a href=&quot;https:&#x2F;&#x2F;starship.rs&#x2F;&quot;&gt;starship&lt;&#x2F;a&gt;の絵文字表示ができなくなってしまいちょっと手こずったので、メモ。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;bi-yao-napatukezi&quot;&gt;必要なパッケージ&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;starship&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;nerd font(AURの&lt;code&gt;nerd-fonts-source-code-pro&lt;&#x2F;code&gt;を使っているが何でもいいはず)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;noto-emoji&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;noto-fonts&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;noto-fonts-cjk&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;最後の２つのパッケージがないとカバーできないUnicode絵文字が微妙に存在する（たとえば[⇡]）。&lt;&#x2F;p&gt;
+&lt;p&gt;starshipの意義については正直なんとも言えないが、デバッグを繰り返しているときに前の実行結果との切れ目がわかりやすい…という効果はある。かもしれない。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>バックアップについて考える</title>
+            <pubDate>Mon, 22 Mar 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/about-backup/</link>
+            <guid>https://kyoheiu.gitlab.io/post/about-backup/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;kyoheiu.gitlab.io&#x2F;post&#x2F;reinstall-arch&#x2F;&quot;&gt;Arch Linuxを再インストールした話&lt;&#x2F;a&gt;に関連して。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;dotfilesnoxi-ifang&quot;&gt;dotfilesの扱い方&lt;&#x2F;h3&gt;
+&lt;p&gt;今回感じたのは、最低限i3と、ターミナルエミュレーター &#x2F; vifm &#x2F; nvimを入れて、dotfilesをリモートリポジトリから引っ張ってくれば作業環境は整うわけなので、追加のバックアップ作業はもしかしたら要らないのかも、ということ。これまではtimeshiftで定期的にバックアップをとっていたのだが、結局一度も使わないままだったし…。&lt;br &#x2F;&gt;
+逆に上記のパッケージのdotfilesがリモートに存在しない場合、動くことは動くが、細かい設定を整えようとするとかなり面倒くさいことになってしまうので、思っていた以上にdotfilesのバックアップは大事だったとも言える（r&#x2F;unixpornに貼りつけるだけのアレじゃなかった）。&lt;&#x2F;p&gt;
+&lt;p&gt;シェルスクリプトでdotfilesの設定ファイルのシンボリックリンクを各所に貼るプログラムを書いている人が多いと思うが、同じようなものをNimでさくっと書いてみたので貼っておきます。&lt;&#x2F;p&gt;
+&lt;script src=&quot;https:&#x2F;&#x2F;gist.github.com&#x2F;kyoheiu&#x2F;9b5c634d38f26d1b67ad1d34bb29ef76.js&quot;&gt;&lt;&#x2F;script&gt;
+&lt;p&gt;&lt;code&gt;os&lt;&#x2F;code&gt;ライブラリの&lt;code&gt;createSymlink&lt;&#x2F;code&gt;は同名のファイルが存在した場合failになるので、ファイルを削除してからシンボリックリンクを作成している。利用する場合は自己責任でお願いします。
+nvimのcolorsディレクトリを除いているのはこれ以上コードが入れ子になるのが嫌だったから、程度の理由。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;shu-kitupanasikodonoxi-ifang&quot;&gt;書きっぱなしコードの扱い方&lt;&#x2F;h3&gt;
+&lt;p&gt;これまで練習用に書いてきたHaskellやらRustやらのコードはクリーンインストールによりすべて消えてしまった。まあ見返すことはほとんどなかったし、作り途中のプロジェクトはGitLabのプライベートリポジトリに上げながらやっているから無事だ。それ以外にも、ちょっと面倒な感じの、たとえばHaskellでスクレイピングするプログラムの骨子などはサイトに上げているので、残りのちまちましたやつ（Project Eulerの解答とか）は別にいいかな…と思いつつ、でもやっぱりちょっとさびしい。&lt;br &#x2F;&gt;
+こういう断片的なコードをいちいちGitHub GistsやGitLab Snippetsに上げるか、それとも書き捨てのつもりで気にしないかはけっこう微妙な問題だと思う。見返さなかったとはいえ、振り返ると意外と発見があったり、最近書いていない言語を思い出すのに使ったり、ということもあるだろうし、悩ましい。&lt;br &#x2F;&gt;
+&lt;a href=&quot;https:&#x2F;&#x2F;note.com&#x2F;konojunya&#x2F;n&#x2F;n461544d2f881&quot;&gt;Gistsに自動アップロードするCLIを書いている&lt;&#x2F;a&gt;方を見つけて、なるほど、と思ったが、書いた端から上げたい感じもある。VS Codeのエクステンションとか、もうありそうだな…と思ったら&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kenhowardpdx&#x2F;vscode-gist&quot;&gt;あった&lt;&#x2F;a&gt;。自分なりに使いそうなフローで何かCLIを作ってみてもいいかもしれない。&lt;br &#x2F;&gt;
+GitLabも&lt;a href=&quot;https:&#x2F;&#x2F;docs.gitlab.com&#x2F;ee&#x2F;api&#x2F;snippets.html#get-a-single-snippet&quot;&gt;Snippets APIの紹介がとてもよくまとまっている&lt;&#x2F;a&gt;のでけっこう使いやすそう。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;jing-de-saitozieneretanoluo-tosixue&quot;&gt;静的サイトジェネレーターの落とし穴(?)&lt;&#x2F;h3&gt;
+&lt;p&gt;それと、Hugo &#x2F; Zolaなどの静的サイトジェネレーターを使っている場合は、サイト上にフロントマター付きの.mdファイルが存在するわけではないので、もしデータが消えてしまった場合はサイト上のテキストをコピーしてきて、あらためて.mdとしてタグ付けをしないといけない（もしくはサイトをスクレイピングして.mdファイルを生成するプログラムを書くか。できなくはないが面倒ではある）。&lt;br &#x2F;&gt;
+幸い、数か月前までプライベートリポジトリにサイトごと上げていたので、手作業での.md復旧は数記事で済んだのだが、これがまったくバックアップがない状況だったらけっこう辛かったかもしれない。プライベートリポジトリでもいいので更新時にpushしておくのが大事だとしみじみ思った（もちろん、github.ioなどでサイトをホスティングしている場合は当然バックアップがとれているのでこんなことは考えなくていい）。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;owarini&quot;&gt;おわりに&lt;&#x2F;h3&gt;
+&lt;p&gt;以上に書いたものはすべてgitのリモートリポジトリの存在が前提になっている。ここに何か落とし穴がまだあるかもしれない。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>Arch Linux再インストールで発見したこと</title>
+            <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/reinstall-arch/</link>
+            <guid>https://kyoheiu.gitlab.io/post/reinstall-arch/</guid>
+            <description>&lt;p&gt;先日自分のミスでパーティションをブレイクしてしまい、Arch Linuxが起動不可の状態に。インストールメディアを準備して&lt;code&gt;arch-chroot&lt;&#x2F;code&gt;すればもしかしたら救出できたのかもしれなかったが、少し時間があったのでこの際、とクリーンインストールをした（ちょうどKDE neonを入れたサブ機を用意したてだったのが本当にラッキーだった）。前回インストールをしたのは１年前だったと思うが、少し様子が変わっていたのでメモ。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;roguwotoreruyouninatuteita&quot;&gt;ログをとれるようになっていた&lt;&#x2F;h4&gt;
+&lt;p&gt;もしかするとこれは前からだったかもしれないが、インストール作業のログをとれるようになっている。また、ArchWikiへの誘導も冒頭にあって、ちょっぴり親切な雰囲気が醸し出されていた。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;wifi-menugashi-enai&quot;&gt;wifi-menuが使えない&lt;&#x2F;h4&gt;
+&lt;p&gt;最新のisoでは&lt;code&gt;wifi-menu&lt;&#x2F;code&gt;が含まれていないのか、開幕&lt;code&gt;wifi-menu&lt;&#x2F;code&gt;でとりあえずネットワーク接続を確保するということができない。&lt;br &#x2F;&gt;
+ArchWikiでは&lt;code&gt;iwctl&lt;&#x2F;code&gt;による接続を推奨している。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;iwctl
+device list # デバイス名の確認
+station &amp;lt;デバイス名&amp;gt; connect &amp;lt;アクセスポイント名&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;これでOK。接続したら&lt;code&gt;ctrl+C&lt;&#x2F;code&gt;で抜けることを忘れずに。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;systemd-bootnoshe-ding-womisusitemoqi-kanai&quot;&gt;systemd-bootの設定をミスしても泣かない&lt;&#x2F;h4&gt;
+&lt;p&gt;ここで何回かミスってしまったのだが、最初からやり直す必要はない。インストールメディアを挿したまま再起動し、ネットワーク接続を確保した後、マウント。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;mount &amp;#x2F;dev&amp;#x2F;device2 &amp;#x2F;mnt
+mount &amp;#x2F;dev&amp;#x2F;device1 &amp;#x2F;mnt&amp;#x2F;boot
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;その後、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;arch-chroot &amp;#x2F;mnt
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;これで&lt;code&gt;&#x2F;boot&lt;&#x2F;code&gt;以下の設定ファイルもいじれるようになる。&lt;&#x2F;p&gt;
+&lt;p&gt;個人的にミスしやすいポイントとしては、&lt;code&gt;&#x2F;boot&#x2F;loader&#x2F;entries&#x2F;arch.conf&lt;&#x2F;code&gt;内のoptions行。&lt;br &#x2F;&gt;
+&lt;code&gt;blkid&lt;&#x2F;code&gt;で調べたPARTUUIDを入れるのだが、間違えてUUIDを入れるとか、違うパーティションのPARTUUIDを入れてしまうといったミスが起こりやすい。ここは落ち着いて写真を撮って進行しましょう。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;systemddeyarikurisuruyounizu-mu&quot;&gt;systemdでやりくりするように組む&lt;&#x2F;h4&gt;
+&lt;p&gt;以前は&lt;a href=&quot;https:&#x2F;&#x2F;kyoheiu.gitlab.io&#x2F;post&#x2F;archinstall&#x2F;&quot;&gt;この記事&lt;&#x2F;a&gt;にあるようにブートローダーとしてgrubを選択していたのだけど、このコマンドを正確に打つのめっちゃ大変ですよね。systemd-bootに切り替えたほうがインストールは楽になるはず。&lt;br &#x2F;&gt;
+ネットワーク接続についても、複数のパッケージで組もうとするとその分再インストールの手間が増え、手順も複雑になって後々わけがわからなくなるので、極力systemd内で生きていくように選択していったほうがよいように思う。&lt;br &#x2F;&gt;
+ネットワーク接続は僕の場合、&lt;code&gt;iwd&lt;&#x2F;code&gt;を入れて&lt;code&gt;iwctl&lt;&#x2F;code&gt;で接続したのち、systemd-networkdとsystemd-resolvedを&lt;code&gt;enable&lt;&#x2F;code&gt;し、&lt;code&gt;dhcpcd&lt;&#x2F;code&gt;も入れてnetworkdの各種設定ファイルを作成、で再起動後も自動接続できた（こう書くとかなり面倒くさそうだが、意外とそうでもない）。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>Chromium losing Sync support on March 15</title>
+            <pubDate>Fri, 05 Feb 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/chromium-losing-sync/</link>
+            <guid>https://kyoheiu.gitlab.io/post/chromium-losing-sync/</guid>
+            <description>&lt;h3 id=&quot;jing-wei&quot;&gt;経緯&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;blog.chromium.org&#x2F;2021&#x2F;01&#x2F;limiting-private-api-availability-in.html&quot;&gt;Chromium Blog: Limiting Private API availability in Chromium&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;During a recent audit, we discovered that some third-party Chromium based browsers were able to integrate Google features, such as Chrome sync and Click to Call, that are only intended for Google’s use. This meant that a small fraction of users could sign into their Google Account and store their personal Chrome sync data, such as bookmarks, not just with Google Chrome, but also with some third-party Chromium based browsers. We are limiting access to our private Chrome APIs starting on March 15, 2021.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;Google提供のChromiumパッケージ以外のChromium、そしてChromiumベースのブラウザにおいて、ブックマークデータのsyncなど、「Googleによる利用のみが想定されていたAPI」の利用がみられることが「分かった」ので、このAPIの利用を21年3月15日より制限することにした、というのがGoogle側の話である。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;archlinux.org&#x2F;news&#x2F;chromium-losing-sync-support-in-early-march&#x2F;&quot;&gt;Arch Linux - News: Chromium losing Sync support in early March&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Google has announced that they are going to block everything but Chrome from accessing certain Google features (like Chrome sync) starting on March 15. This decision by Google is going to affect Arch&#x27;s chromium package a bit earlier, on March 2, when Chromium 89 gets released.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;これを受けて、各ディストリビューションのメンテナも対応を迫られている。Arch Linux版はGoogleによる制限の前に先んじてAPI利用を停止する模様。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;googlenofang-zhen-zhuan-huan&quot;&gt;Googleの方針転換&lt;&#x2F;h3&gt;
+&lt;p&gt;しかし、このGoogle側の言い分には事実でない情報が含まれているようだ。
+以下のブログの記事を読んでみる。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;hackaday.com&#x2F;2021&#x2F;01&#x2F;26&#x2F;whats-the-deal-with-chromium-on-linux-google-at-odds-with-package-maintainers&#x2F;&quot;&gt;What’s The Deal With Chromium On Linux? Google At Odds With Package Maintainers | Hackaday&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;As developer Eric Hameleers explains in a lengthy blog post, he was supplied with a dedicated API key for his Slackware Chromium builds by the Google Chrome Team in 2013. He was granted “official permission to include Google API keys in your packages”, and was told that the usage quota for that particular key would be increased “in an effort to adequately support your users”, as normally the key he was assigned would only be for personal development use. Evangelos Foutras, the maintainer for the Arch Linux Chromium package, has indicated he received a similar email at around the same time.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;groups.google.com&#x2F;a&#x2F;chromium.org&#x2F;g&#x2F;chromium-packagers&#x2F;c&#x2F;SG6jnsP4pWM&#x2F;m&#x2F;Kr0KlsL8CQAJ?pli=1&quot;&gt;Re: [Action Required] Update on Google API usage in Chromium&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Arch LinuxのChromiumパッケージのメンテナ・Evangelos Foutras氏の上記書き込みによると、このAPIは実は、2013年ごろにGoogleのChrome開発チームから「公式に再配布が認められていないものを、配布用に提供する」とのメッセージとともに送られたものだという。とすると、少なくともこのAPIの利用が各ディストリビューションのパッケージにおいて始まったタイミングでは、Google側はAPIがサードパーティーによって利用されていることは認識していたし、むしろそれを促進していたということになる。今回の方針転換が、API制限以上の何を示唆しているのかは、それぞれに感じるところがあるだろう。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;sekiyuriteiwen-ti&quot;&gt;セキュリティ問題&lt;&#x2F;h3&gt;
+&lt;p&gt;これを受けてのコミュニティの主な反応としては当然、「各ディストリビューションのChromiumパッケージにおいてsyncが行えなくなること」、そして「Googleが提供しているプロプライエタリなChrome、そしてChromiumと比して価値が低落すること」を否定的に受け止め、他ブラウザへ移行するという声が多い。
+しかしどうも話は単に「便利機能の制限」にとどまらないようだ。Foutras氏によると、このAPI制限によりセーフブラウンジング機能もdisabledにされる可能性があるとのこと。Safe Browsing Testing Linksでテストすると、&lt;a href=&quot;https:&#x2F;&#x2F;groups.google.com&#x2F;a&#x2F;chromium.org&#x2F;g&#x2F;chromium-packagers&#x2F;c&#x2F;SG6jnsP4pWM&#x2F;m&#x2F;OOxl9wKLAAAJ&quot;&gt;セーフブラウジング機能による警告が動かなかった&lt;&#x2F;a&gt;という。これは利便性がどうこうという話以前の、深刻なトラブルにつながりかねない変更だ。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;mentenanofan-ying&quot;&gt;メンテナの反応&lt;&#x2F;h3&gt;
+&lt;p&gt;この件については、上記のパッケージメンテナ諸氏による議論のほか、SlackwareのChromiumパッケージのメンテナ・Eric Hameleers氏のブログ記事も大変読み応えがある（&lt;a href=&quot;https:&#x2F;&#x2F;alien.slackbook.org&#x2F;blog&#x2F;google-muzzles-all-chromium-browsers-on-15-march-2021&#x2F;&quot;&gt;Google muzzles all Chromium browsers on 15 March 2021 | Alien Pastures&lt;&#x2F;a&gt;）。普段パッケージを好き勝手に使わせてもらっている身としては、これらの発言の奥にある感情を想像せずにはいられない。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>Steamサーバー接続時トラブルを解決する（Arch Linux）</title>
+            <pubDate>Wed, 23 Dec 2020 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/steam-server-error/</link>
+            <guid>https://kyoheiu.gitlab.io/post/steam-server-error/</guid>
+            <description>&lt;h3 id=&quot;huan-jing&quot;&gt;環境&lt;&#x2F;h3&gt;
+&lt;p&gt;OS: Arch Linux x86_64&lt;br &#x2F;&gt;
+Kernel: 5.9.14-arch1-1&lt;br &#x2F;&gt;
+Steamは&lt;code&gt;pacman&lt;&#x2F;code&gt;のパッケージを使用。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;wen-ti&quot;&gt;問題&lt;&#x2F;h3&gt;
+&lt;p&gt;前提として、「ブラウザなどのネットワーク接続は異常なし」。&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;ある日突然、Steamで購入したはずのゲームをダウンロードできなくなる。（ダウンロードアイコンをクリックしてもダウンロードが始まらない／一瞬で停止する）&lt;&#x2F;li&gt;
+&lt;li&gt;上記を解決するべくSteamを再インストールしてみたところ、今度はログインができなくなる。エラーメッセージは &lt;strong&gt;&amp;quot;Steam is having trouble connecting to the Steam servers&amp;quot;&lt;&#x2F;strong&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h3 id=&quot;yuan-yin&quot;&gt;原因&lt;&#x2F;h3&gt;
+&lt;p&gt;僕の場合は、少し前にネットワークへの接続方法を&lt;code&gt;NetworkManager&lt;&#x2F;code&gt;から&lt;code&gt;systemd-networkd&lt;&#x2F;code&gt;に切り替えた際、DHCP接続の設定が抜けていたことが原因だった模様。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;dui-ce&quot;&gt;対策&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;systemd-networkd&lt;&#x2F;code&gt;でWi-FiにDHCP接続する場合は、&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;1&quot;&gt;(1)&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;&#x2F;etc&#x2F;systemd&#x2F;network&#x2F;interface.network&lt;&#x2F;code&gt;に&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;[Match]
+Name=interface
+[Network]
+DHCP=yes
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;と書いておき、&lt;strong&gt;同時に&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;2&quot;&gt;(2)&lt;&#x2F;h4&gt;
+&lt;p&gt;別途&lt;code&gt;dhcpcd&lt;&#x2F;code&gt;をインストールして&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;# systemctl start dhcpcd.service
+# systemctl enable dhcpcd.service
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;しておかなければならない。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;NetworkManager&lt;&#x2F;code&gt;を使っていた元々の設定では、このあたりはクリアーできていたようなのだが、&lt;code&gt;networkd&lt;&#x2F;code&gt;へ切り替えたタイミングでDHCPまわりが抜けた結果起こった問題と思われる。&lt;&#x2F;p&gt;
+&lt;p&gt;しかし(2)が抜けた状態でも、ブラウザやターミナルでのインターネット接続は問題なく行えていたので、&lt;code&gt;dhcpcd&lt;&#x2F;code&gt;不在によるトラブルだということを突き止めるまで時間がかかってしまった。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;cf&quot;&gt;cf&lt;&#x2F;h3&gt;
+&lt;p&gt;https:&#x2F;&#x2F;github.com&#x2F;ValveSoftware&#x2F;steam-for-linux&#x2F;issues&#x2F;2085
+https:&#x2F;&#x2F;github.com&#x2F;ValveSoftware&#x2F;steam-for-linux&#x2F;issues&#x2F;4855&lt;&#x2F;p&gt;
+&lt;p&gt;関連していそうなissue。「Steam以外はふつうにネット接続できている」というのがミソ。&lt;code&gt;networkd&lt;&#x2F;code&gt;以外を使っていても、同症状の場合は一度DHCP接続を確認してみるとよいかもしれない。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>Arch Linuxインストールメモ(2020)</title>
+            <pubDate>Sun, 20 Sep 2020 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/archinstall/</link>
+            <guid>https://kyoheiu.gitlab.io/post/archinstall/</guid>
+            <description>&lt;h1 id=&quot;2021-03-21-konomemohagu-ku-xian-xing-baziyondehashi-emasen-ji-lu-tositecan-siteimasu-archwikiwodu-mimasiyou&quot;&gt;(2021-03-21) このメモは古く、現行バージョンでは使えません。記録として残しています。ArchWikiを読みましょう。&lt;&#x2F;h1&gt;
+&lt;p&gt;Arch Linuxインストールの覚書。将来の自分へのメモとして。&lt;&#x2F;p&gt;
+&lt;p&gt;liveインストールの時点でどの程度パッケージを入れておくかは自由だが、インストール自体が初めての場合は&lt;code&gt;pacstrap&lt;&#x2F;code&gt;段階では基本パッケージ、エディタ、ネットワーク関係（これも選択肢は複数ある）くらいにとどめておき、後でX以下を入れていくほうが理解が進むのでいいと思う。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;insutoruhou-toraburunowei-ran-fang-zhi-ce&quot;&gt;インストール後トラブルの未然防止策&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;ネットワークに接続できない -&amp;gt; インストール時にネットワーク周りのパッケージを導入しておく。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;pacman&lt;&#x2F;code&gt;が見つからない -&amp;gt; インストール時に&lt;code&gt;base-devel&lt;&#x2F;code&gt;を入れておく。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;hazimeni&quot;&gt;はじめに&lt;&#x2F;h3&gt;
+&lt;p&gt;UEFIモードでliveUSBを起動すること&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;mazuwifijie-sok&quot;&gt;まずwifi接続&lt;&#x2F;h3&gt;
+&lt;p&gt;wifi-menu&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;pateisiyon&quot;&gt;パーティション&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;risutowoque-ren&quot;&gt;リストを確認&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;fdisk -l&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;pateisiyonbureiku&quot;&gt;パーティションブレイク&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;sgdisk --zap-all &#x2F;dev&#x2F;nvme0n1&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;pateisiyonfen-ge-kai-shi&quot;&gt;パーティション分割開始&lt;&#x2F;h4&gt;
+&lt;pre&gt;&lt;code&gt;gdisk &amp;#x2F;dev&amp;#x2F;nvme0n1
+Command (? for help): o
+This option deletes all partitions and creates a new protective MBR.
+Proceed? (Y&amp;#x2F;N): y
+
+Command (? for help): n
+Partition number (1-128, default 1): default
+First sector (34-xxxxxxxxx, default = xxxx) or {+-}size{KMGTP}: default
+Last sector (xxxx-xxxxxxxxx, default = xxxxxxxxx) or {+-}size{KMGTP}: +500M
+Hex code or GUID (L to show codes, Enter = 8300): ef00
+
+Command (? for help): n
+Partition number (2-128, default 2): default
+First sector (34-xxxxxxxxx, default = xxxxxx) or {+-}size{KMGTP}: default
+Last sector (xxxxxx-xxxxxxxxx, default = xxxxxxxxx) or {+-}size{KMGTP}: default
+Hex code or GUID (L to show codes, Enter = 8300): default
+
+Command (? for help): w
+
+Do you want to proceed? (Y&amp;#x2F;N): y
+OK: writing new GUID partition table (GPT) to &amp;#x2F;dev&amp;#x2F;nvme0n1
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;huomatuto&quot;&gt;フォーマット&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;mkfs.fat -F32 &amp;#x2F;dev&amp;#x2F;nvme0n1p1
+mkfs.ext4 &amp;#x2F;dev&amp;#x2F;nvme0n1p2
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;maunto&quot;&gt;マウント&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;mount &amp;#x2F;dev&amp;#x2F;nvme0n1p2 &amp;#x2F;mnt
+mkdir &amp;#x2F;mnt&amp;#x2F;boot
+mount &amp;#x2F;dev&amp;#x2F;nvme0n1p1 &amp;#x2F;mnt&amp;#x2F;boot
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;mirarisutonobian-ji&quot;&gt;ミラーリストの編集&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;vi &#x2F;etc&#x2F;pacman.d&#x2F;mirrorlist&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;shi-ji-he-wase&quot;&gt;時計合わせ&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;timedatectl set-ntp true&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;patukeziinsutorukai-shi&quot;&gt;パッケージインストール開始&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;ji-ben-patukezi&quot;&gt;基本パッケージ&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt base linux linux-firmware base-devel man-deb man-pages&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;netutowakuguan-xi&quot;&gt;ネットワーク関係&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt networkmanager nm-connection-editor network-manager-applet&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;tekisutoedeita&quot;&gt;テキストエディタ&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt nano vi nvim&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;desukutotupuhuan-jing-x&quot;&gt;デスクトップ環境（X）&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt  xorg-server xorg-apps xorg-xinit&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;desukutotupuhuan-jing-wm&quot;&gt;デスクトップ環境（WM）&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt i3&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;i3guan-lian&quot;&gt;i3関連&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt vifm feh picom rxvt-unicode rofi parcellite&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;ri-ben-yu-zhou-ri&quot;&gt;日本語周り&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt fcitx fcitx-mozc fcitx-im fcitx-configtool&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;sonota&quot;&gt;その他&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt chromium xf86-video-intel lightdm lightdm-gtk-greeter&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;fstabzuo-cheng&quot;&gt;Fstab作成&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;genfstab -U &#x2F;mnt &amp;gt;&amp;gt; &#x2F;mnt&#x2F;etc&#x2F;fstab&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;chroot&quot;&gt;chroot&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;arch-chroot &#x2F;mnt&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;taimuzon&quot;&gt;タイムゾーン&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;ln -sf &#x2F;usr&#x2F;share&#x2F;zoneinfo&#x2F;Asia&#x2F;Tokyo &#x2F;etc&#x2F;localtime&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;adjtimesheng-cheng&quot;&gt;adjtime生成&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;hwclock --systohc&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;lang&quot;&gt;LANG&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;vi &amp;#x2F;etc&amp;#x2F;locale.gen
+	en_US.UTF-8 UTF-8
+	ja_JP.UTF-8 UTF-8
+
+locale-gen
+echo LANG=en_US.UTF-8 &amp;gt; &amp;#x2F;etc&amp;#x2F;locale.conf
+export LANG=en_US.UTF-8
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;hosutonemu&quot;&gt;ホストネーム&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;echo hostname &amp;gt; &amp;#x2F;etc&amp;#x2F;hostname
+vi &amp;#x2F;etc&amp;#x2F;hosts
+127.0.0.1	localhost
+::1		localhost
+127.0.1.1	hostname.localdomain	hostname
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;rootpasuwado&quot;&gt;rootパスワード&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;passwd&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ripozitoriatupudeto&quot;&gt;リポジトリアップデート&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;pacman -Syy&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;maikurokodoatupudeto-insutoru&quot;&gt;マイクロコードアップデート　インストール&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;pacman -S intel-ucode&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;boot-loader&quot;&gt;boot-loader&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;pacman -S grub efibootmgr
+mkdir &amp;#x2F;boot&amp;#x2F;efi
+mount &amp;#x2F;dev&amp;#x2F;nvme0n1p1 &amp;#x2F;boot&amp;#x2F;efi
+grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=&amp;#x2F;boot&amp;#x2F;efi
+grub-mkconfig -o &amp;#x2F;boot&amp;#x2F;grub&amp;#x2F;grub.cfg
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;zhong-liao-zai-qi-dong&quot;&gt;終了・再起動&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;exit
+umount -R &amp;#x2F;mnt
+shutdown now
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</description>
+        </item>
+        <item>
+            <title>systemdを使ってプログラムを定期実行する</title>
+            <pubDate>Tue, 25 Aug 2020 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/systemd-service/</link>
+            <guid>https://kyoheiu.gitlab.io/post/systemd-service/</guid>
+            <description>&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;kyoheiu.gitlab.io&#x2F;post&#x2F;haskellscraping01&#x2F;&quot;&gt;HaskellによるWebスクレイピング&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;kyoheiu.gitlab.io&#x2F;post&#x2F;posttoslack&#x2F;&quot;&gt;HaskellでSlackに投稿する&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;systemdを使ってプログラムを定期実行する（この記事）&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;linux上でプログラムを定期実行する手段は主に&lt;code&gt;cron&lt;&#x2F;code&gt;(とそのフォーク）と&lt;code&gt;systemd&lt;&#x2F;code&gt;を使うものの２種類あるが、今回は&lt;code&gt;systemd&lt;&#x2F;code&gt;を使ってみた。&lt;code&gt;cron&lt;&#x2F;code&gt;のフォークである&lt;code&gt;cronie&lt;&#x2F;code&gt;も試してみたのだが、&lt;code&gt;&#x2F;etc&#x2F;&lt;&#x2F;code&gt;以下にさしあたり必要でないディレクトリが作られたり、設定ファイルが個人的に扱いづらかったりであまり肌に合わなかった。&lt;br &#x2F;&gt;
+&lt;code&gt;systemd&lt;&#x2F;code&gt;を使うメリットとしては、他のserviceと同様&lt;code&gt;systemd&lt;&#x2F;code&gt;管理下で一元的に扱え、動作状況などの&lt;code&gt;journal&lt;&#x2F;code&gt;も一覧で確認できること、依存関係を非常に簡単に設定できるので今回のようなネットワーク通信を前提とする実行ファイルの場合は特に取り回しが楽であること、あたりかと思う。デメリットは、ある程度込み入った定期実行設定をしたければ、.serviceとは別に.timerが必要であること。&lt;&#x2F;p&gt;
+&lt;p&gt;実際の.serviceの内容は以下のようになる。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;toml&quot; class=&quot;language-toml &quot;&gt;&lt;code class=&quot;language-toml&quot; data-lang=&quot;toml&quot;&gt;[Unit]
+Description=scraping
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=&amp;#x2F;home&amp;#x2F;user&amp;#x2F;xxxx
+ExecStart=&amp;#x2F;home&amp;#x2F;user&amp;#x2F;.local&amp;#x2F;bin&amp;#x2F;xxxx-exe
+
+[Install]
+WantedBy=multi-user.target
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;.service作成後、&lt;code&gt;# systemctl enable&lt;&#x2F;code&gt;で起動時実行をオンにしておけばOK。&lt;br &#x2F;&gt;
+ネットワークがつながった後でないとスクレイピングに失敗するため、&lt;code&gt;[Unit]&lt;&#x2F;code&gt;の&lt;code&gt;Requires&lt;&#x2F;code&gt;と&lt;code&gt;After&lt;&#x2F;code&gt;は必須。逆に言うとここさえ押さえれば、システム起動 -&amp;gt; ネットワーク確立 -&amp;gt; 実行という流れを作れるので、実際にはこの依存関係の設定で実行時間をある程度コントロールできるとも言える。一日一回とりにいけば十分なので、今回は.timerは作成しなかった。&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

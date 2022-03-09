@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>kyoheiu.gitlab.io - dotfiles</title>
+        <link>https://kyoheiu.gitlab.io</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://kyoheiu.gitlab.io/tags/dotfiles/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Mon, 22 Mar 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>バックアップについて考える</title>
+            <pubDate>Mon, 22 Mar 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/about-backup/</link>
+            <guid>https://kyoheiu.gitlab.io/post/about-backup/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;kyoheiu.gitlab.io&#x2F;post&#x2F;reinstall-arch&#x2F;&quot;&gt;Arch Linuxを再インストールした話&lt;&#x2F;a&gt;に関連して。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;dotfilesnoxi-ifang&quot;&gt;dotfilesの扱い方&lt;&#x2F;h3&gt;
+&lt;p&gt;今回感じたのは、最低限i3と、ターミナルエミュレーター &#x2F; vifm &#x2F; nvimを入れて、dotfilesをリモートリポジトリから引っ張ってくれば作業環境は整うわけなので、追加のバックアップ作業はもしかしたら要らないのかも、ということ。これまではtimeshiftで定期的にバックアップをとっていたのだが、結局一度も使わないままだったし…。&lt;br &#x2F;&gt;
+逆に上記のパッケージのdotfilesがリモートに存在しない場合、動くことは動くが、細かい設定を整えようとするとかなり面倒くさいことになってしまうので、思っていた以上にdotfilesのバックアップは大事だったとも言える（r&#x2F;unixpornに貼りつけるだけのアレじゃなかった）。&lt;&#x2F;p&gt;
+&lt;p&gt;シェルスクリプトでdotfilesの設定ファイルのシンボリックリンクを各所に貼るプログラムを書いている人が多いと思うが、同じようなものをNimでさくっと書いてみたので貼っておきます。&lt;&#x2F;p&gt;
+&lt;script src=&quot;https:&#x2F;&#x2F;gist.github.com&#x2F;kyoheiu&#x2F;9b5c634d38f26d1b67ad1d34bb29ef76.js&quot;&gt;&lt;&#x2F;script&gt;
+&lt;p&gt;&lt;code&gt;os&lt;&#x2F;code&gt;ライブラリの&lt;code&gt;createSymlink&lt;&#x2F;code&gt;は同名のファイルが存在した場合failになるので、ファイルを削除してからシンボリックリンクを作成している。利用する場合は自己責任でお願いします。
+nvimのcolorsディレクトリを除いているのはこれ以上コードが入れ子になるのが嫌だったから、程度の理由。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;shu-kitupanasikodonoxi-ifang&quot;&gt;書きっぱなしコードの扱い方&lt;&#x2F;h3&gt;
+&lt;p&gt;これまで練習用に書いてきたHaskellやらRustやらのコードはクリーンインストールによりすべて消えてしまった。まあ見返すことはほとんどなかったし、作り途中のプロジェクトはGitLabのプライベートリポジトリに上げながらやっているから無事だ。それ以外にも、ちょっと面倒な感じの、たとえばHaskellでスクレイピングするプログラムの骨子などはサイトに上げているので、残りのちまちましたやつ（Project Eulerの解答とか）は別にいいかな…と思いつつ、でもやっぱりちょっとさびしい。&lt;br &#x2F;&gt;
+こういう断片的なコードをいちいちGitHub GistsやGitLab Snippetsに上げるか、それとも書き捨てのつもりで気にしないかはけっこう微妙な問題だと思う。見返さなかったとはいえ、振り返ると意外と発見があったり、最近書いていない言語を思い出すのに使ったり、ということもあるだろうし、悩ましい。&lt;br &#x2F;&gt;
+&lt;a href=&quot;https:&#x2F;&#x2F;note.com&#x2F;konojunya&#x2F;n&#x2F;n461544d2f881&quot;&gt;Gistsに自動アップロードするCLIを書いている&lt;&#x2F;a&gt;方を見つけて、なるほど、と思ったが、書いた端から上げたい感じもある。VS Codeのエクステンションとか、もうありそうだな…と思ったら&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kenhowardpdx&#x2F;vscode-gist&quot;&gt;あった&lt;&#x2F;a&gt;。自分なりに使いそうなフローで何かCLIを作ってみてもいいかもしれない。&lt;br &#x2F;&gt;
+GitLabも&lt;a href=&quot;https:&#x2F;&#x2F;docs.gitlab.com&#x2F;ee&#x2F;api&#x2F;snippets.html#get-a-single-snippet&quot;&gt;Snippets APIの紹介がとてもよくまとまっている&lt;&#x2F;a&gt;のでけっこう使いやすそう。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;jing-de-saitozieneretanoluo-tosixue&quot;&gt;静的サイトジェネレーターの落とし穴(?)&lt;&#x2F;h3&gt;
+&lt;p&gt;それと、Hugo &#x2F; Zolaなどの静的サイトジェネレーターを使っている場合は、サイト上にフロントマター付きの.mdファイルが存在するわけではないので、もしデータが消えてしまった場合はサイト上のテキストをコピーしてきて、あらためて.mdとしてタグ付けをしないといけない（もしくはサイトをスクレイピングして.mdファイルを生成するプログラムを書くか。できなくはないが面倒ではある）。&lt;br &#x2F;&gt;
+幸い、数か月前までプライベートリポジトリにサイトごと上げていたので、手作業での.md復旧は数記事で済んだのだが、これがまったくバックアップがない状況だったらけっこう辛かったかもしれない。プライベートリポジトリでもいいので更新時にpushしておくのが大事だとしみじみ思った（もちろん、github.ioなどでサイトをホスティングしている場合は当然バックアップがとれているのでこんなことは考えなくていい）。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;owarini&quot;&gt;おわりに&lt;&#x2F;h3&gt;
+&lt;p&gt;以上に書いたものはすべてgitのリモートリポジトリの存在が前提になっている。ここに何か落とし穴がまだあるかもしれない。&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>kyoheiu.gitlab.io - Parsec</title>
+        <link>https://kyoheiu.gitlab.io</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://kyoheiu.gitlab.io/tags/parsec/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Sat, 31 Jul 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>各パーサーコンビネータにおけるtry&#x2F;eof(endOfInput)の挙動</title>
+            <pubDate>Sat, 31 Jul 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/try-and-eof-in-parser-combinators/</link>
+            <guid>https://kyoheiu.gitlab.io/post/try-and-eof-in-parser-combinators/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;adventofcode.com&#x2F;2020&#x2F;day&#x2F;19&quot;&gt;Advent of Code 2020のDay 19&lt;&#x2F;a&gt;を解いていて、複数パーサーの選択でしばらくつまずいていたのでメモ。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;tl-dr&quot;&gt;TL;DR&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;MegaparsecおよびParsecでは、tryでくるんだパーサー内でeofを使うと正常に動かない場合がある？&lt;&#x2F;li&gt;
+&lt;li&gt;Attoparsecではchoice内でも問題なくendOfInputが動く。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;tekisutowozhi-he-xing-norisutonipasusuru&quot;&gt;テキストを直和型のリストにパースする&lt;&#x2F;h3&gt;
+&lt;p&gt;Day 19では次のようなテキストを適切にパースすることが求められる。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;0: 4 1 5
+1: 2 3 | 3 2
+2: 4 4 | 5 5
+3: 4 5 | 5 4
+4: &amp;quot;a&amp;quot;
+5: &amp;quot;b&amp;quot;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;これを、ひとまず次のような型としてパースしたい。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;data Rule = Zero [Int]
+          | Pairs Int [(Int,Int)]
+          | Key Int Char
+          deriving Show
+
+-- expected result
+[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &amp;#x27;a&amp;#x27;,Key 5 &amp;#x27;b&amp;#x27;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;ul&gt;
+&lt;li&gt;０から始まる行は「特殊ルール」として、Zero [Int]で拾う。&lt;&#x2F;li&gt;
+&lt;li&gt;それ以外の行は、
+&lt;ul&gt;
+&lt;li&gt;数字と&amp;quot;|&amp;quot;のみの行についてはPairsで、&lt;&#x2F;li&gt;
+&lt;li&gt;アルファベットが含まれる行はKeyで拾う。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;magaparsec-trydeshi-bai-sitekurenai&quot;&gt;Magaparsec - &lt;code&gt;try&lt;&#x2F;code&gt;で失敗してくれない？&lt;&#x2F;h3&gt;
+&lt;p&gt;最初に使ったのはMegaparsec。このソースコードから始めよう。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;import qualified Data.Map.Strict as M
+import Text.Megaparsec
+import Text.Megaparsec.Char
+import qualified Data.Text as T
+import Data.Void
+import Data.Either (rights)
+
+type Parser = Parsec Void String
+
+readInt x = read x :: Int
+
+data Rule = Zero [Int]
+          | Pairs Int [(Int,Int)]
+          | Key Int Char
+          deriving Show
+
+zero :: Parser Rule
+zero = do
+  string &amp;quot;0: &amp;quot;
+  list &amp;lt;- sepBy1 (many alphaNumChar) (char &amp;#x27; &amp;#x27;)
+  return $ Zero (map readInt list)
+
+pair :: Parser (Int,Int)
+pair = do
+  y &amp;lt;- many digitChar
+  char &amp;#x27; &amp;#x27;
+  z &amp;lt;- many digitChar
+  return (readInt y, readInt z)
+
+pairs :: Parser Rule
+pairs = do
+  n &amp;lt;- readInt &amp;lt;$&amp;gt; many alphaNumChar
+  string &amp;quot;: &amp;quot;
+  p &amp;lt;- sepBy1 pair (string &amp;quot; | &amp;quot;)
+  return $ Pairs n p
+
+key :: Parser Rule
+key = do
+  n &amp;lt;- readInt &amp;lt;$&amp;gt; many alphaNumChar
+  string &amp;quot;: \&amp;quot;&amp;quot;
+  c &amp;lt;- letterChar
+  char &amp;#x27;\&amp;quot;&amp;#x27;
+  return $ Key n c
+
+rules = try zero &amp;lt;|&amp;gt; key &amp;lt;|&amp;gt; pairs
+
+main = readFile &amp;quot;day19e.txt&amp;quot; &amp;gt;&amp;gt;= print . rights . map (parse rules &amp;quot;&amp;quot;) . lines
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;cabal repl&lt;&#x2F;code&gt;で&lt;code&gt;main&lt;&#x2F;code&gt;を実行すると、結果はこうなる。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;[Zero [4,1,5],Key 4 &amp;#x27;a&amp;#x27;,Key 5 &amp;#x27;b&amp;#x27;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;Data.Either&lt;&#x2F;code&gt;の&lt;code&gt;rights&lt;&#x2F;code&gt;で強制的に&lt;code&gt;Right&lt;&#x2F;code&gt;のみを抽出しているので分かりにくいが、２〜４行めはパースに失敗している。ちなみにエラーメッセージはかなり難解。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;Right (Zero [4,1,5]),Left (ParseErrorBundle {bundleErrors = TrivialError 1 (Just (Tokens (&amp;#x27;:&amp;#x27; :| &amp;quot; 2&amp;quot;))) (fromList [Tokens (&amp;#x27;:&amp;#x27; :| &amp;quot; \&amp;quot;&amp;quot;),Label (&amp;#x27;a&amp;#x27; :| &amp;quot;lphanumeric character&amp;quot;)]) :| [], bundlePosState = PosState {pstateInput = &amp;quot;1: 2 3 | 3 2&amp;quot;, pstateOffset = 0, pstateSourcePos = SourcePos {sourceName = &amp;quot;&amp;quot;, sourceLine = Pos 1, sourceColumn = Pos 1}, pstateTabWidth = Pos 8, pstateLinePrefix = &amp;quot;&amp;quot;}}),Left (ParseErrorBundle {bundleErrors = TrivialError 1 (Just (Tokens (&amp;#x27;:&amp;#x27; :| &amp;quot; 4&amp;quot;))) (fromList [Tokens (&amp;#x27;:&amp;#x27; :| &amp;quot; \&amp;quot;&amp;quot;),Label (&amp;#x27;a&amp;#x27; :| &amp;quot;lphanumeric character&amp;quot;)]) :| [], bundlePosState = PosState {pstateInput = &amp;quot;2: 4 4 | 5 5&amp;quot;, pstateOffset = 0, pstateSourcePos = SourcePos {sourceName = &amp;quot;&amp;quot;, sourceLine = Pos 1, sourceColumn = Pos 1}, pstateTabWidth = Pos 8, pstateLinePrefix = &amp;quot;&amp;quot;}}),Left (ParseErrorBundle {bundleErrors = TrivialError 1 (Just (Tokens (&amp;#x27;:&amp;#x27; :| &amp;quot; 4&amp;quot;))) (fromList [Tokens (&amp;#x27;:&amp;#x27; :| &amp;quot; \&amp;quot;&amp;quot;),Label (&amp;#x27;a&amp;#x27; :| &amp;quot;lphanumeric character&amp;quot;)]) :| [], bundlePosState = PosState {pstateInput = &amp;quot;3: 4 5 | 5 4&amp;quot;, pstateOffset = 0, pstateSourcePos = SourcePos {sourceName = &amp;quot;&amp;quot;, sourceLine = Pos 1, sourceColumn = Pos 1}, pstateTabWidth = Pos 8, pstateLinePrefix = &amp;quot;&amp;quot;}}),Right (Key 4 &amp;#x27;a&amp;#x27;),Right (Key 5 &amp;#x27;b&amp;#x27;)]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;色々と試行錯誤した結果わかったのは、&lt;code&gt;try&lt;&#x2F;code&gt;でくるんでいるからといって必ず適切なパーサーを選択してくれるわけではない（適切に選択してもらうためには工夫が必要）ということ。&lt;&#x2F;p&gt;
+&lt;p&gt;たとえば２行目の&lt;code&gt;1: 2 3 | 3 2&lt;&#x2F;code&gt;のみをパースしてみると、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;*Main&amp;gt; parseTest rules &amp;quot;1: 2 3 | 3 2&amp;quot;
+1:2:
+  |
+1 | 1: 2 3 | 3 2
+  |  ^^^
+unexpected &amp;quot;: 2&amp;quot;
+expecting &amp;quot;: &amp;quot;&amp;quot; or alphanumeric character
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;try&lt;&#x2F;code&gt;でくるんでいるから最終的にはpairsを使ってパースしてくれるはずなのに、そうなっていない。&lt;br &#x2F;&gt;
+ちなみに&lt;code&gt;pairs&lt;&#x2F;code&gt;単体でパースすると、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;*Main&amp;gt; parseTest pairs &amp;quot;1: 2 3 | 3 2&amp;quot;
+Pairs 1 [(2,3),(3,2)]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;となって正しい結果が出るので、&lt;code&gt;pairs&lt;&#x2F;code&gt;自体にミスがあるわけではなさそうだ。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;rules&lt;&#x2F;code&gt;はまず&lt;code&gt;zero&lt;&#x2F;code&gt;をトライするが、&lt;code&gt;string &amp;quot;0: &amp;quot;&lt;&#x2F;code&gt;にマッチしないので失敗し、backtrackが発生する。&lt;br &#x2F;&gt;
+次に&lt;code&gt;key&lt;&#x2F;code&gt;をトライする。そうすると、最初の&lt;code&gt;many alphaNumChar&lt;&#x2F;code&gt;は成功するが、次の&lt;code&gt;string &amp;quot;: \&amp;quot;&amp;quot;&lt;&#x2F;code&gt;は失敗するのでまたbacktrackが発生する…はずなのだがそうならず、パースは失敗に終わる。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;tryyi-jiang-noxuan-ze-zhi-noshun-fan-nanoka&quot;&gt;&lt;code&gt;try&lt;&#x2F;code&gt;以降の選択肢の順番なのか？&lt;&#x2F;h3&gt;
+&lt;p&gt;最初に、&lt;code&gt;try&lt;&#x2F;code&gt;のくるみ方に問題があるのかもしれないと考えて、&lt;code&gt;try&lt;&#x2F;code&gt;のあとを色々と変えてみた。すると実際、&lt;code&gt;rules = try key &amp;lt;|&amp;gt; zero &amp;lt;|&amp;gt; pairs&lt;&#x2F;code&gt;とした場合は、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &amp;#x27;a&amp;#x27;,Key 5 &amp;#x27;b&amp;#x27;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;となり成功している。&lt;&#x2F;p&gt;
+&lt;p&gt;さらに、&lt;code&gt;rules = try key &amp;lt;|&amp;gt; pairs &amp;lt;|&amp;gt; zero&lt;&#x2F;code&gt;の場合。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;[Pairs 0 [(4,1)],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &amp;#x27;a&amp;#x27;,Key 5 &amp;#x27;b&amp;#x27;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;一見成功しているように見えるが、第１行めが&lt;code&gt;Zero&lt;&#x2F;code&gt;ではなく&lt;code&gt;Pairs&lt;&#x2F;code&gt;でのパースになってしまっているので間違っている。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;zero&lt;&#x2F;code&gt;, &lt;code&gt;pairs&lt;&#x2F;code&gt;, &lt;code&gt;key&lt;&#x2F;code&gt;の順番を入れ替えて試した結果は以下の通り。&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th align=&quot;left&quot;&gt;order&lt;&#x2F;th&gt;&lt;th align=&quot;left&quot;&gt;result&lt;&#x2F;th&gt;&lt;th align=&quot;center&quot;&gt;T&#x2F;F&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;zero key pairs&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;[Zero [4,1,5],Key 4 &#x27;a&#x27;,Key 5 &#x27;b&#x27;]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;F&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;zero pairs key&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)]]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;F&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;pairs zero key&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;[Pairs 0 [(4,1)],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &#x27;a&#x27;,Key 5 &#x27;b&#x27;]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;F&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;pairs key zero&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;[Pairs 0 [(4,1)],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &#x27;a&#x27;,Key 5 &#x27;b&#x27;]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;F&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;key zero pairs&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &#x27;a&#x27;,Key 5 &#x27;b&#x27;]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;T&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;key pairs zero&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;&lt;code&gt;[Pairs 0 [(4,1)],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &#x27;a&#x27;,Key 5 &#x27;b&#x27;]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;F&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;このあたりで薄々ストーリーが見えてくる。&lt;code&gt;zero&lt;&#x2F;code&gt;で拾いたいのに&lt;code&gt;pairs&lt;&#x2F;code&gt;になってしまっているのは、&lt;code&gt;0: 4 1 5&lt;&#x2F;code&gt;で言うと&amp;quot;1&amp;quot;までは&lt;code&gt;pairs&lt;&#x2F;code&gt;で拾えてしまえることがまず発端になっている。それだけなら残りを失敗するのでいいじゃないか、となりそうだが、途中でパースが止まっても成功扱いとなり、次の行に進んでしまう。&lt;&#x2F;p&gt;
+&lt;p&gt;実際、&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;pairs :: Parser Rule
+pairs = do
+  n &amp;lt;- readInt &amp;lt;$&amp;gt; many alphaNumChar
+  string &amp;quot;: &amp;quot;
+  p &amp;lt;- sepBy pair (string &amp;quot; | &amp;quot;)
+  return $ Pairs n p
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;と、&lt;code&gt;sepBy1&lt;&#x2F;code&gt;から&lt;code&gt;sepBy&lt;&#x2F;code&gt;にしてみると、結果は&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Pairs 4 [],Pairs 5 []]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;となって最後の２行が&lt;code&gt;pairs&lt;&#x2F;code&gt;で拾われてしまっていることがわかる。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;megaparsecdenoeofnoju-dong&quot;&gt;Megaparsecでのeofの挙動&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;4: &amp;quot;a&amp;quot;&lt;&#x2F;code&gt;が&lt;code&gt;pairs&lt;&#x2F;code&gt;ではなく&lt;code&gt;key&lt;&#x2F;code&gt;で拾うべき行だということをプログラムに伝えるには、&lt;code&gt;try&lt;&#x2F;code&gt;以降のパーサーの順番をあれこれいじるよりも&lt;code&gt;eof&lt;&#x2F;code&gt;を使えばよいのではないか、と思いつき、以下のようにしてみる。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;zero :: Parser Rule
+zero = do
+  string &amp;quot;0: &amp;quot;
+  list &amp;lt;- sepBy1 (many alphaNumChar) (char &amp;#x27; &amp;#x27;)
+  eof
+  return $ Zero (map readInt list)
+
+pair :: Parser (Int,Int)
+pair = do
+  y &amp;lt;- readInt &amp;lt;$&amp;gt; many alphaNumChar
+  char &amp;#x27; &amp;#x27;
+  z &amp;lt;- readInt &amp;lt;$&amp;gt; many alphaNumChar
+  return (y,z)
+
+pairs :: Parser Rule
+pairs = do
+  n &amp;lt;- readInt &amp;lt;$&amp;gt; many alphaNumChar
+  string &amp;quot;: &amp;quot;
+  p &amp;lt;- sepBy1 pair (string &amp;quot; | &amp;quot;)
+  eof
+  return $ Pairs n p
+
+key :: Parser Rule
+key = do
+  n &amp;lt;- readInt &amp;lt;$&amp;gt; many alphaNumChar
+  string &amp;quot;: \&amp;quot;&amp;quot;
+  c &amp;lt;- letterChar
+  char &amp;#x27;\&amp;quot;&amp;#x27;
+  eof
+  return $ Key n c
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;しかし結果は変わらず、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;-- try zero &amp;lt;|&amp;gt; pairs &amp;lt;|&amp;gt; key
+[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)]]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;入力の終了にのみマッチするはずの&lt;code&gt;eof&lt;&#x2F;code&gt;が動いていない。&lt;&#x2F;p&gt;
+&lt;p&gt;念のため、テストパーサーを書いてみるとこちらはちゃんと機能する。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;test :: Parser String
+test = do
+  s &amp;lt;- many alphaNumChar
+  eof
+  return s
+
+---
+
+*Main&amp;gt; parseTest test &amp;quot;aaa&amp;quot;
+&amp;quot;aaa&amp;quot;
+*Main&amp;gt; parseTest test &amp;quot;aaa111&amp;quot;
+&amp;quot;aaa111&amp;quot;
+*Main&amp;gt; parseTest test &amp;quot;aaa111+++&amp;quot;
+1:7:
+  |
+1 | aaa111+++
+  |       ^
+unexpected &amp;#x27;+&amp;#x27;
+expecting alphanumeric character or end of input
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;attoparsecdenoju-dong&quot;&gt;Attoparsecでの挙動&lt;&#x2F;h3&gt;
+&lt;p&gt;つまり、&lt;code&gt;try&lt;&#x2F;code&gt;でくるんだパーサーにおいて&lt;code&gt;eof&lt;&#x2F;code&gt;がちゃんと動いていないのではないか？ということだ。&lt;br &#x2F;&gt;
+どこかのコードが間違っている可能性も十分あるし、ソースコードを読んでいないのでMegaparsecの調査としてはここまでなのだが、本来であれば、&lt;code&gt;try&lt;&#x2F;code&gt;以降のパーサーの順序は極力考慮せず組み立てられるのが理想…だと思うので、これは困る。ちなみに、後に検証してみたところ、Parsecの&lt;code&gt;try&lt;&#x2F;code&gt;&#x2F;&lt;code&gt;eof&lt;&#x2F;code&gt;でも同じ問題が発生する。&lt;&#x2F;p&gt;
+&lt;p&gt;そこで、試しにAttoparsecを使ってみるとこちらはうまくいった。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;hs&quot; class=&quot;language-hs &quot;&gt;&lt;code class=&quot;language-hs&quot; data-lang=&quot;hs&quot;&gt;import Data.Attoparsec.Text
+import qualified Data.Text as T
+import qualified Data.Text.IO as TIO
+import Data.Either (rights)
+
+readInt x = read x :: Int
+
+data Rule = Zero [Int]
+          | Pairs Int [(Int,Int)]
+          | Key Int Char
+          deriving Show
+
+zero :: Parser Rule
+zero = do
+  string &amp;quot;0: &amp;quot;
+  list &amp;lt;- many1 digit `sepBy1` char &amp;#x27; &amp;#x27;
+  endOfInput
+  return $ Zero (map readInt list)
+
+pair :: Parser (Int,Int)
+pair = do
+  x &amp;lt;- readInt &amp;lt;$&amp;gt; many1 digit
+  space
+  y &amp;lt;- readInt &amp;lt;$&amp;gt; many1 digit
+  return (x,y)
+
+pairs :: Parser Rule
+pairs = do
+  n &amp;lt;- readInt &amp;lt;$&amp;gt; many1 digit
+  string &amp;quot;: &amp;quot;
+  p &amp;lt;- sepBy1 pair (string &amp;quot; | &amp;quot;)
+  endOfInput
+  return $ Pairs n p
+
+key :: Parser Rule
+key = do
+  n &amp;lt;- readInt &amp;lt;$&amp;gt; many1 digit
+  string &amp;quot;: \&amp;quot;&amp;quot;
+  c &amp;lt;- letter
+  char &amp;#x27;\&amp;quot;&amp;#x27;
+  endOfInput
+  return $ Key n c
+
+rules = choice [pairs, key, zero]
+
+main = TIO.readFile &amp;quot;day19e.txt&amp;quot; &amp;gt;&amp;gt;= print . rights . map (parseOnly rules) . T.lines
+
+---
+
+*Main&amp;gt; main
+[Zero [4,1,5],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &amp;#x27;a&amp;#x27;,Key 5 &amp;#x27;b&amp;#x27;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;もちろん、&lt;code&gt;choice&lt;&#x2F;code&gt;以降のリスト内の順序をどのパターンにしても、結果は変わらなかった。&lt;&#x2F;p&gt;
+&lt;p&gt;ちなみに各パーサーの&lt;code&gt;endOfInput&lt;&#x2F;code&gt;を外すと、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;-- rules = choice [pairs, key, zero]
+[Pairs 0 [(4,1)],Pairs 1 [(2,3),(3,2)],Pairs 2 [(4,4),(5,5)],Pairs 3 [(4,5),(5,4)],Key 4 &amp;quot;a&amp;quot;,Key 5 &amp;quot;b&amp;quot;]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;となって１行目を&lt;code&gt;pairs&lt;&#x2F;code&gt;で拾ってしまっているので、やっぱり&lt;code&gt;endOfInput&lt;&#x2F;code&gt;が機能していることがわかる。&lt;&#x2F;p&gt;
+&lt;p&gt;コード自体はほぼ変わらない。主な変更点としては、&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th align=&quot;center&quot;&gt;Megaparsec&lt;&#x2F;th&gt;&lt;th align=&quot;center&quot;&gt;Attoparsec&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td align=&quot;center&quot;&gt;&lt;code&gt;try&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;&lt;code&gt;choice&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td align=&quot;center&quot;&gt;&lt;code&gt;eof&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td align=&quot;center&quot;&gt;&lt;code&gt;endOfInput&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;まず１点め、&lt;code&gt;try&lt;&#x2F;code&gt;でなく&lt;code&gt;choice&lt;&#x2F;code&gt;を使うというのは、Attoparsecがデフォルトで失敗時backtrackをする仕様のためで、これは素晴らしい（&lt;code&gt;try&lt;&#x2F;code&gt;も実装されているが、これはParsecとの互換性のためと&lt;a href=&quot;https:&#x2F;&#x2F;hackage.haskell.org&#x2F;package&#x2F;attoparsec-0.14.1&#x2F;docs&#x2F;Data-Attoparsec-ByteString.html#v:try&quot;&gt;明記されている&lt;&#x2F;a&gt;）。&lt;br &#x2F;&gt;
+そしてMegaparsecの&lt;code&gt;eof&lt;&#x2F;code&gt;とAttoparsecの&lt;code&gt;endOfInput&lt;&#x2F;code&gt;は、どうやら局所的に違う挙動をするらしい。（MegaparsecとParsecがこの点で同じ動きをしたのは、MegaparsecがParsecのフォークだからかもしれない）&lt;&#x2F;p&gt;
+&lt;p&gt;同じようなディテールで頭を悩ませている人がいたら、参考になれば幸いです。&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

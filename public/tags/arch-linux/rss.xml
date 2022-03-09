@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>kyoheiu.gitlab.io - Arch Linux</title>
+        <link>https://kyoheiu.gitlab.io</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://kyoheiu.gitlab.io/tags/arch-linux/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Thu, 25 Nov 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>RustプロジェクトのビルドテストをGithub Actionsで行う（Arch Linuxのタグに要注意）</title>
+            <pubDate>Thu, 25 Nov 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/arch-docker-gcc/</link>
+            <guid>https://kyoheiu.gitlab.io/post/arch-docker-gcc/</guid>
+            <description>&lt;p&gt;タイトルの通りなのだが、若干ハマったので記録しておきます。&lt;&#x2F;p&gt;
+&lt;p&gt;Rustのプロジェクトにおいて、自分のローカル環境以外でもうまくインストールできるかのテストを行うためにGitHub Actionsを使っている。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;# .github&amp;#x2F;workflows&amp;#x2F;install_test.yml
+
+name: &amp;#x27;install test&amp;#x27;
+
+on:
+  push:
+    branches-ignore: &amp;#x27;main&amp;#x27;
+    paths-ignore:
+      - &amp;#x27;*.md&amp;#x27;
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  ubuntu-install:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions&amp;#x2F;checkout@v2
+    - name: Install
+      run: |
+        cargo install --path .
+  macos-install:
+    runs-on: macos-latest
+    steps:
+    - uses: actions&amp;#x2F;checkout@v2
+    - name: Install
+      run: |
+        cargo install --path .
+  archlinux-install:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    steps:
+    - uses: actions&amp;#x2F;checkout@v2
+    - name: Install
+      run: |
+        pacman -Syu --noconfirm
+        pacman -S gcc --noconfirm
+        pacman -S rustup --noconfirm
+        rustup install stable
+        rustup default stable
+        cargo install --path .
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;jobsは３つ。Ubuntu上・macOS上・Arch Linux上それぞれでのインストールをテストしている。（&lt;code&gt;cargo install --path .&lt;&#x2F;code&gt;が通ればcrates.ioからのインストールも問題ないという認識）&lt;&#x2F;p&gt;
+&lt;p&gt;ご覧の通り、UbuntuとmacOSでは特に追加でライブラリをインストールする必要なくパスしているが、archlinux:latestを使った最後のテストでは、&lt;code&gt;gcc&lt;&#x2F;code&gt;と&lt;code&gt;rustup&lt;&#x2F;code&gt;を先にインストールしている。
+&lt;code&gt;rustup&lt;&#x2F;code&gt;がarchlinux:latestに含まれていないのは当たり前のことなのでこれは良い。問題なのは&lt;code&gt;gcc&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;gcc&lt;&#x2F;code&gt;を事前インストールしない場合、テスト中に&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;error: linker `cc` not found
+  |
+  = note: No such file or directory (os error 2)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;とビルドエラーが出てしまう。 &lt;&#x2F;p&gt;
+&lt;p&gt;そもそものarchlinux:latestイメージの中に入ってみると、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;# docker run -it archlinux:latest
+[root@0fd34e31306a &amp;#x2F;]# pacman -Qi gcc
+warning: database file for &amp;#x27;core&amp;#x27; does not exist (use &amp;#x27;-Sy&amp;#x27; to download)
+warning: database file for &amp;#x27;extra&amp;#x27; does not exist (use &amp;#x27;-Sy&amp;#x27; to download)
+warning: database file for &amp;#x27;community&amp;#x27; does not exist (use &amp;#x27;-Sy&amp;#x27; to download)
+error: package &amp;#x27;gcc&amp;#x27; was not found
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;うーん、やっぱり入ってない。&lt;code&gt;gcc&lt;&#x2F;code&gt;が含まれてないなんて、そんなことある？　と思いながら、テストはパスするのでそのままにしていた。&lt;&#x2F;p&gt;
+&lt;p&gt;でもやっぱり引っかかる。そこで、よく&lt;a href=&quot;https:&#x2F;&#x2F;hub.docker.com&#x2F;_&#x2F;archlinux&quot;&gt;公式の説明&lt;&#x2F;a&gt;を読んで見ると…&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Besides &lt;code&gt;base&lt;&#x2F;code&gt; we also provide images for the &lt;code&gt;base-devel&lt;&#x2F;code&gt; package group. &lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;tagにちゃんと&lt;code&gt;base-devel&lt;&#x2F;code&gt;がある…！　そして&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The &lt;code&gt;latest&lt;&#x2F;code&gt; tag will always match the latest &lt;code&gt;base&lt;&#x2F;code&gt; tag.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;はい、ありがちな&lt;code&gt;base-devel&lt;&#x2F;code&gt;抜け。&lt;br &#x2F;&gt;
+何も考えずlatestを使ってはいけないという教訓を得ました。&lt;&#x2F;p&gt;
+&lt;p&gt;というわけで冒頭のymlを次のように変更。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;  archlinux-install:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:base-devel
+    steps:
+    - uses: actions&amp;#x2F;checkout@v2
+    - name: Install
+      run: |
+        pacman -Syu --noconfirm
+        pacman -S rustup --noconfirm
+        rustup install stable
+        rustup default stable
+        cargo install --path .
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;データベースの更新はいずれにせよ必要として、&lt;code&gt;gcc&lt;&#x2F;code&gt;の明示的インストールを削除。テストももちろんパス。あースッキリした。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>rewind - A CLI tool to downgrade packages using local Pacman cache</title>
+            <pubDate>Sun, 08 Aug 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/rewind-downgrade-cli/</link>
+            <guid>https://kyoheiu.gitlab.io/post/rewind-downgrade-cli/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kyoheiu&#x2F;rewind&quot;&gt;kyoheiu&#x2F;rewind&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;sample.gif&quot; alt=&quot;gif&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;installation&quot;&gt;Installation&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;git clone https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;kyoheiu&amp;#x2F;rewind.git
+cd rewind
+cabal install
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;usage&quot;&gt;Usage&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;rewind [package name you want to downgrade]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;like &lt;code&gt;rewind neovim&lt;&#x2F;code&gt;.
+You can use mutliple arguments like &lt;code&gt;rewind neovim emacs&lt;&#x2F;code&gt; as well.&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>starshipで絵文字を表示させる（Arch Linux）</title>
+            <pubDate>Wed, 31 Mar 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/starship-emoji/</link>
+            <guid>https://kyoheiu.gitlab.io/post/starship-emoji/</guid>
+            <description>&lt;p&gt;先日のArch Linux再インストールに伴い、色々とアプリケーションを入れ直していたのだけれど、&lt;a href=&quot;https:&#x2F;&#x2F;starship.rs&#x2F;&quot;&gt;starship&lt;&#x2F;a&gt;の絵文字表示ができなくなってしまいちょっと手こずったので、メモ。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;bi-yao-napatukezi&quot;&gt;必要なパッケージ&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;starship&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;nerd font(AURの&lt;code&gt;nerd-fonts-source-code-pro&lt;&#x2F;code&gt;を使っているが何でもいいはず)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;noto-emoji&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;noto-fonts&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;noto-fonts-cjk&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;最後の２つのパッケージがないとカバーできないUnicode絵文字が微妙に存在する（たとえば[⇡]）。&lt;&#x2F;p&gt;
+&lt;p&gt;starshipの意義については正直なんとも言えないが、デバッグを繰り返しているときに前の実行結果との切れ目がわかりやすい…という効果はある。かもしれない。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>バックアップについて考える</title>
+            <pubDate>Mon, 22 Mar 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/about-backup/</link>
+            <guid>https://kyoheiu.gitlab.io/post/about-backup/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;kyoheiu.gitlab.io&#x2F;post&#x2F;reinstall-arch&#x2F;&quot;&gt;Arch Linuxを再インストールした話&lt;&#x2F;a&gt;に関連して。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;dotfilesnoxi-ifang&quot;&gt;dotfilesの扱い方&lt;&#x2F;h3&gt;
+&lt;p&gt;今回感じたのは、最低限i3と、ターミナルエミュレーター &#x2F; vifm &#x2F; nvimを入れて、dotfilesをリモートリポジトリから引っ張ってくれば作業環境は整うわけなので、追加のバックアップ作業はもしかしたら要らないのかも、ということ。これまではtimeshiftで定期的にバックアップをとっていたのだが、結局一度も使わないままだったし…。&lt;br &#x2F;&gt;
+逆に上記のパッケージのdotfilesがリモートに存在しない場合、動くことは動くが、細かい設定を整えようとするとかなり面倒くさいことになってしまうので、思っていた以上にdotfilesのバックアップは大事だったとも言える（r&#x2F;unixpornに貼りつけるだけのアレじゃなかった）。&lt;&#x2F;p&gt;
+&lt;p&gt;シェルスクリプトでdotfilesの設定ファイルのシンボリックリンクを各所に貼るプログラムを書いている人が多いと思うが、同じようなものをNimでさくっと書いてみたので貼っておきます。&lt;&#x2F;p&gt;
+&lt;script src=&quot;https:&#x2F;&#x2F;gist.github.com&#x2F;kyoheiu&#x2F;9b5c634d38f26d1b67ad1d34bb29ef76.js&quot;&gt;&lt;&#x2F;script&gt;
+&lt;p&gt;&lt;code&gt;os&lt;&#x2F;code&gt;ライブラリの&lt;code&gt;createSymlink&lt;&#x2F;code&gt;は同名のファイルが存在した場合failになるので、ファイルを削除してからシンボリックリンクを作成している。利用する場合は自己責任でお願いします。
+nvimのcolorsディレクトリを除いているのはこれ以上コードが入れ子になるのが嫌だったから、程度の理由。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;shu-kitupanasikodonoxi-ifang&quot;&gt;書きっぱなしコードの扱い方&lt;&#x2F;h3&gt;
+&lt;p&gt;これまで練習用に書いてきたHaskellやらRustやらのコードはクリーンインストールによりすべて消えてしまった。まあ見返すことはほとんどなかったし、作り途中のプロジェクトはGitLabのプライベートリポジトリに上げながらやっているから無事だ。それ以外にも、ちょっと面倒な感じの、たとえばHaskellでスクレイピングするプログラムの骨子などはサイトに上げているので、残りのちまちましたやつ（Project Eulerの解答とか）は別にいいかな…と思いつつ、でもやっぱりちょっとさびしい。&lt;br &#x2F;&gt;
+こういう断片的なコードをいちいちGitHub GistsやGitLab Snippetsに上げるか、それとも書き捨てのつもりで気にしないかはけっこう微妙な問題だと思う。見返さなかったとはいえ、振り返ると意外と発見があったり、最近書いていない言語を思い出すのに使ったり、ということもあるだろうし、悩ましい。&lt;br &#x2F;&gt;
+&lt;a href=&quot;https:&#x2F;&#x2F;note.com&#x2F;konojunya&#x2F;n&#x2F;n461544d2f881&quot;&gt;Gistsに自動アップロードするCLIを書いている&lt;&#x2F;a&gt;方を見つけて、なるほど、と思ったが、書いた端から上げたい感じもある。VS Codeのエクステンションとか、もうありそうだな…と思ったら&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kenhowardpdx&#x2F;vscode-gist&quot;&gt;あった&lt;&#x2F;a&gt;。自分なりに使いそうなフローで何かCLIを作ってみてもいいかもしれない。&lt;br &#x2F;&gt;
+GitLabも&lt;a href=&quot;https:&#x2F;&#x2F;docs.gitlab.com&#x2F;ee&#x2F;api&#x2F;snippets.html#get-a-single-snippet&quot;&gt;Snippets APIの紹介がとてもよくまとまっている&lt;&#x2F;a&gt;のでけっこう使いやすそう。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;jing-de-saitozieneretanoluo-tosixue&quot;&gt;静的サイトジェネレーターの落とし穴(?)&lt;&#x2F;h3&gt;
+&lt;p&gt;それと、Hugo &#x2F; Zolaなどの静的サイトジェネレーターを使っている場合は、サイト上にフロントマター付きの.mdファイルが存在するわけではないので、もしデータが消えてしまった場合はサイト上のテキストをコピーしてきて、あらためて.mdとしてタグ付けをしないといけない（もしくはサイトをスクレイピングして.mdファイルを生成するプログラムを書くか。できなくはないが面倒ではある）。&lt;br &#x2F;&gt;
+幸い、数か月前までプライベートリポジトリにサイトごと上げていたので、手作業での.md復旧は数記事で済んだのだが、これがまったくバックアップがない状況だったらけっこう辛かったかもしれない。プライベートリポジトリでもいいので更新時にpushしておくのが大事だとしみじみ思った（もちろん、github.ioなどでサイトをホスティングしている場合は当然バックアップがとれているのでこんなことは考えなくていい）。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;owarini&quot;&gt;おわりに&lt;&#x2F;h3&gt;
+&lt;p&gt;以上に書いたものはすべてgitのリモートリポジトリの存在が前提になっている。ここに何か落とし穴がまだあるかもしれない。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>Arch Linux再インストールで発見したこと</title>
+            <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/reinstall-arch/</link>
+            <guid>https://kyoheiu.gitlab.io/post/reinstall-arch/</guid>
+            <description>&lt;p&gt;先日自分のミスでパーティションをブレイクしてしまい、Arch Linuxが起動不可の状態に。インストールメディアを準備して&lt;code&gt;arch-chroot&lt;&#x2F;code&gt;すればもしかしたら救出できたのかもしれなかったが、少し時間があったのでこの際、とクリーンインストールをした（ちょうどKDE neonを入れたサブ機を用意したてだったのが本当にラッキーだった）。前回インストールをしたのは１年前だったと思うが、少し様子が変わっていたのでメモ。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;roguwotoreruyouninatuteita&quot;&gt;ログをとれるようになっていた&lt;&#x2F;h4&gt;
+&lt;p&gt;もしかするとこれは前からだったかもしれないが、インストール作業のログをとれるようになっている。また、ArchWikiへの誘導も冒頭にあって、ちょっぴり親切な雰囲気が醸し出されていた。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;wifi-menugashi-enai&quot;&gt;wifi-menuが使えない&lt;&#x2F;h4&gt;
+&lt;p&gt;最新のisoでは&lt;code&gt;wifi-menu&lt;&#x2F;code&gt;が含まれていないのか、開幕&lt;code&gt;wifi-menu&lt;&#x2F;code&gt;でとりあえずネットワーク接続を確保するということができない。&lt;br &#x2F;&gt;
+ArchWikiでは&lt;code&gt;iwctl&lt;&#x2F;code&gt;による接続を推奨している。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;iwctl
+device list # デバイス名の確認
+station &amp;lt;デバイス名&amp;gt; connect &amp;lt;アクセスポイント名&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;これでOK。接続したら&lt;code&gt;ctrl+C&lt;&#x2F;code&gt;で抜けることを忘れずに。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;systemd-bootnoshe-ding-womisusitemoqi-kanai&quot;&gt;systemd-bootの設定をミスしても泣かない&lt;&#x2F;h4&gt;
+&lt;p&gt;ここで何回かミスってしまったのだが、最初からやり直す必要はない。インストールメディアを挿したまま再起動し、ネットワーク接続を確保した後、マウント。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;mount &amp;#x2F;dev&amp;#x2F;device2 &amp;#x2F;mnt
+mount &amp;#x2F;dev&amp;#x2F;device1 &amp;#x2F;mnt&amp;#x2F;boot
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;その後、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;arch-chroot &amp;#x2F;mnt
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;これで&lt;code&gt;&#x2F;boot&lt;&#x2F;code&gt;以下の設定ファイルもいじれるようになる。&lt;&#x2F;p&gt;
+&lt;p&gt;個人的にミスしやすいポイントとしては、&lt;code&gt;&#x2F;boot&#x2F;loader&#x2F;entries&#x2F;arch.conf&lt;&#x2F;code&gt;内のoptions行。&lt;br &#x2F;&gt;
+&lt;code&gt;blkid&lt;&#x2F;code&gt;で調べたPARTUUIDを入れるのだが、間違えてUUIDを入れるとか、違うパーティションのPARTUUIDを入れてしまうといったミスが起こりやすい。ここは落ち着いて写真を撮って進行しましょう。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;systemddeyarikurisuruyounizu-mu&quot;&gt;systemdでやりくりするように組む&lt;&#x2F;h4&gt;
+&lt;p&gt;以前は&lt;a href=&quot;https:&#x2F;&#x2F;kyoheiu.gitlab.io&#x2F;post&#x2F;archinstall&#x2F;&quot;&gt;この記事&lt;&#x2F;a&gt;にあるようにブートローダーとしてgrubを選択していたのだけど、このコマンドを正確に打つのめっちゃ大変ですよね。systemd-bootに切り替えたほうがインストールは楽になるはず。&lt;br &#x2F;&gt;
+ネットワーク接続についても、複数のパッケージで組もうとするとその分再インストールの手間が増え、手順も複雑になって後々わけがわからなくなるので、極力systemd内で生きていくように選択していったほうがよいように思う。&lt;br &#x2F;&gt;
+ネットワーク接続は僕の場合、&lt;code&gt;iwd&lt;&#x2F;code&gt;を入れて&lt;code&gt;iwctl&lt;&#x2F;code&gt;で接続したのち、systemd-networkdとsystemd-resolvedを&lt;code&gt;enable&lt;&#x2F;code&gt;し、&lt;code&gt;dhcpcd&lt;&#x2F;code&gt;も入れてnetworkdの各種設定ファイルを作成、で再起動後も自動接続できた（こう書くとかなり面倒くさそうだが、意外とそうでもない）。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>Steamサーバー接続時トラブルを解決する（Arch Linux）</title>
+            <pubDate>Wed, 23 Dec 2020 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/steam-server-error/</link>
+            <guid>https://kyoheiu.gitlab.io/post/steam-server-error/</guid>
+            <description>&lt;h3 id=&quot;huan-jing&quot;&gt;環境&lt;&#x2F;h3&gt;
+&lt;p&gt;OS: Arch Linux x86_64&lt;br &#x2F;&gt;
+Kernel: 5.9.14-arch1-1&lt;br &#x2F;&gt;
+Steamは&lt;code&gt;pacman&lt;&#x2F;code&gt;のパッケージを使用。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;wen-ti&quot;&gt;問題&lt;&#x2F;h3&gt;
+&lt;p&gt;前提として、「ブラウザなどのネットワーク接続は異常なし」。&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;ある日突然、Steamで購入したはずのゲームをダウンロードできなくなる。（ダウンロードアイコンをクリックしてもダウンロードが始まらない／一瞬で停止する）&lt;&#x2F;li&gt;
+&lt;li&gt;上記を解決するべくSteamを再インストールしてみたところ、今度はログインができなくなる。エラーメッセージは &lt;strong&gt;&amp;quot;Steam is having trouble connecting to the Steam servers&amp;quot;&lt;&#x2F;strong&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h3 id=&quot;yuan-yin&quot;&gt;原因&lt;&#x2F;h3&gt;
+&lt;p&gt;僕の場合は、少し前にネットワークへの接続方法を&lt;code&gt;NetworkManager&lt;&#x2F;code&gt;から&lt;code&gt;systemd-networkd&lt;&#x2F;code&gt;に切り替えた際、DHCP接続の設定が抜けていたことが原因だった模様。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;dui-ce&quot;&gt;対策&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;systemd-networkd&lt;&#x2F;code&gt;でWi-FiにDHCP接続する場合は、&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;1&quot;&gt;(1)&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;&#x2F;etc&#x2F;systemd&#x2F;network&#x2F;interface.network&lt;&#x2F;code&gt;に&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;[Match]
+Name=interface
+[Network]
+DHCP=yes
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;と書いておき、&lt;strong&gt;同時に&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;2&quot;&gt;(2)&lt;&#x2F;h4&gt;
+&lt;p&gt;別途&lt;code&gt;dhcpcd&lt;&#x2F;code&gt;をインストールして&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;# systemctl start dhcpcd.service
+# systemctl enable dhcpcd.service
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;しておかなければならない。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;NetworkManager&lt;&#x2F;code&gt;を使っていた元々の設定では、このあたりはクリアーできていたようなのだが、&lt;code&gt;networkd&lt;&#x2F;code&gt;へ切り替えたタイミングでDHCPまわりが抜けた結果起こった問題と思われる。&lt;&#x2F;p&gt;
+&lt;p&gt;しかし(2)が抜けた状態でも、ブラウザやターミナルでのインターネット接続は問題なく行えていたので、&lt;code&gt;dhcpcd&lt;&#x2F;code&gt;不在によるトラブルだということを突き止めるまで時間がかかってしまった。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;cf&quot;&gt;cf&lt;&#x2F;h3&gt;
+&lt;p&gt;https:&#x2F;&#x2F;github.com&#x2F;ValveSoftware&#x2F;steam-for-linux&#x2F;issues&#x2F;2085
+https:&#x2F;&#x2F;github.com&#x2F;ValveSoftware&#x2F;steam-for-linux&#x2F;issues&#x2F;4855&lt;&#x2F;p&gt;
+&lt;p&gt;関連していそうなissue。「Steam以外はふつうにネット接続できている」というのがミソ。&lt;code&gt;networkd&lt;&#x2F;code&gt;以外を使っていても、同症状の場合は一度DHCP接続を確認してみるとよいかもしれない。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>Arch Linuxインストールメモ(2020)</title>
+            <pubDate>Sun, 20 Sep 2020 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/archinstall/</link>
+            <guid>https://kyoheiu.gitlab.io/post/archinstall/</guid>
+            <description>&lt;h1 id=&quot;2021-03-21-konomemohagu-ku-xian-xing-baziyondehashi-emasen-ji-lu-tositecan-siteimasu-archwikiwodu-mimasiyou&quot;&gt;(2021-03-21) このメモは古く、現行バージョンでは使えません。記録として残しています。ArchWikiを読みましょう。&lt;&#x2F;h1&gt;
+&lt;p&gt;Arch Linuxインストールの覚書。将来の自分へのメモとして。&lt;&#x2F;p&gt;
+&lt;p&gt;liveインストールの時点でどの程度パッケージを入れておくかは自由だが、インストール自体が初めての場合は&lt;code&gt;pacstrap&lt;&#x2F;code&gt;段階では基本パッケージ、エディタ、ネットワーク関係（これも選択肢は複数ある）くらいにとどめておき、後でX以下を入れていくほうが理解が進むのでいいと思う。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;insutoruhou-toraburunowei-ran-fang-zhi-ce&quot;&gt;インストール後トラブルの未然防止策&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;ネットワークに接続できない -&amp;gt; インストール時にネットワーク周りのパッケージを導入しておく。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;pacman&lt;&#x2F;code&gt;が見つからない -&amp;gt; インストール時に&lt;code&gt;base-devel&lt;&#x2F;code&gt;を入れておく。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;hazimeni&quot;&gt;はじめに&lt;&#x2F;h3&gt;
+&lt;p&gt;UEFIモードでliveUSBを起動すること&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;mazuwifijie-sok&quot;&gt;まずwifi接続&lt;&#x2F;h3&gt;
+&lt;p&gt;wifi-menu&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;pateisiyon&quot;&gt;パーティション&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;risutowoque-ren&quot;&gt;リストを確認&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;fdisk -l&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;pateisiyonbureiku&quot;&gt;パーティションブレイク&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;sgdisk --zap-all &#x2F;dev&#x2F;nvme0n1&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;pateisiyonfen-ge-kai-shi&quot;&gt;パーティション分割開始&lt;&#x2F;h4&gt;
+&lt;pre&gt;&lt;code&gt;gdisk &amp;#x2F;dev&amp;#x2F;nvme0n1
+Command (? for help): o
+This option deletes all partitions and creates a new protective MBR.
+Proceed? (Y&amp;#x2F;N): y
+
+Command (? for help): n
+Partition number (1-128, default 1): default
+First sector (34-xxxxxxxxx, default = xxxx) or {+-}size{KMGTP}: default
+Last sector (xxxx-xxxxxxxxx, default = xxxxxxxxx) or {+-}size{KMGTP}: +500M
+Hex code or GUID (L to show codes, Enter = 8300): ef00
+
+Command (? for help): n
+Partition number (2-128, default 2): default
+First sector (34-xxxxxxxxx, default = xxxxxx) or {+-}size{KMGTP}: default
+Last sector (xxxxxx-xxxxxxxxx, default = xxxxxxxxx) or {+-}size{KMGTP}: default
+Hex code or GUID (L to show codes, Enter = 8300): default
+
+Command (? for help): w
+
+Do you want to proceed? (Y&amp;#x2F;N): y
+OK: writing new GUID partition table (GPT) to &amp;#x2F;dev&amp;#x2F;nvme0n1
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;huomatuto&quot;&gt;フォーマット&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;mkfs.fat -F32 &amp;#x2F;dev&amp;#x2F;nvme0n1p1
+mkfs.ext4 &amp;#x2F;dev&amp;#x2F;nvme0n1p2
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;maunto&quot;&gt;マウント&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;mount &amp;#x2F;dev&amp;#x2F;nvme0n1p2 &amp;#x2F;mnt
+mkdir &amp;#x2F;mnt&amp;#x2F;boot
+mount &amp;#x2F;dev&amp;#x2F;nvme0n1p1 &amp;#x2F;mnt&amp;#x2F;boot
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;mirarisutonobian-ji&quot;&gt;ミラーリストの編集&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;vi &#x2F;etc&#x2F;pacman.d&#x2F;mirrorlist&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;shi-ji-he-wase&quot;&gt;時計合わせ&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;timedatectl set-ntp true&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;patukeziinsutorukai-shi&quot;&gt;パッケージインストール開始&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;ji-ben-patukezi&quot;&gt;基本パッケージ&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt base linux linux-firmware base-devel man-deb man-pages&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;netutowakuguan-xi&quot;&gt;ネットワーク関係&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt networkmanager nm-connection-editor network-manager-applet&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;tekisutoedeita&quot;&gt;テキストエディタ&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt nano vi nvim&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;desukutotupuhuan-jing-x&quot;&gt;デスクトップ環境（X）&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt  xorg-server xorg-apps xorg-xinit&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;desukutotupuhuan-jing-wm&quot;&gt;デスクトップ環境（WM）&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt i3&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;i3guan-lian&quot;&gt;i3関連&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt vifm feh picom rxvt-unicode rofi parcellite&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;ri-ben-yu-zhou-ri&quot;&gt;日本語周り&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt fcitx fcitx-mozc fcitx-im fcitx-configtool&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;sonota&quot;&gt;その他&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;pacstrap &#x2F;mnt chromium xf86-video-intel lightdm lightdm-gtk-greeter&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;fstabzuo-cheng&quot;&gt;Fstab作成&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;genfstab -U &#x2F;mnt &amp;gt;&amp;gt; &#x2F;mnt&#x2F;etc&#x2F;fstab&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;chroot&quot;&gt;chroot&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;arch-chroot &#x2F;mnt&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;taimuzon&quot;&gt;タイムゾーン&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;ln -sf &#x2F;usr&#x2F;share&#x2F;zoneinfo&#x2F;Asia&#x2F;Tokyo &#x2F;etc&#x2F;localtime&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;adjtimesheng-cheng&quot;&gt;adjtime生成&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;hwclock --systohc&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;lang&quot;&gt;LANG&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;vi &amp;#x2F;etc&amp;#x2F;locale.gen
+	en_US.UTF-8 UTF-8
+	ja_JP.UTF-8 UTF-8
+
+locale-gen
+echo LANG=en_US.UTF-8 &amp;gt; &amp;#x2F;etc&amp;#x2F;locale.conf
+export LANG=en_US.UTF-8
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;hosutonemu&quot;&gt;ホストネーム&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;echo hostname &amp;gt; &amp;#x2F;etc&amp;#x2F;hostname
+vi &amp;#x2F;etc&amp;#x2F;hosts
+127.0.0.1	localhost
+::1		localhost
+127.0.1.1	hostname.localdomain	hostname
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;rootpasuwado&quot;&gt;rootパスワード&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;passwd&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ripozitoriatupudeto&quot;&gt;リポジトリアップデート&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;pacman -Syy&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;maikurokodoatupudeto-insutoru&quot;&gt;マイクロコードアップデート　インストール&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;pacman -S intel-ucode&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;boot-loader&quot;&gt;boot-loader&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;pacman -S grub efibootmgr
+mkdir &amp;#x2F;boot&amp;#x2F;efi
+mount &amp;#x2F;dev&amp;#x2F;nvme0n1p1 &amp;#x2F;boot&amp;#x2F;efi
+grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=&amp;#x2F;boot&amp;#x2F;efi
+grub-mkconfig -o &amp;#x2F;boot&amp;#x2F;grub&amp;#x2F;grub.cfg
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;zhong-liao-zai-qi-dong&quot;&gt;終了・再起動&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;exit
+umount -R &amp;#x2F;mnt
+shutdown now
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</description>
+        </item>
+    </channel>
+</rss>

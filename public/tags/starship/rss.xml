@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>kyoheiu.gitlab.io - starship</title>
+        <link>https://kyoheiu.gitlab.io</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://kyoheiu.gitlab.io/tags/starship/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Wed, 31 Mar 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>starshipで絵文字を表示させる（Arch Linux）</title>
+            <pubDate>Wed, 31 Mar 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/starship-emoji/</link>
+            <guid>https://kyoheiu.gitlab.io/post/starship-emoji/</guid>
+            <description>&lt;p&gt;先日のArch Linux再インストールに伴い、色々とアプリケーションを入れ直していたのだけれど、&lt;a href=&quot;https:&#x2F;&#x2F;starship.rs&#x2F;&quot;&gt;starship&lt;&#x2F;a&gt;の絵文字表示ができなくなってしまいちょっと手こずったので、メモ。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;bi-yao-napatukezi&quot;&gt;必要なパッケージ&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;starship&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;nerd font(AURの&lt;code&gt;nerd-fonts-source-code-pro&lt;&#x2F;code&gt;を使っているが何でもいいはず)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;noto-emoji&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;noto-fonts&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;noto-fonts-cjk&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;最後の２つのパッケージがないとカバーできないUnicode絵文字が微妙に存在する（たとえば[⇡]）。&lt;&#x2F;p&gt;
+&lt;p&gt;starshipの意義については正直なんとも言えないが、デバッグを繰り返しているときに前の実行結果との切れ目がわかりやすい…という効果はある。かもしれない。&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

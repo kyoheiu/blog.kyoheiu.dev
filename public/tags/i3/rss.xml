@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>kyoheiu.gitlab.io - i3</title>
+        <link>https://kyoheiu.gitlab.io</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://kyoheiu.gitlab.io/tags/i3/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Wed, 29 Dec 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>fcitxが壊れたので設定を見直す</title>
+            <pubDate>Wed, 29 Dec 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/fcitx-does-not-work/</link>
+            <guid>https://kyoheiu.gitlab.io/post/fcitx-does-not-work/</guid>
+            <description>&lt;h3 id=&quot;huai-retayuan-yin&quot;&gt;壊れた原因&lt;&#x2F;h3&gt;
+&lt;p&gt;普段はMac bookでzoomを使っていたのだけれど、ちょっとした用事でメインのデスクトップにもzoomを入れることになり、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;yay -S zoom
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;でインストール（officialじゃなくてaurだよ）。&lt;&#x2F;p&gt;
+&lt;p&gt;しかしこのzoom、理由は不明だが依存パッケージにibusがあり、おそらくこいつが原因でfcitxが正常に動かなくなってしまった。多分何かしらのコンフリクトが発生している。状態としては、起動するけれど変換してくれない、というもの。&lt;&#x2F;p&gt;
+&lt;p&gt;明らかにzoomインストール後の不具合だったので、何とか依存パッケージごと削除してもとに戻そうとするも、どこかのファイルに変更が加えられてしまったのか、うまくいかない。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;koremade&quot;&gt;これまで&lt;&#x2F;h3&gt;
+&lt;p&gt;fcitxの起動はこれまで、&lt;code&gt;.xinitrc&lt;&#x2F;code&gt;に&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;と記述した上で、i3のスタート時起動 &lt;code&gt;exec --no-startup-id fcitx&lt;&#x2F;code&gt; を行っていた。&lt;br &#x2F;&gt;
+のだが、どうやら一連のexportは通常&lt;code&gt;.xprofile&lt;&#x2F;code&gt;に記述するほうが正しいみたい。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;.xprofile&lt;&#x2F;code&gt;への記述で、fcitx自体は無事動くようになった（なぜかは不明）。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zhui-jia-nowen-ti&quot;&gt;追加の問題&lt;&#x2F;h3&gt;
+&lt;p&gt;ただ、こうすると、fcitxが起動している状態でターミナルを立ち上げたとき、日本語のインプットが必ず先に入ってしまう（これまではなぜかターミナルではデフォルト英数だった）。自作ランチャーにも日本語が入るようになり、すごくわずらわしい。いちいち切り替えて入力するのも嫌だし…。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;dui-ce&quot;&gt;対策&lt;&#x2F;h3&gt;
+&lt;p&gt;exportの記述をすべて&lt;code&gt;.xprofile&lt;&#x2F;code&gt;に移した上で、思いきってスタート時のfcitx起動を削除した。
+代わりに、i3の設定で&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;#IME
+bindsym $mod+i exec fcitx
+bindsym $mod+k exec &amp;quot;killall fcitx&amp;quot;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;として、ショートカットでfcitxの起動／停止を行うようにした。IME自体をデフォルトで無効にして、どうしても必要なときに日本語入力を立ち上げる。こうなると「日本語入力ができる」ほうがむしろ特殊な状態になるので、「今日本語入力だっけ…？」的なわずらわしさがちょっと減り、わりと頭の中はスッキリする。&lt;br &#x2F;&gt;
+だいたい起動時に問答無用でfcitxを起動している人が多い印象ですが、むしろ使わないときはkillallしてしまったほうが快適ですね。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zui-hou-ni&quot;&gt;最後に&lt;&#x2F;h3&gt;
+&lt;p&gt;zoom(ibus)許すまじ。&lt;&#x2F;p&gt;
+&lt;p&gt;(本当は、日本語入力するデバイスと英語／コードを書くデバイスを思いきって分けてしまったほうが楽かもしれない)&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

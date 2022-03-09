@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>kyoheiu.gitlab.io - systemd</title>
+        <link>https://kyoheiu.gitlab.io</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://kyoheiu.gitlab.io/tags/systemd/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Sun, 21 Mar 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>Arch Linux再インストールで発見したこと</title>
+            <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/reinstall-arch/</link>
+            <guid>https://kyoheiu.gitlab.io/post/reinstall-arch/</guid>
+            <description>&lt;p&gt;先日自分のミスでパーティションをブレイクしてしまい、Arch Linuxが起動不可の状態に。インストールメディアを準備して&lt;code&gt;arch-chroot&lt;&#x2F;code&gt;すればもしかしたら救出できたのかもしれなかったが、少し時間があったのでこの際、とクリーンインストールをした（ちょうどKDE neonを入れたサブ機を用意したてだったのが本当にラッキーだった）。前回インストールをしたのは１年前だったと思うが、少し様子が変わっていたのでメモ。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;roguwotoreruyouninatuteita&quot;&gt;ログをとれるようになっていた&lt;&#x2F;h4&gt;
+&lt;p&gt;もしかするとこれは前からだったかもしれないが、インストール作業のログをとれるようになっている。また、ArchWikiへの誘導も冒頭にあって、ちょっぴり親切な雰囲気が醸し出されていた。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;wifi-menugashi-enai&quot;&gt;wifi-menuが使えない&lt;&#x2F;h4&gt;
+&lt;p&gt;最新のisoでは&lt;code&gt;wifi-menu&lt;&#x2F;code&gt;が含まれていないのか、開幕&lt;code&gt;wifi-menu&lt;&#x2F;code&gt;でとりあえずネットワーク接続を確保するということができない。&lt;br &#x2F;&gt;
+ArchWikiでは&lt;code&gt;iwctl&lt;&#x2F;code&gt;による接続を推奨している。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;iwctl
+device list # デバイス名の確認
+station &amp;lt;デバイス名&amp;gt; connect &amp;lt;アクセスポイント名&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;これでOK。接続したら&lt;code&gt;ctrl+C&lt;&#x2F;code&gt;で抜けることを忘れずに。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;systemd-bootnoshe-ding-womisusitemoqi-kanai&quot;&gt;systemd-bootの設定をミスしても泣かない&lt;&#x2F;h4&gt;
+&lt;p&gt;ここで何回かミスってしまったのだが、最初からやり直す必要はない。インストールメディアを挿したまま再起動し、ネットワーク接続を確保した後、マウント。&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;mount &amp;#x2F;dev&amp;#x2F;device2 &amp;#x2F;mnt
+mount &amp;#x2F;dev&amp;#x2F;device1 &amp;#x2F;mnt&amp;#x2F;boot
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;その後、&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;arch-chroot &amp;#x2F;mnt
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;これで&lt;code&gt;&#x2F;boot&lt;&#x2F;code&gt;以下の設定ファイルもいじれるようになる。&lt;&#x2F;p&gt;
+&lt;p&gt;個人的にミスしやすいポイントとしては、&lt;code&gt;&#x2F;boot&#x2F;loader&#x2F;entries&#x2F;arch.conf&lt;&#x2F;code&gt;内のoptions行。&lt;br &#x2F;&gt;
+&lt;code&gt;blkid&lt;&#x2F;code&gt;で調べたPARTUUIDを入れるのだが、間違えてUUIDを入れるとか、違うパーティションのPARTUUIDを入れてしまうといったミスが起こりやすい。ここは落ち着いて写真を撮って進行しましょう。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;systemddeyarikurisuruyounizu-mu&quot;&gt;systemdでやりくりするように組む&lt;&#x2F;h4&gt;
+&lt;p&gt;以前は&lt;a href=&quot;https:&#x2F;&#x2F;kyoheiu.gitlab.io&#x2F;post&#x2F;archinstall&#x2F;&quot;&gt;この記事&lt;&#x2F;a&gt;にあるようにブートローダーとしてgrubを選択していたのだけど、このコマンドを正確に打つのめっちゃ大変ですよね。systemd-bootに切り替えたほうがインストールは楽になるはず。&lt;br &#x2F;&gt;
+ネットワーク接続についても、複数のパッケージで組もうとするとその分再インストールの手間が増え、手順も複雑になって後々わけがわからなくなるので、極力systemd内で生きていくように選択していったほうがよいように思う。&lt;br &#x2F;&gt;
+ネットワーク接続は僕の場合、&lt;code&gt;iwd&lt;&#x2F;code&gt;を入れて&lt;code&gt;iwctl&lt;&#x2F;code&gt;で接続したのち、systemd-networkdとsystemd-resolvedを&lt;code&gt;enable&lt;&#x2F;code&gt;し、&lt;code&gt;dhcpcd&lt;&#x2F;code&gt;も入れてnetworkdの各種設定ファイルを作成、で再起動後も自動接続できた（こう書くとかなり面倒くさそうだが、意外とそうでもない）。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>systemdを使ってプログラムを定期実行する</title>
+            <pubDate>Tue, 25 Aug 2020 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/systemd-service/</link>
+            <guid>https://kyoheiu.gitlab.io/post/systemd-service/</guid>
+            <description>&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;kyoheiu.gitlab.io&#x2F;post&#x2F;haskellscraping01&#x2F;&quot;&gt;HaskellによるWebスクレイピング&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;kyoheiu.gitlab.io&#x2F;post&#x2F;posttoslack&#x2F;&quot;&gt;HaskellでSlackに投稿する&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;systemdを使ってプログラムを定期実行する（この記事）&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;linux上でプログラムを定期実行する手段は主に&lt;code&gt;cron&lt;&#x2F;code&gt;(とそのフォーク）と&lt;code&gt;systemd&lt;&#x2F;code&gt;を使うものの２種類あるが、今回は&lt;code&gt;systemd&lt;&#x2F;code&gt;を使ってみた。&lt;code&gt;cron&lt;&#x2F;code&gt;のフォークである&lt;code&gt;cronie&lt;&#x2F;code&gt;も試してみたのだが、&lt;code&gt;&#x2F;etc&#x2F;&lt;&#x2F;code&gt;以下にさしあたり必要でないディレクトリが作られたり、設定ファイルが個人的に扱いづらかったりであまり肌に合わなかった。&lt;br &#x2F;&gt;
+&lt;code&gt;systemd&lt;&#x2F;code&gt;を使うメリットとしては、他のserviceと同様&lt;code&gt;systemd&lt;&#x2F;code&gt;管理下で一元的に扱え、動作状況などの&lt;code&gt;journal&lt;&#x2F;code&gt;も一覧で確認できること、依存関係を非常に簡単に設定できるので今回のようなネットワーク通信を前提とする実行ファイルの場合は特に取り回しが楽であること、あたりかと思う。デメリットは、ある程度込み入った定期実行設定をしたければ、.serviceとは別に.timerが必要であること。&lt;&#x2F;p&gt;
+&lt;p&gt;実際の.serviceの内容は以下のようになる。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;toml&quot; class=&quot;language-toml &quot;&gt;&lt;code class=&quot;language-toml&quot; data-lang=&quot;toml&quot;&gt;[Unit]
+Description=scraping
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=&amp;#x2F;home&amp;#x2F;user&amp;#x2F;xxxx
+ExecStart=&amp;#x2F;home&amp;#x2F;user&amp;#x2F;.local&amp;#x2F;bin&amp;#x2F;xxxx-exe
+
+[Install]
+WantedBy=multi-user.target
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;.service作成後、&lt;code&gt;# systemctl enable&lt;&#x2F;code&gt;で起動時実行をオンにしておけばOK。&lt;br &#x2F;&gt;
+ネットワークがつながった後でないとスクレイピングに失敗するため、&lt;code&gt;[Unit]&lt;&#x2F;code&gt;の&lt;code&gt;Requires&lt;&#x2F;code&gt;と&lt;code&gt;After&lt;&#x2F;code&gt;は必須。逆に言うとここさえ押さえれば、システム起動 -&amp;gt; ネットワーク確立 -&amp;gt; 実行という流れを作れるので、実際にはこの依存関係の設定で実行時間をある程度コントロールできるとも言える。一日一回とりにいけば十分なので、今回は.timerは作成しなかった。&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>

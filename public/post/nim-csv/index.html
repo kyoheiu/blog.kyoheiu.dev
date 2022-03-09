@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>NimでCSVファイルをパースする | kyoheiu.gitlab.io</title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;icon.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+
+  <script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;kyoheiu.gitlab.io&#x2F;images&#x2F;icon.png" alt="kyoheiu.gitlab.io"
+          width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;kyoheiu.gitlab.io</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+  </div>
+</div>
+
+<body onload="getTheme()">
+  <section class="section">
+    <div class="container">
+      
+<p>
+  <div class="title_postpage">NimでCSVファイルをパースする</div>
+</p>
+<p>
+  <div class="date_postpage">2021-01-20</div>
+  <div class="taxonomies_postpage">
+  
+      
+      <a href="https://kyoheiu.gitlab.io/categories/code/">/code</a>
+      
+  
+  
+      
+      &emsp;<a href="https://kyoheiu.gitlab.io/tags/nim/">#Nim</a>
+      
+      &emsp;<a href="https://kyoheiu.gitlab.io/tags/csv-parser/">#CSV parser</a>
+      
+  
+  </div>
+</p>
+
+<p>
+  <p>最近勉強中の言語Nimで、ちょっとした作業用にプログラムを書いてみた。
+NimはPython風の文法で簡潔かつコンパクトに高速なプログラムを書ける言語。C / C++ / Objective-Cのコードにトランスパイルすることができ、Cのライブラリも使用することが可能。</p>
+<p>今回触ったのはStandard Libaryのparsecsv。</p>
+<pre><code>import parsecsv
+
+var p: CsvParser
+p.open(&quot;sample1.csv&quot;)
+p.readHeaderRow()
+while p.readRow():
+  echo &quot;The average of &quot;, p.row[0], &quot; in &quot;, 
+       p.headers[2], &quot; is &quot;, p.row[1]
+</code></pre>
+<p>readHeaderRowはcsvの最初の行を読み込んでテーブルを作る関数。最初の行の要素にアクセスしたいときはheaders[i]を使う。
+readRowは次の行があるかどうか判定してBoolを返してくれるので、whileの条件に使えばcsv全体に手続きを順に適用できる。</p>
+<pre><code>[kyohei@myarch csvsample]$ nim c -r csvparse.nim
+Hint: used config file &#x27;&#x2F;home&#x2F;kyohei&#x2F;.choosenim&#x2F;toolchains&#x2F;nim-1.4.2&#x2F;config&#x2F;nim.cfg&#x27; [Conf]
+Hint: used config file &#x27;&#x2F;home&#x2F;kyohei&#x2F;.choosenim&#x2F;toolchains&#x2F;nim-1.4.2&#x2F;config&#x2F;config.nims&#x27; [Conf]
+..............CC: stdlib_assertions.nim
+CC: stdlib_io.nim
+CC: stdlib_system.nim
+CC: stdlib_streams.nim
+CC: stdlib_lexbase.nim
+CC: stdlib_parsecsv.nim
+CC: csvparse.nim
+Hint:  [Link]
+Hint: 35986 lines; 0.750s; 48.977MiB peakmem; Debug build; proj: &#x2F;home&#x2F;kyohei&#x2F;nim&#x2F;csvsample&#x2F;csvparse.nim; out: &#x2F;home&#x2F;kyohei&#x2F;nim&#x2F;csvsample&#x2F;csvparse [SuccessX]
+Hint: &#x2F;home&#x2F;kyohei&#x2F;nim&#x2F;csvsample&#x2F;csvparse  [Exec]
+The average of May in  &quot;2005&quot; is   0.1
+The average of Jun in  &quot;2005&quot; is   0.5
+The average of Jul in  &quot;2005&quot; is   0.7
+The average of Aug in  &quot;2005&quot; is   2.3
+The average of Sep in  &quot;2005&quot; is   3.5
+The average of Oct in  &quot;2005&quot; is   2.0
+The average of Nov in  &quot;2005&quot; is   0.5
+The average of Dec in  &quot;2005&quot; is   0.0
+
+[kyohei@myarch csvsample]$ nim c -r csvparse.nim
+Hint: used config file &#x27;&#x2F;home&#x2F;kyohei&#x2F;.choosenim&#x2F;toolchains&#x2F;nim-1.4.2&#x2F;config&#x2F;nim.cfg&#x27; [Conf]
+Hint: used config file &#x27;&#x2F;home&#x2F;kyohei&#x2F;.choosenim&#x2F;toolchains&#x2F;nim-1.4.2&#x2F;config&#x2F;config.nims&#x27; [Conf]
+Hint: 7847 lines; 0.013s; 6.98MiB peakmem; Debug build; proj: &#x2F;home&#x2F;kyohei&#x2F;nim&#x2F;csvsample&#x2F;csvparse.nim; out: &#x2F;home&#x2F;kyohei&#x2F;nim&#x2F;csvsample&#x2F;csvparse [SuccessX]
+Hint: &#x2F;home&#x2F;kyohei&#x2F;nim&#x2F;csvsample&#x2F;csvparse  [Exec]
+The average of May in  &quot;2005&quot; is   0.1
+The average of Jun in  &quot;2005&quot; is   0.5
+The average of Jul in  &quot;2005&quot; is   0.7
+The average of Aug in  &quot;2005&quot; is   2.3
+The average of Sep in  &quot;2005&quot; is   3.5
+The average of Oct in  &quot;2005&quot; is   2.0
+The average of Nov in  &quot;2005&quot; is   0.5
+The average of Dec in  &quot;2005&quot; is   0.0
+</code></pre>
+<p>１回めの実行は0.750sかかっているが、２回めは0.013sと短縮されている。</p>
+<p>個人的なNimの使用感としては、わずらわしいこと抜きにさくっとシンプルなプログラムを書きたいときにとても良い感じ（もちろんもっと複雑なプログラムも書けるだろうけれど）。「今時の簡潔言語」の中では一番しっくりきてます。</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/">kyoheiu.gitlab.io</a>&emsp;&copy; Kyohei Uto<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a
+    href="https://github.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>

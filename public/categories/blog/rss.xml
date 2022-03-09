@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>kyoheiu.gitlab.io - blog</title>
+        <link>https://kyoheiu.gitlab.io</link>
+        <description>personal notes</description>
+        <generator>Zola</generator>
+        <language>ja</language>
+        <atom:link href="https://kyoheiu.gitlab.io/categories/blog/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Fri, 20 Aug 2021 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>やる気因子の重み付けをする</title>
+            <pubDate>Fri, 20 Aug 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/self-motivation/</link>
+            <guid>https://kyoheiu.gitlab.io/post/self-motivation/</guid>
+            <description>&lt;p&gt;「できる」「すべき」「したい」&#x2F;can, should, wantが揃うとモチベーションが湧いてくる、という話をたまに見聞きするが、それが仕事でも家事でも、その他のなんの活動でもいいのだけれど、何かをやろうとするときにモチベーションが問題になるのは大抵、当の人間がモチベーションを感じて「いない」ときである。この、やる気を感じるときと感じられないときがある、ということについて、少し考えてみたい。&lt;&#x2F;p&gt;
+&lt;p&gt;まず、自分自身が手応えを感じていない状況について考えてみるが、&amp;quot;I can do it&amp;quot;, &amp;quot;It should be done&amp;quot;, &amp;quot;It&#x27;s worth it&amp;quot;の３つがすべて揃っているというのは、誰にとってもレアなことのように思う。大抵の場合、どれかはあって、どれかはない。たとえばAという作業について、これまでの自分の経験から、やればできることはわかっている。けれども、やる価値をどうにも感じられない…ということは多い（e.g. 運動）。あるいは、統計的にBをやれば生産性が上がることはわかっているし、生産性が上がることには価値も感じる。けれども自分にはどうしてもできない…ということもあるだろう（e.g. 早寝早起き）。&lt;br &#x2F;&gt;
+だからといって、３つ揃っていないと何事もとりかかれない・達成できないということはない。人生はもう少しambiguityに満ちている。ここで考えたいのは、「人によって、何があればやる気を出せるかは異なっている」という事実だ。&lt;&#x2F;p&gt;
+&lt;p&gt;たとえば、Cに価値を感じられれば、その瞬間Cをするスキルがなく、Cを支える理論やデータも知らないとしても、とにかくやりたくなり、実際にやってみる、という人がいる(worth)。あるいは、特に積極的な価値を強く感じているわけでもなく、理論も知らないが、できるから、という理由で何かにとりかかる人もいる(can)。とにかく義務だからこれをやるのだ、という人もいるはずだ(should)。&lt;br &#x2F;&gt;
+自らのやる気に対してどの因子が最も強く働くかは、相当な個人差があるし、この「やる気因子の重み」というのは、各行動のカテゴリによってもわりと異なるはずだ。たとえば、自分自身の勉強なら何でも、やりたいと思っただけでどんどん手が出せるけれど、こどもに対する教育に関してはむしろやるべきだからやるのだと考えている、といったケースだ。単純に10ポイントを割り振る（数字が大きいほどやる気に直結するとする）として、この場合、勉強においてはたとえばcan-2, should-2, worth-6、こどもの教育はcan-2, should-5, worth-3みたいに表現ができるかもしれない。&lt;br &#x2F;&gt;
+だから、まず自分自身のやる気の現状を把握するには、自分がやる気を出したいカテゴリにおいて、今現在どのタイプであるのかを認識することが大切だ。その上で、「このツボを押せば自分はやる気が出る・前に進める」というポイントを着実に押さえていく。&lt;&#x2F;p&gt;
+&lt;p&gt;また、この重み付けは、先天的な部分と後天的な部分、両方あるように感じる。周囲の人間のリアクションや助言でやる気が形作られていく（あるいは逆に、やる気を削がれていく）というのはよくある話だ。それが積み重なることで、次第に自分の中の重み付けが変化していき、「自分はここを押されるとやる気が出る」という意識が出てくるのではないか。&lt;br &#x2F;&gt;
+重み付けの変化に年齢的なリミットがあるのかどうかはよく分からないが、「大人になってから、それまで感じたことのないタイプのやる気が湧いてくる」というのは個人的にも”ある話”なので、わりといつでも更新できるのではないか（その時々にフィットする、自分に対するナッジを見出だせるのではないか）、という希望を持っている。&lt;&#x2F;p&gt;
+&lt;p&gt;こんなふうに、自分の「やる気因子の重み付け」を意識することができれば、他人との付き合い方にも活かせるような気がする。たとえば一緒に働いている人がいまいちやる気を出せていないとき。パートナーが手応えを感じていなさそうなとき。「自分はこんなにやる気があるのに、どうして？」とつい思う。それが積み重なると、相手にそもそもやる気を起こす気がないのではと考えるようになってしまう。けれど、自分が手応えを感じていて、同時に相手が手応えを感じていないということが有り得るのだ、と考えられれば、そんな心理状態からは抜け出すことができる。&lt;br &#x2F;&gt;
+単純な話だが、他人とうまくやっていくためには、けっこう大事なポイントじゃないかなと思っている。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>How to use Google Domains with Netlify</title>
+            <pubDate>Fri, 30 Apr 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/netlify-and-googledmains-en/</link>
+            <guid>https://kyoheiu.gitlab.io/post/netlify-and-googledmains-en/</guid>
+            <description>&lt;p&gt;I recently jumped into Netlify-hosted from other server. This article is about how to use Google Domains with Netlify (and why GitLab pages with custom domain is &lt;em&gt;bad&lt;&#x2F;em&gt;).&lt;&#x2F;p&gt;
+&lt;p&gt;First of all, Options of hosting service I had in mind were:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Firebase&lt;&#x2F;li&gt;
+&lt;li&gt;GitLab pages&lt;&#x2F;li&gt;
+&lt;li&gt;Netlify&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Firebase seemed good for dynamic site, but this site is powered by Zola (a fantastic static site generator) so, well, I don&#x27;t use it for now.&lt;&#x2F;p&gt;
+&lt;p&gt;Next, GitLab pages. OK I use GitLab for my main repository-hosting service, and it&#x27;s been great. So I thought GitLab pages with custom domain was natural and might be easy.&lt;&#x2F;p&gt;
+&lt;p&gt;It was not. Using custom domain in GitLab pages is hard. I do not recommend this setup.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;why&quot;&gt;Why?&lt;&#x2F;h3&gt;
+&lt;p&gt;Because its document is broken.&lt;&#x2F;p&gt;
+&lt;p&gt;In &lt;a href=&quot;https:&#x2F;&#x2F;docs.gitlab.com&#x2F;ee&#x2F;user&#x2F;project&#x2F;pages&#x2F;custom_domains_ssl_tls_certification&#x2F;&quot;&gt;official tutorial&lt;&#x2F;a&gt;, they say &amp;quot;set the A record to foo, and TXT record to bar.&amp;quot; But in the settings page of custom domain, I&#x27;m told to set CNAME and TXT. What&#x27;s going on?&lt;&#x2F;p&gt;
+&lt;p&gt;Actually I tried both. Neither did work. Though time might solve this (due to TTL? Note that I&#x27;ve waited for 1 day), I felt like, OK this is enough.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;resource-records-for-netlify&quot;&gt;resource records for Netlify&lt;&#x2F;h3&gt;
+&lt;p&gt;So, I went to Netlify, which I&#x27;ve used as an example site for my Zola theme. In &lt;code&gt;DNS &amp;gt;&amp;gt; resource records&lt;&#x2F;code&gt; set as following and, voila, it&#x27;s done:&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th align=&quot;left&quot;&gt;name&lt;&#x2F;th&gt;&lt;th align=&quot;left&quot;&gt;type&lt;&#x2F;th&gt;&lt;th align=&quot;left&quot;&gt;TTL&lt;&#x2F;th&gt;&lt;th align=&quot;left&quot;&gt;data&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;@&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;A&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;10m(or whatever you like)&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;75.2.60.5&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;www&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;CNAME&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;same as above&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;YOURSITENAME.netlify.app.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;Netlify automatically set the TLS certificate with Let&#x27;s Encrypt a few minutes after check for DNS configuration. This was a good experience, so I highly recommend Netlify over GitLab pages, at least for now.&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>Netlifyで独自ドメイン（Google Domains）を使う</title>
+            <pubDate>Fri, 30 Apr 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/netlify-and-googledmains/</link>
+            <guid>https://kyoheiu.gitlab.io/post/netlify-and-googledmains/</guid>
+            <description>&lt;p&gt;Google Domainsで管理している独自ドメインを使っているのだが、少し前にロリポップ！のサーバーから引越しをした。その際、いくつかのホスティングサービスの中でどれがいいか少し迷ったので、メモ。&lt;&#x2F;p&gt;
+&lt;p&gt;まず、オプションとして以下のものを考えた。&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Firebase&lt;&#x2F;li&gt;
+&lt;li&gt;GitLab pages&lt;&#x2F;li&gt;
+&lt;li&gt;Netlify&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Firebaseは良さげだったが、動的サイトのホスティング向けのような気がしたので今回はパス。&lt;&#x2F;p&gt;
+&lt;p&gt;次にGitLab pages。僕はGitLabをメイン使いしているので当初はこれ一択かなと思っていたのだが、はっきり言って期待外れだった。&lt;br &#x2F;&gt;
+というのは、独自ドメイン適用周りがどうにもこうにもうまくいっていないのだ。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;naze&quot;&gt;なぜ&lt;&#x2F;h3&gt;
+&lt;p&gt;そもそも公式のドキュメントが矛盾しているので、何を信用したらいいのかわからないから。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;docs.gitlab.com&#x2F;ee&#x2F;user&#x2F;project&#x2F;pages&#x2F;custom_domains_ssl_tls_certification&#x2F;&quot;&gt;チュートリアル&lt;&#x2F;a&gt;ではAレコードをこれこれに、TXTレコードをこれこれに設定しろと書いてあるのに、カスタムドメインの設定画面ではCNAMEとTXTの設定を求めてくる。どういうことだ。&lt;br &#x2F;&gt;
+実際両方やってみたのだが、どっちもうまくいかず途方に暮れた。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;netlifydenorekodoshe-ding&quot;&gt;Netlifyでのレコード設定&lt;&#x2F;h3&gt;
+&lt;p&gt;というわけで、Zolaのテーマサイトのホスティングにも元々使っていたNetlifyをチョイス。
+Google Domainsの設定は以下のようにすればOK。&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th align=&quot;left&quot;&gt;name&lt;&#x2F;th&gt;&lt;th align=&quot;left&quot;&gt;type&lt;&#x2F;th&gt;&lt;th align=&quot;left&quot;&gt;TTL&lt;&#x2F;th&gt;&lt;th align=&quot;left&quot;&gt;data&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;@&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;A&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;10m(or whatever you like)&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;75.2.60.5&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td align=&quot;left&quot;&gt;www&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;CNAME&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;same as above&lt;&#x2F;td&gt;&lt;td align=&quot;left&quot;&gt;YOURSITENAME.netlify.app.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;NetlifyはDNS設定が認証された後、自動的にTLS証明書をLet&#x27;s Encryptからとってきてくれる。独自ドメインでのホスティングは今のところNetlifyが圧勝。GitLab頑張れ。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        <item>
+            <title>Chromium losing Sync support on March 15</title>
+            <pubDate>Fri, 05 Feb 2021 00:00:00 +0000</pubDate>
+            <link>https://kyoheiu.gitlab.io/post/chromium-losing-sync/</link>
+            <guid>https://kyoheiu.gitlab.io/post/chromium-losing-sync/</guid>
+            <description>&lt;h3 id=&quot;jing-wei&quot;&gt;経緯&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;blog.chromium.org&#x2F;2021&#x2F;01&#x2F;limiting-private-api-availability-in.html&quot;&gt;Chromium Blog: Limiting Private API availability in Chromium&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;During a recent audit, we discovered that some third-party Chromium based browsers were able to integrate Google features, such as Chrome sync and Click to Call, that are only intended for Google’s use. This meant that a small fraction of users could sign into their Google Account and store their personal Chrome sync data, such as bookmarks, not just with Google Chrome, but also with some third-party Chromium based browsers. We are limiting access to our private Chrome APIs starting on March 15, 2021.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;Google提供のChromiumパッケージ以外のChromium、そしてChromiumベースのブラウザにおいて、ブックマークデータのsyncなど、「Googleによる利用のみが想定されていたAPI」の利用がみられることが「分かった」ので、このAPIの利用を21年3月15日より制限することにした、というのがGoogle側の話である。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;archlinux.org&#x2F;news&#x2F;chromium-losing-sync-support-in-early-march&#x2F;&quot;&gt;Arch Linux - News: Chromium losing Sync support in early March&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Google has announced that they are going to block everything but Chrome from accessing certain Google features (like Chrome sync) starting on March 15. This decision by Google is going to affect Arch&#x27;s chromium package a bit earlier, on March 2, when Chromium 89 gets released.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;これを受けて、各ディストリビューションのメンテナも対応を迫られている。Arch Linux版はGoogleによる制限の前に先んじてAPI利用を停止する模様。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;googlenofang-zhen-zhuan-huan&quot;&gt;Googleの方針転換&lt;&#x2F;h3&gt;
+&lt;p&gt;しかし、このGoogle側の言い分には事実でない情報が含まれているようだ。
+以下のブログの記事を読んでみる。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;hackaday.com&#x2F;2021&#x2F;01&#x2F;26&#x2F;whats-the-deal-with-chromium-on-linux-google-at-odds-with-package-maintainers&#x2F;&quot;&gt;What’s The Deal With Chromium On Linux? Google At Odds With Package Maintainers | Hackaday&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;As developer Eric Hameleers explains in a lengthy blog post, he was supplied with a dedicated API key for his Slackware Chromium builds by the Google Chrome Team in 2013. He was granted “official permission to include Google API keys in your packages”, and was told that the usage quota for that particular key would be increased “in an effort to adequately support your users”, as normally the key he was assigned would only be for personal development use. Evangelos Foutras, the maintainer for the Arch Linux Chromium package, has indicated he received a similar email at around the same time.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;groups.google.com&#x2F;a&#x2F;chromium.org&#x2F;g&#x2F;chromium-packagers&#x2F;c&#x2F;SG6jnsP4pWM&#x2F;m&#x2F;Kr0KlsL8CQAJ?pli=1&quot;&gt;Re: [Action Required] Update on Google API usage in Chromium&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Arch LinuxのChromiumパッケージのメンテナ・Evangelos Foutras氏の上記書き込みによると、このAPIは実は、2013年ごろにGoogleのChrome開発チームから「公式に再配布が認められていないものを、配布用に提供する」とのメッセージとともに送られたものだという。とすると、少なくともこのAPIの利用が各ディストリビューションのパッケージにおいて始まったタイミングでは、Google側はAPIがサードパーティーによって利用されていることは認識していたし、むしろそれを促進していたということになる。今回の方針転換が、API制限以上の何を示唆しているのかは、それぞれに感じるところがあるだろう。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;sekiyuriteiwen-ti&quot;&gt;セキュリティ問題&lt;&#x2F;h3&gt;
+&lt;p&gt;これを受けてのコミュニティの主な反応としては当然、「各ディストリビューションのChromiumパッケージにおいてsyncが行えなくなること」、そして「Googleが提供しているプロプライエタリなChrome、そしてChromiumと比して価値が低落すること」を否定的に受け止め、他ブラウザへ移行するという声が多い。
+しかしどうも話は単に「便利機能の制限」にとどまらないようだ。Foutras氏によると、このAPI制限によりセーフブラウンジング機能もdisabledにされる可能性があるとのこと。Safe Browsing Testing Linksでテストすると、&lt;a href=&quot;https:&#x2F;&#x2F;groups.google.com&#x2F;a&#x2F;chromium.org&#x2F;g&#x2F;chromium-packagers&#x2F;c&#x2F;SG6jnsP4pWM&#x2F;m&#x2F;OOxl9wKLAAAJ&quot;&gt;セーフブラウジング機能による警告が動かなかった&lt;&#x2F;a&gt;という。これは利便性がどうこうという話以前の、深刻なトラブルにつながりかねない変更だ。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;mentenanofan-ying&quot;&gt;メンテナの反応&lt;&#x2F;h3&gt;
+&lt;p&gt;この件については、上記のパッケージメンテナ諸氏による議論のほか、SlackwareのChromiumパッケージのメンテナ・Eric Hameleers氏のブログ記事も大変読み応えがある（&lt;a href=&quot;https:&#x2F;&#x2F;alien.slackbook.org&#x2F;blog&#x2F;google-muzzles-all-chromium-browsers-on-15-march-2021&#x2F;&quot;&gt;Google muzzles all Chromium browsers on 15 March 2021 | Alien Pastures&lt;&#x2F;a&gt;）。普段パッケージを好き勝手に使わせてもらっている身としては、これらの発言の奥にある感情を想像せずにはいられない。&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>
