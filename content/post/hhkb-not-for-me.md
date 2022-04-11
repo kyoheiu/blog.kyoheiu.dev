@@ -8,6 +8,7 @@ tags = ["keyboard"]
 +++
 
 備忘録として。
+
 ２年くらい、[ProgresTouch RETRO TINY](https://archisite.co.jp/products/archiss/progres-touch/retro-tiny-jp/)の静音赤軸＋静音リングというセットアップを使っていてまったくなんの不満もなかったのだが、たまにふと「静電容量を使ってみたらもうちょっと指の疲れが減るのだろうか」と思うこともある。（言うほど疲れているわけでもない）  
 TINYを使っているくらいなのでコンパクトキーボード推しで、テンキーレスでもまだ全然大きいという感覚なのでREALFORCEは選択肢に入らない。現実的には
 
@@ -20,8 +21,10 @@ TINYを使っているくらいなのでコンパクトキーボード推しで�
 レンタルしたのはHappy Hacking Keyboard Professional HYBRID Type-S 英語配列。本当はクラシックを試したかったが置いてなかった。
 
 注文の翌日に届くのですごく早い。さっそく開封して試してみるが、動かない。  
-OS（Linux）との相性？と一瞬思ったが、少し検索してみると、BlueToothモードから抜けないと、有線接続しても認識してくれないとか。  
-https://www.reddit.com/r/HHKB/comments/eo112e/hhkb_hybrid_type_s_running_into_issues_trying_to/  
+OS（Linux）との相性？と一瞬思ったが、少し検索してみると、BlueToothモードから抜けないと、有線接続しても認識してくれないとか。
+
+cf: [\[HHKB Hybrid Type S\] Running into issues trying to get this keyboard working on OSX and Linux\. : HHKB](https://www.reddit.com/r/HHKB/comments/eo112e/hhkb_hybrid_type_s_running_into_issues_trying_to/)
+
 有線接続しつつBTで別の端末につなぎたい、みたいなときに便利なのかもしれない。でも直感的でないデザインだと思う。
 結局上記ポストのトップにあるOPのコメント通りではうまくいかなくて、Fn + Q, Fn + ZとかでBTモードを抜けたはず。
 
