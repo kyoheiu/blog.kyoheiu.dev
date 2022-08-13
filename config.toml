@@ -1,9 +1,9 @@
 # The base URL of the site; the only required configuration variable.
-base_url = "https://kyoheiu.gitlab.io"
+base_url = "https://kyoheiu.dev"
 
 # The site title and description; used in feeds by default.
 description = "personal notes"
-title = "kyoheiu.gitlab.io"
+title = "kyoheiu.dev"
 
 # The default language; used in feeds.
 default_language = "ja"

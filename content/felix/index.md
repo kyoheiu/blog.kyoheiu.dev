@@ -5,8 +5,10 @@ template = "felix.html"
 +++
 
 <p align=right>
-<a href="https://crates.io/crates/felix">crates.io</a> <a href="https://github.com/kyoheiu/felix">repository</a>
+<a href="https://crates.io/crates/felix">> crates.io</a> <a href="https://github.com/kyoheiu/felix">> repository</a>
 </p>
+
+---
 
 # _felix_
 
@@ -44,7 +46,7 @@ A tui file manager with vim-like key mapping, written in Rust. Fast, simple, and
 - By `chafa`, the high-res image preview is enabled in terminals that support sixel, or kitty.
 - In other terminals, images are displayed by characters.
 
-For more details, see `CHANGELOG.md`.
+For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoheiu/felix).
 
 <a id="installation"></a>
 
@@ -109,18 +111,18 @@ cargo install --path .
 
 ### Move cursor / Change directory
 
-| Key                    | Explanation                                                                                                                                                                                                                                                                    |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| j / Up                 | Go up. If the list exceeds max-row, it "scrolls" before the top of the list.                                                                                                                                                                                                   |
-| k / Down               | Go down. If the list exceeds max-row, it "scrolls" before the bottom of the list.                                                                                                                                                                                              |
-| h / Left               | Go to the parent directory if exists.                                                                                                                                                                                                                                          |
-| l / Right / Enter      | Open a file or change the directory. Commands for the execution can be managed in the config file.                                                                                                                                                                             |
-| gg                     | Go to the top.                                                                                                                                                                                                                                                                 |
-| G                      | Go to the bottom.                                                                                                                                                                                                                                                              |
-| z + Enter              | Go to the home directory.                                                                                                                                                                                                                                                      |
-| z \<keyword\> + Enter  | **_This command requires zoxide installed._** Jump to a directory that matches the keyword. Internally, felix calls [`zoxide query <keyword>`](https://man.archlinux.org/man/zoxide-query.1.en), so if the keyword does not match the zoxide database, this command will fail. |
-| :cd / :z               | Go to the home directory.                                                                                                                                                                                                                                                      |
-| :z \<keyword\> + Enter | Same as `z <keyword>`.                                                                                                                                                                                                                                                         |
+| Key                      | Explanation                                                                                                                                                                                                                                                                    |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| j / Up                   | Go up. If the list exceeds max-row, it "scrolls" before the top of the list.                                                                                                                                                                                                   |
+| k / Down                 | Go down. If the list exceeds max-row, it "scrolls" before the bottom of the list.                                                                                                                                                                                              |
+| h / Left                 | Go to the parent directory if exists.                                                                                                                                                                                                                                          |
+| l / Right / Enter        | Open a file or change the directory. Commands for the execution can be managed in the config file.                                                                                                                                                                             |
+| gg                       | Go to the top.                                                                                                                                                                                                                                                                 |
+| G                        | Go to the bottom.                                                                                                                                                                                                                                                              |
+| z + Enter                | Go to the home directory.                                                                                                                                                                                                                                                      |
+| z \<keyword\> + Enter    | **_This command requires zoxide installed._** Jump to a directory that matches the keyword. Internally, felix calls [`zoxide query <keyword>`](https://man.archlinux.org/man/zoxide-query.1.en), so if the keyword does not match the zoxide database, this command will fail. |
+| :cd + Enter / :z + Enter | Go to the home directory.                                                                                                                                                                                                                                                      |
+| :z \<keyword\> + Enter   | Same as `z <keyword>`.                                                                                                                                                                                                                                                         |
 
 <a id="open"></a>
 
@@ -158,7 +160,7 @@ cargo install --path .
 | t               | Toggle sort order (by name <-> by modified time). This change remains after exit (same as above).                                                                                                                        |
 | /               | Switch to the filter mode (enter the keyword and press Enter to show the filtered list). Press h or Left to exit the filter mode.                                                                                        |
 | :               | **_Experimantal._** Switch to the shell mode. Type command and press Enter to execute it. You can use any command in the displayed directory, but some commands may fail, and the display may collapse during execution. |
-| :e              | Reload the current directory. Useful when something goes wrong.                                                                                                                                                          |
+| :e + Enter      | Reload the current directory. Useful when something goes wrong.                                                                                                                                                          |
 | :empty + Enter  | Empty the trash directory. **Please think twice to use this.**                                                                                                                                                           |
 | :h + Enter      | Show help. (scrolls by `j/k` or `Up/Down`)                                                                                                                                                                               |
 | Esc             | Return to the normal mode.                                                                                                                                                                                               |
@@ -177,9 +179,9 @@ Note that items moved to the trash directory are prefixed with Unix time (like `
 
 ```
 felix
-  - config.toml # configuration file
-  - log         # log files
-  - trash       # trash directory
+├─ config.toml # configuration file
+├─ log         # log files
+└─ trash       # trash directory
 
 # All config file and directories will be automatically created.
 ```
