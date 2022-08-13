@@ -5,7 +5,7 @@ template = "felix.html"
 +++
 
 <p align=right>
-<a href="https://crates.io/crates/felix">> crates.io</a> <a href="https://github.com/kyoheiu/felix">> repository</a>
+<a href="https://crates.io/crates/felix">crates.io</a> <a href="https://github.com/kyoheiu/felix">repository</a>
 </p>
 
 ---
@@ -22,8 +22,8 @@ A tui file manager with vim-like key mapping, written in Rust. Fast, simple, and
 - [Key Manual](#key-manual)
   - [Move cursor / Change directory](#move)
   - [Open a file](#open)
-  - [Item manipulation](#manip)
-  - [Change view, filter and others](#view)
+  - [Manage items](#manage)
+  - [Change the view, filter items and others](#view)
 - [Configuration](#configuration)
 
 <a id="new-release"></a>
@@ -133,9 +133,9 @@ cargo install --path .
 | l / Right / Enter | Open a file or change the directory. Commands for the execution can be managed in the config file.                                                                                                                           |
 | o                 | Open a file in a new window. This enables you to use felix while working with the file. If you open a file in an editor that runs inside the terminal, no new window appears, and after exit some error messages may appear. |
 
-<a id="manip"></a>
+<a id="manage"></a>
 
-### Item manipulation
+### Manage items
 
 | Key             | Explanation                                                                                                                             |
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
@@ -151,7 +151,7 @@ cargo install --path .
 
 <a id="view"></a>
 
-### Change view, filter, and others
+### Change the view, search and others
 
 | Key             | Explanation                                                                                                                                                                                                              |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
