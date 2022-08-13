@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  {% block title %}
+  <title>{{ config.title }}</title>
+  {% endblock %}
+  <link rel="shortcut icon" type="image/png" href="{{ config.extra.emily_favicon }}">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+  <script type="text/javascript" src="/js/theme.js"></script>
+</head>
+{% block content %}
+<p>
+  {{ page.content | safe }}
+</p>
+{% endblock content %}
