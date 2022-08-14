@@ -173,7 +173,7 @@ These apps do not need any configuration to use with felix!
 
 | Key             | Explanation                                                                                                                                                                                                              |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| v               | Toggle whether to show the item preview (text, image, or the contents tree) on the right half of the terminal. **You must install [`chafa`](https://hpjansson.org/chafa/) in order to preview images.\_**                |
+| v               | Toggle whether to show the item preview (text, image, or the contents tree) on the right half of the terminal. **_You must install [`chafa`](https://hpjansson.org/chafa/) in order to preview images._**                |
 | backspace       | Toggle whether to show hidden items or not. This change remains after exit (stored in `.session`).                                                                                                                       |
 | t               | Toggle sort order (by name <-> by modified time). This change remains after exit (same as above).                                                                                                                        |
 | /               | Switch to the filter mode (enter the keyword and press Enter to show the filtered list). Press h or Left to exit the filter mode.                                                                                        |
