@@ -10,20 +10,20 @@ template = "felix.html"
 
 ---
 
-# _felix_
+<h1 align=center><i>felix</i></h1>
 
 A tui file manager with vim-like key mapping, written in Rust. Fast, simple, and easy to configure & use.
 
 ![sample](/images/sample.gif)
 
 - [New Release](#new-release)
-- [Installation](#installation)
+- [Get started](#get-started)
 - [Usage](#usage)
 - [Key Manual](#key-manual)
   - [Move cursor / Change directory](#move)
   - [Open a file](#open)
   - [Manage items](#manage)
-  - [Change the view, filter items and others](#view)
+  - [Change the view, search and others](#view)
 - [Configuration](#configuration)
 
 <a id="new-release"></a>
@@ -48,9 +48,9 @@ A tui file manager with vim-like key mapping, written in Rust. Fast, simple, and
 
 For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoheiu/felix).
 
-<a id="installation"></a>
+<a id="get-started"></a>
 
-## Installation
+## Get Started
 
 ### Status
 
@@ -61,7 +61,7 @@ For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoh
 | MacOS   | works (tested only on Intel Mac) |
 | Windows | not supported yet                |
 
-### Install
+### Installation
 
 _Make sure that `gcc` is installed._
 
@@ -95,7 +95,7 @@ cargo install --path .
 
 ## Usage
 
-| command / arguments                |                                                               |
+| command / options                  |                                                               |
 | ---------------------------------- | ------------------------------------------------------------- |
 | `fx`                               | Show items in the current directory.                          |
 | `fx <directory path>`              | Show items in the path. Both relative and absolute available. |
@@ -105,7 +105,7 @@ cargo install --path .
 
 <a id="key-manual"></a>
 
-## Key manual
+## Key Manual
 
 <a id="move"></a>
 
@@ -186,7 +186,7 @@ felix
 # All config file and directories will be automatically created.
 ```
 
-Default config file, will be created automatically when you launch the program for the first time.
+Default config file will be created automatically when you launch the program for the first time.
 
 Default config.toml:
 
