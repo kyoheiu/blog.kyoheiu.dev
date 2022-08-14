@@ -18,6 +18,9 @@ A tui file manager with vim-like key mapping, written in Rust. Fast, simple, and
 
 - [New Release](#new-release)
 - [Get started](#get-started)
+  - [Status](#status)
+  - [Installation](#installation)
+  - [Integrations](#integrations)
 - [Usage](#usage)
 - [Key Manual](#key-manual)
   - [Move cursor / Change directory](#move)
@@ -42,7 +45,7 @@ A tui file manager with vim-like key mapping, written in Rust. Fast, simple, and
 
 - From v1.1.0, felix uses [hpjansson](https://github.com/hpjansson) /
   [chafa](https://github.com/hpjansson/chafa) instead of `libsixel` & `viuer` to preview image files. This greatly improves the performance and code maintainability, and as a consequence, the number of dependencies is reduced (137 -> 53).
-- Due to this change, the image preview does not work out of the box: **_You must install `chafa` to preview images._** Please see [https://hpjansson.org/chafa/](https://hpjansson.org/chafa/).
+- Due to this change, the image preview does not work out of the box: **_Install `chafa` and it will be enabled without configuration_**. To install, please see https://hpjansson.org/chafa/.
 - By `chafa`, the high-res image preview is enabled in terminals that support sixel, or kitty.
 - In other terminals, images are displayed by characters.
 
@@ -52,6 +55,8 @@ For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoh
 
 ## Get Started
 
+<a id="status"></a>
+
 ### Status
 
 | OS      | Status                           |
@@ -60,6 +65,8 @@ For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoh
 | NetBSD  | works                            |
 | MacOS   | works (tested only on Intel Mac) |
 | Windows | not supported yet                |
+
+<a id="installation"></a>
 
 ### Installation
 
@@ -90,6 +97,17 @@ git clone https://github.com/kyoheiu/felix.git
 cd felix
 cargo install --path .
 ```
+
+<a id="integrations"></a>
+
+### Integrations
+
+In addition, you can use felix more conveniently by installing the following two apps:
+
+- [zoxide](https://github.com/ajeetdsouza/zoxide): A smarter `cd` command, which enables you to jump to a directory that matches the keyword in felix.
+- [chafa](https://hpjansson.org/chafa/): Terminal graphics for the 21st century, by which you can preview images in felix.
+
+These apps do not need any configuration to use with felix!
 
 <a id="usage"></a>
 
@@ -155,7 +173,7 @@ cargo install --path .
 
 | Key             | Explanation                                                                                                                                                                                                              |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| v               | Toggle whether to show the item preview (text, image, or the contents tree) on the right half of the terminal. **_You must install [`chafa`](https://hpjansson.org/chafa/) in order to preview images._**                |
+| v               | Toggle whether to show the item preview (text, image, or the contents tree) on the right half of the terminal. **You must install [`chafa`](https://hpjansson.org/chafa/) in order to preview images.\_**                |
 | backspace       | Toggle whether to show hidden items or not. This change remains after exit (stored in `.session`).                                                                                                                       |
 | t               | Toggle sort order (by name <-> by modified time). This change remains after exit (same as above).                                                                                                                        |
 | /               | Switch to the filter mode (enter the keyword and press Enter to show the filtered list). Press h or Left to exit the filter mode.                                                                                        |
