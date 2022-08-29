@@ -51,12 +51,12 @@ For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoh
 
 ### Status
 
-| OS      | Status                           |
-| ------- | -------------------------------- |
-| Linux   | works                            |
-| NetBSD  | works                            |
-| MacOS   | works (tested only on Intel Mac) |
-| Windows | not supported yet                |
+| OS      | Status            |
+| ------- | ----------------- |
+| Linux   | works             |
+| NetBSD  | works             |
+| MacOS   | works             |
+| Windows | not supported yet |
 
 <a id="installation"></a>
 
