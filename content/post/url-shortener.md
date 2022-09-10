@@ -1,6 +1,6 @@
 +++
 title = "URL短縮サービスを勢いだけで実装する"
-date = 2021-09-03
+date = 2022-09-03
 math = false
 [taxonomies]
 categories = ["code"]
