@@ -6,8 +6,8 @@ categories = ["code"]
 tags = ["linux", "systemd"]
 +++
 
-1. [HaskellによるWebスクレイピング](@/post/haskellscraping01.md)
-2. [HaskellでSlackに投稿する](@/post/posttoslack.md)
+1. [HaskellによるWebスクレイピング](@/posts/haskellscraping01.md)
+2. [HaskellでSlackに投稿する](@/posts/posttoslack.md)
 3. systemdを使ってプログラムを定期実行する（この記事）
 
 linux上でプログラムを定期実行する手段は主に`cron`(とそのフォーク）と`systemd`を使うものの２種類あるが、今回は`systemd`を使ってみた。`cron`のフォークである`cronie`も試してみたのだが、`/etc/`以下にさしあたり必要でないディレクトリが作られたり、設定ファイルが個人的に扱いづらかったりであまり肌に合わなかった。  

@@ -6,9 +6,9 @@ categories = ["code"]
 tags = ["Haskell", "Slack"]
 +++
 
-1. [HaskellによるWebスクレイピング](@/post/haskellscraping01.md)
+1. [HaskellによるWebスクレイピング](@/posts/haskellscraping01.md)
 2. HaskellでSlackに投稿する（この記事）
-3. [systemdを使ってプログラムを定期実行する](@/post/systemd-service.md)
+3. [systemdを使ってプログラムを定期実行する](@/posts/systemd-service.md)
 
 scalpelで更新情報を抽出した後、保存されているテキストデータと異なっていた場合は、その旨をSlackへ通知を入れたい。
 そのための関数は`Main.hs`とは別に`Lib.hs`へ保存する。
