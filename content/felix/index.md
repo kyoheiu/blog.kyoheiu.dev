@@ -33,13 +33,18 @@ A tui file manager with vim-like key mapping, written in Rust. Fast, simple, and
 
 ## New Release
 
-## v1.1.2 (2022-08-29)
+## v1.2.0 (2022-10-01)
+
+### Changed
+
+- Huge refactoring: Instead of `thiserror`, use custom error type to make it easier to handle.
+- Bump up chrono version to 0.4.22, clarifing the feature to use.
+- Avoid extra heap allocation by using write! instead of push_str/format!.
+- Copied item will be renamed with the suffix "\_{count}" such as "test_1.txt", instead of "test_copied.txt".
 
 ### Fixed
 
-- Use full width of the terminal when `use_full_width` in config.toml is not set.
-- Use `cursor::Goto` instead of `cursor::Left` to fix the layout in macOS Terminal.app.
-- Refactor functions around the layout.
+- Choose `None` for directory extension.
 
 For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoheiu/felix).
 
@@ -57,6 +62,8 @@ For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoh
 | NetBSD  | works             |
 | MacOS   | works             |
 | Windows | not supported yet |
+
+MSRV(Minimum Supported Rust Version): **1.59.0**
 
 <a id="installation"></a>
 
@@ -147,17 +154,17 @@ These apps do not need any configuration to use with felix!
 
 ### Manage items
 
-| Key             | Explanation                                                                                                                             |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| dd              | Delete and yank one item (it will go to the trash directory).                                                                           |
-| yy              | Yank one item. If you yanked other item(s) before, it's replaced by this one.                                                           |
-| p               | Put yanked item(s) in the current directory. If the item with same name exists, copied item will be renamed with the suffix "\_copied". |
-| c               | Switch to the rename mode (enter the new name and press Enter to rename the item).                                                      |
-| V               | Switch to the select mode, where you can move cursor to select items.                                                                   |
-| d (select mode) | Delete and yank selected items, and return to the normal mode.                                                                          |
-| y (select mode) | Yank selected items, and return to the normal mode.                                                                                     |
-| u               | Undo put/delete/rename.                                                                                                                 |
-| Ctrl + r        | Redo put/delete/rename.                                                                                                                 |
+| Key             | Explanation                                                                                                                                                    |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| dd              | Delete and yank one item (it will go to the trash directory).                                                                                                  |
+| yy              | Yank one item. If you yanked other item(s) before, it's replaced by this one.                                                                                  |
+| p               | Put yanked item(s) in the current directory. If the item with same name exists, copied item will be renamed with the suffix `\_{count}`, such as `test_1.txt`. |
+| c               | Switch to the rename mode (enter the new name and press Enter to rename the item).                                                                             |
+| V               | Switch to the select mode, where you can move cursor to select items.                                                                                          |
+| d (select mode) | Delete and yank selected items, and return to the normal mode.                                                                                                 |
+| y (select mode) | Yank selected items, and return to the normal mode.                                                                                                            |
+| u               | Undo put/delete/rename.                                                                                                                                        |
+| Ctrl + r        | Redo put/delete/rename.                                                                                                                                        |
 
 <a id="view"></a>
 
