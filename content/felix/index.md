@@ -12,7 +12,8 @@ template = "felix.html"
 
 <h1 align=center><i>felix</i></h1>
 
-A tui file manager with vim-like key mapping, written in Rust. Fast, simple, and easy to configure & use.
+A tui file manager with vim-like key mapping, written in Rust.  
+Fast, simple, and easy to configure & use.
 
 ![sample](/images/sample.gif)
 
@@ -33,18 +34,19 @@ A tui file manager with vim-like key mapping, written in Rust. Fast, simple, and
 
 ## New Release
 
-## v1.2.0 (2022-10-01)
+## v1.3.0 (2022-10-18)
 
 ### Changed
 
-- Huge refactoring: Instead of `thiserror`, use custom error type to make it easier to handle.
-- Bump up chrono version to 0.4.22, clarifing the feature to use.
-- Avoid extra heap allocation by using write! instead of push_str/format!.
-- Copied item will be renamed with the suffix "\_{count}" such as "test_1.txt", instead of "test_copied.txt".
+- Huge refactoring: Migrated to crossterm from termion due to the maintainability and future-support for Windows. New module `term.rs` contains (almost) all of the terminal API, so that other modules will not get effected by the future backend change.
+  - Alongside, some changes are added to show the file path properly in Windows.
+  - With crossterm, opening a file in e.g. Vim, it feels as if this app "freezes". This behavior is not what I want, so from v1.3.0, `open_file_in_new_window` can work only if \[exec\] is set in config file, and the extension of the item matches the key.
+- `default` key in the config file become `Option`, so that users can select `$EDITOR` without explicitly setting it up. The initial process of asking users to select the default command has also been fixed accordingly.
 
 ### Fixed
 
-- Choose `None` for directory extension.
+- After zoxide jump, turn off the filter mode.
+- Many typos fixed.
 
 For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoheiu/felix).
 
@@ -56,14 +58,16 @@ For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoh
 
 ### Status
 
-| OS      | Status            |
-| ------- | ----------------- |
-| Linux   | works             |
-| NetBSD  | works             |
-| MacOS   | works             |
-| Windows | not supported yet |
+| OS      | Status               |
+| ------- | -------------------- |
+| Linux   | works                |
+| NetBSD  | works                |
+| MacOS   | works                |
+| Windows | not fully tested yet |
 
-MSRV(Minimum Supported Rust Version): **1.59.0**
+_For Windows users: From v1.3.0, it can be at least compiled on Windows (see `.github/workflows/install_test.yml`.) If you're interested, Please try the native build and report any problems._
+
+MSRV(Minimum Supported rustc Version): **1.59.0**
 
 <a id="installation"></a>
 
@@ -145,10 +149,10 @@ These apps do not need any configuration to use with felix!
 
 ### Open a file
 
-| Key               | Explanation                                                                                                                                                                                                                  |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| l / Right / Enter | Open a file or change the directory. Commands for the execution can be managed in the config file.                                                                                                                           |
-| o                 | Open a file in a new window. This enables you to use felix while working with the file. If you open a file in an editor that runs inside the terminal, no new window appears, and after exit some error messages may appear. |
+| Key               | Explanation                                                                                                                                                                              |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| l / Right / Enter | Open a file or change the directory. Commands for the execution can be managed in the config file.                                                                                       |
+| o                 | Open a file in a new window. This enables you to use felix while working with the file. Works only if \[exec\] is set in the config file, and the extension of the item matches the key. |
 
 <a id="manage"></a>
 
@@ -189,10 +193,11 @@ Note that items moved to the trash directory are prefixed with Unix time (like `
 
 ## Configuration
 
-| OS    | path                                      |
-| ----- | ----------------------------------------- |
-| Linux | `$XDG_CONFIG_HOME/felix`                  |
-| macOS | `$HOME/Library/Application Support/felix` |
+| OS      | path                                      |
+| ------- | ----------------------------------------- |
+| Linux   | `$XDG_CONFIG_HOME/felix`                  |
+| macOS   | `$HOME/Library/Application Support/felix` |
+| Windows | `$PROFILE\AppData\Roaming\felix`          |
 
 ```
 felix
@@ -203,12 +208,13 @@ felix
 # All config file and directories will be automatically created.
 ```
 
-Default config file will be created automatically when you launch the program for the first time.
+Default config file will be created automatically at the first launch.
 
 Default config.toml:
 
 ```
-# Default exec command when open files.
+# (Optional) Default exec command when open files.
+# If not set, will default to $EDITOR
 default = "nvim"
 
 # (Optional) Whether to use the full width of terminal.
@@ -229,25 +235,24 @@ default = "nvim"
 
 # The foreground color of directory, file and symlink.
 # Pick one of the following:
-#   AnsiValue(u8)
-#   Black
-#   Blue
-#   Cyan
-#   Green
-#   LightBlack
-#   LightBlue
-#   LightCyan
-#   LightGreen
-#   LightMagenta
-#   LightRed
-#   LightWhite
-#   LightYellow
-#   Magenta
-#   Red
-#   Rgb(u8, u8, u8)
-#   White
-#   Yellow
-# For more details, see https://docs.rs/termion/1.5.6/termion/color/index.html
+#     Black
+#     Red
+#     Green
+#     Yellow
+#     Blue
+#     Magenta
+#     Cyan
+#     White
+#     LightBlack
+#     LightRed
+#     LightGreen
+#     LightYellow
+#     LightBlue
+#     LightMagenta
+#     LightCyan
+#     LightWhite
+#     Rgb(u8, u8, u8)
+#     AnsiValue(u8)
 [color]
 dir_fg = "LightCyan"
 file_fg = "LightWhite"
