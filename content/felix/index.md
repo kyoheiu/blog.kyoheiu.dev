@@ -34,6 +34,16 @@ Fast, simple, and easy to configure & use.
 
 ## New Release
 
+## v1.3.2 (2022-10-23)
+
+### Added
+
+- Add `std::panic::catch_unwind` to manually restore after a panic rewind. This allows the cursor to be restored and the screen cleared when this app panics.
+
+### Fixed
+
+- Fixed: Similar to v1.3.1, attempting to preview a symbolic link to a nonexistent file caused a panic. Now the preview shows `(file not readable)` for such a link.
+
 ## v1.3.1 (2022-10-21)
 
 ### Fixed
@@ -47,10 +57,6 @@ Fast, simple, and easy to configure & use.
 - Huge refactoring: Migrated to crossterm from termion due to the maintainability and future-support for Windows. New module `term.rs` contains (almost) all of the terminal API, so that other modules will not get effected by the future backend change.
   - With crossterm, opening a file in e.g. Vim, it feels as if this app "freezes". This behavior is not what I want, so from v1.3.0, `open_file_in_new_window` can work only if \[exec\] is set in config file, and the extension of the item matches the key.
 - `default` key in the config file changed to `Option`, so that users can select `$EDITOR` without explicitly setting it up. The initial process of asking users to select the default command has also been fixed accordingly.
-
-### Fixed
-
-- After zoxide jump, turn off the filter mode.
 
 For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoheiu/felix).
 
