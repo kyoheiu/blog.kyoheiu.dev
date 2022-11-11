@@ -34,29 +34,21 @@ Fast, simple, and easy to configure & use.
 
 ## New Release
 
-## v1.3.2 (2022-10-23)
-
-### Added
-
-- Add `std::panic::catch_unwind` to manually restore after a panic rewind. This allows the cursor to be restored and the screen cleared when this app panics.
-
-### Fixed
-
-- Fixed: Similar to v1.3.1, attempting to preview a symbolic link to a nonexistent file caused a panic. Now the preview shows `(file not readable)` for such a link.
-
-## v1.3.1 (2022-10-21)
-
-### Fixed
-
-- Attempting to preview a symbolic link to a directory caused a panic. It has been fixed and the preview will now show the contents of the linked directory.
-
-## v1.3.0 (2022-10-18)
+## v2.0.0 (2022-11-11)
 
 ### Changed
 
-- Huge refactoring: Migrated to crossterm from termion due to the maintainability and future-support for Windows. New module `term.rs` contains (almost) all of the terminal API, so that other modules will not get effected by the future backend change.
-  - With crossterm, opening a file in e.g. Vim, it feels as if this app "freezes". This behavior is not what I want, so from v1.3.0, `open_file_in_new_window` can work only if \[exec\] is set in config file, and the extension of the item matches the key.
-- `default` key in the config file changed to `Option`, so that users can select `$EDITOR` without explicitly setting it up. The initial process of asking users to select the default command has also been fixed accordingly.
+- Migrated to yaml from toml: New config file will be created at the first launch (In this process you should enter the default command name or choose to use \$EDITOR). No need to keep `config.toml`.
+- Add the fallback when config file cannot be read: In such a case, you can use the default config.
+- HUGE refactoring overall.
+
+### Added
+
+- Horizontal split, in addtion to the vertical split. To swtch between them, press `s`.
+- Syntax highlighting (if possible) in previewed texts. To turn on, state `syntax_hightlight: true` in `config.yaml`. you can also choose your theme, either from the default theme set or your favorite .tmtheme.
+- Enable scrolling in the preview space. `Alt + j / Down` goes down, `Alt + Up` goes up. Experimental and may have some bugs. Also, big text files can cause the performance issue.
+- Search by keyword. Similar to the filter mode, but this feature does not manipulate the item list: Just let users jump to the item that matches the keyword, like Vim's `/`. `n` and `N` after `/` also works.
+- Show permissions on the footer (in unix only).
 
 For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoheiu/felix).
 
@@ -77,7 +69,7 @@ For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoh
 
 _For Windows users: From v1.3.0, it can be at least compiled on Windows (see `.github/workflows/install_test.yml`.) If you're interested, Please try the native build and report any problems._
 
-MSRV(Minimum Supported rustc Version): **1.59.0**
+MSRV(Minimum Supported rustc Version): **1.60.0**
 
 <a id="installation"></a>
 
@@ -144,8 +136,8 @@ These apps do not need any configuration to use with felix!
 
 | Key                      | Explanation                                                                                                                                                                                                                                                                    |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| j / Up                   | Go up. If the list exceeds max-row, it "scrolls" before the top of the list.                                                                                                                                                                                                   |
-| k / Down                 | Go down. If the list exceeds max-row, it "scrolls" before the bottom of the list.                                                                                                                                                                                              |
+| j / Down                 | Go up. If the list exceeds max-row, it "scrolls" before the top of the list.                                                                                                                                                                                                   |
+| k / Up                   | Go down. If the list exceeds max-row, it "scrolls" before the bottom of the list.                                                                                                                                                                                              |
 | h / Left                 | Go to the parent directory if exists.                                                                                                                                                                                                                                          |
 | l / Right / Enter        | Open a file or change the directory. Commands for the execution can be managed in the config file.                                                                                                                                                                             |
 | gg                       | Go to the top.                                                                                                                                                                                                                                                                 |
@@ -159,10 +151,10 @@ These apps do not need any configuration to use with felix!
 
 ### Open a file
 
-| Key               | Explanation                                                                                                                                                                              |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| l / Right / Enter | Open a file or change the directory. Commands for the execution can be managed in the config file.                                                                                       |
-| o                 | Open a file in a new window. This enables you to use felix while working with the file. Works only if \[exec\] is set in the config file, and the extension of the item matches the key. |
+| Key               | Explanation                                                                                                                                                                                     |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| l / Right / Enter | Open a file or change the directory. Commands for the execution can be managed in the config file.                                                                                              |
+| o                 | Open a file in a new window. This enables you to use felix while working with the file. Works only if `exec` is set in the config file, and the extension of the item matches one of the value. |
 
 <a id="manage"></a>
 
@@ -187,9 +179,14 @@ These apps do not need any configuration to use with felix!
 | Key             | Explanation                                                                                                                                                                                                              |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | v               | Toggle whether to show the item preview (text, image, or the contents tree) on the right half of the terminal. **_You must install [`chafa`](https://hpjansson.org/chafa/) in order to preview images._**                |
+| Alt + j / Down  | Scroll down the preview text.                                                                                                                                                                                            |
+| Alt + k / Up    | Scroll up the preview text.                                                                                                                                                                                              |
+| s               | Toggle between vertical / horizontal split in the preview mode.                                                                                                                                                          |
 | backspace       | Toggle whether to show hidden items or not. This change remains after exit (stored in `.session`).                                                                                                                       |
 | t               | Toggle sort order (by name <-> by modified time). This change remains after exit (same as above).                                                                                                                        |
-| /               | Switch to the filter mode (enter the keyword and press Enter to show the filtered list). Press h or Left to exit the filter mode.                                                                                        |
+| /               | Search items by the keyword.                                                                                                                                                                                             |
+| n               | Go forward to the item that matches the keyword.                                                                                                                                                                         |
+| N               | Go backward to the item that matches the keyword.                                                                                                                                                                        |
 | :               | **_Experimantal._** Switch to the shell mode. Type command and press Enter to execute it. You can use any command in the displayed directory, but some commands may fail, and the display may collapse during execution. |
 | :e + Enter      | Reload the current directory. Useful when something goes wrong.                                                                                                                                                          |
 | :empty + Enter  | Empty the trash directory. **Please think twice to use this.**                                                                                                                                                           |
@@ -211,7 +208,7 @@ Note that items moved to the trash directory are prefixed with Unix time (like `
 
 ```
 felix
-├─ config.toml # configuration file
+├─ config.yaml # configuration file
 ├─ log         # log files
 └─ trash       # trash directory
 
@@ -220,53 +217,72 @@ felix
 
 Default config file will be created automatically at the first launch.
 
-Default config.toml:
+Default config.yaml:
 
 ```
-# (Optional) Default exec command when open files.
-# If not set, will default to $EDITOR
-default = "nvim"
-
-# (Optional) Whether to use the full width of terminal.
-# If not set, this will be true.
-# use_full_width = true
-
-# (Optional) Set the max length of item name to be displayed.
-# This works only when use_full_width is set to false.
-# If the terminal size is not enough, the length will be changed to fit it.
-# If not set, this will be 30.
-# item_name_length = 30
+# v2.0.0
 
 # (Optional)
-# key (the command you want to use) = [values] (extensions)
-# [exec]
-# feh = ["jpg", "jpeg", "png", "gif", "svg"]
-# zathura = ["pdf"]
+# Default exec command when open files.
+# If not set, will default to $EDITOR.
+# default: nvim
+
+# (Optional)
+# key (the command you want to use): [values] (extensions)
+# exec:
+#   feh:
+#     [jpg, jpeg, png, gif, svg]
+#   zathura:
+#     [pdf]
+
+# (Optional)
+# Whether to use syntax highlighting in the preview mode.
+# If not set, will default to false.
+# syntax_highlight: true
+
+# (Optional)
+# Default theme for syntax highlighting.
+# Pick one from the following:
+#    Base16OceanDark
+#    Base16EightiesDark
+#    Base16MochaDark
+#    Base16OceanLight
+#    InspiredGitHub
+#    SolarizedDark
+#    SolarizedLight
+# If not set, will default to "Base16OceanDark".
+# default_theme: Base16EightiesDark
+
+# (Optional)
+# Path to .tmtheme file for the syntax highlighting.
+# If not set, default_theme will be used.
+# theme_path: "/home/kyohei/.config/felix/monokai.tmtheme"
 
 # The foreground color of directory, file and symlink.
 # Pick one of the following:
-#     Black
-#     Red
-#     Green
-#     Yellow
-#     Blue
-#     Magenta
-#     Cyan
-#     White
-#     LightBlack
-#     LightRed
-#     LightGreen
-#     LightYellow
-#     LightBlue
-#     LightMagenta
-#     LightCyan
-#     LightWhite
+#     Black            // 0
+#     Red              // 1
+#     Green            // 2
+#     Yellow           // 3
+#     Blue             // 4
+#     Magenta          // 5
+#     Cyan             // 6
+#     White            // 7
+#     LightBlack       // 8
+#     LightRed         // 9
+#     LightGreen       // 10
+#     LightYellow      // 11
+#     LightBlue        // 12
+#     LightMagenta     // 13
+#     LightCyan        // 14
+#     LightWhite       // 15
 #     Rgb(u8, u8, u8)
 #     AnsiValue(u8)
-[color]
-dir_fg = "LightCyan"
-file_fg = "LightWhite"
-symlink_fg = "LightYellow"
+# For more details, see https://docs.rs/termion/1.5.6/termion/color/index.html
+color:
+  dir_fg: LightCyan
+  file_fg: LightWhite
+  symlink_fg: LightYellow
 ```
 
 ### Command settings
@@ -274,11 +290,13 @@ symlink_fg = "LightYellow"
 For example, If you write
 
 ```
-default = "nvim"
+default: nvim
 
-[exec]
-feh = ["jpg", "jpeg", "png", "gif", "svg"]
-zathura = ["pdf"]
+exec:
+  feh:
+    [jpg, jpeg, png, gif, svg]
+  zathura:
+    [pdf]
 ```
 
-then, .jpg, .jpeg, .png, .gif and .svg files are opened by `feh <file-name>`, .pdf files by `zathura <file-name>` and others by `nvim <file-name>` .
+then, `.jpg`, `.jpeg`, `.png`, `.gif` and `.svg` files are opened by `feh <file-name>`, `.pdf` files by `zathura <file-name>` and others by `nvim <file-name>` .
