@@ -157,7 +157,7 @@ These apps do not need any configuration to use with felix!
 | Key               | Explanation                                                                                                                                                                                                                   |
 | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | l / Right / Enter | Open a file or change the directory. Commands for the execution can be managed in the config file.                                                                                                                            |
-| o                 | Open a file in a new window. This enables you to use felix while working with the file. Works only if `exec` is set in the config file, and the extension of the item matches one of the value.                               |
+| o                 | Open a file in a new window. This enables you to use felix while working with the file. Works only if `exec` is set in the config file and the extension of the item matches one of the value.                                |
 | e                 | Extract archived/compressed file to the current directory. Supported types: `tar.gz`(Gzip), `tar.xz`(lzma), `tar.zst`(Zstandard & tar), `zst`(Zstandard), `tar`, zip file format and formats based on it(`zip`, `docx`, ...). |
 
 <a id="manage"></a>
@@ -227,12 +227,12 @@ Default config.yaml:
 # v2.0.0
 
 # (Optional)
-# Default exec command when open files.
+# Default exec command when opening files.
 # If not set, will default to $EDITOR.
 # default: nvim
 
 # (Optional)
-# key (the command you want to use): [values] (extensions)
+# key (the command you want to use when opening certain files): [values] (extensions)
 # exec:
 #   feh:
 #     [jpg, jpeg, png, gif, svg]
