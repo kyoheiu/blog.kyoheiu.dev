@@ -12,7 +12,7 @@ template = "felix.html"
 
 <h1 align=center><i>felix</i></h1>
 
-A tui file manager with vim-like key mapping, written in Rust.  
+A tui file manager with Vim-like key mapping, written in Rust.  
 Fast, simple, and easy to configure & use.
 
 ![sample](/images/sample.gif)
@@ -34,24 +34,31 @@ Fast, simple, and easy to configure & use.
 
 ## New Release
 
-## New Release
-
-## v2.1.0 (2022-11-19)
-
-### Added
-
-- Feature to unpack archive/compressed file to the current directory. Supported types: `tar.gz`(Gzip), `tar.xz`(lzma), `tar.zst`(Zstandard & tar), `zst`(Zstandard), `tar`, zip file format and formats based on it(`zip`, `docx`, ...). To unpack, press `e` on the item.
-  - The number of dependencies bumps up to around 150 due to this.
+## v2.2.1 (2022-12-15)
 
 ### Fixed
 
-- Bug: In the select mode, the selected item was unintentionally canceled when going up/down.
-- Delete pointer properly when removing items.
-- Instead of panic, return error when `config_dir()` fails.
+- Fix the compilation on NetBSD.
+
+## v2.2.0 (2022-12-12)
 
 ### Changed
 
-- Image file detection: Use magic bytes instead of checking the extension. This will enable to detect image more precisely.
+- **IMPORTANT**: Trash and log directory path changed.
+  - from v2.2.0, felix will use `dirs::data_local_dir()` to store the deleted items and log files, instead of `dirs::config_dir()`.
+  - Due to this change, the path for linux will be `$XDG_DATA_HOME/felix/{Trash, log}`, in most case `/home/user/.local/share/felix/{Trash, log}`. For Windows `{FOLDERID_LocalAppData}\felix\{Trash, log}`, typically `C:\Users\user\AppData\Local\felix\{Trash, log}`. No change for macOS users.
+  - Note that config file path is unchanged for any OS!
+  - Please don't forget deleting old trash diretory and log files if you don't want them anymore.
+- Refactoring overall.
+
+### Added
+
+- `:trash` to go to the trash directory.
+
+### Fixed
+
+- Support NetBSD to open file in a new window.
+- Properly remove broken symlink in Windows as well. Also, when deleting/puttiing a directory, broken symlink(s) in it won't cause any error and will be removed from the file system after deleting/putting.
 
 For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoheiu/felix).
 
@@ -78,7 +85,16 @@ MSRV(Minimum Supported rustc Version): **1.60.0**
 
 ### Installation
 
-_Make sure that `gcc` is installed._
+### Prerequisites
+
+- Make sure that `gcc` is installed.
+- MSRV(Minimum Supported rustc Version): **1.60.0**
+
+Update Rust if rustc < 1.60:
+
+```
+rustup update
+```
 
 From crates.io:
 
@@ -149,6 +165,7 @@ These apps do not need any configuration to use with felix!
 | z \<keyword\> + Enter    | **_This command requires zoxide installed._** Jump to a directory that matches the keyword. Internally, felix calls [`zoxide query <keyword>`](https://man.archlinux.org/man/zoxide-query.1.en), so if the keyword does not match the zoxide database, this command will fail. |
 | :cd + Enter / :z + Enter | Go to the home directory.                                                                                                                                                                                                                                                      |
 | :z \<keyword\> + Enter   | Same as `z <keyword>`.                                                                                                                                                                                                                                                         |
+| :trash + Enter           | Go to the trash directory.                                                                                                                                                                                                                                                     |
 
 <a id="open"></a>
 
@@ -180,23 +197,23 @@ These apps do not need any configuration to use with felix!
 
 ### Change the view, search and others
 
-| Key             | Explanation                                                                                                                                                                                                              |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| v               | Toggle whether to show the item preview (text, image, or the contents tree) on the right half of the terminal. **_You must install [`chafa`](https://hpjansson.org/chafa/) in order to preview images._**                |
-| Alt + j / Down  | Scroll down the preview text.                                                                                                                                                                                            |
-| Alt + k / Up    | Scroll up the preview text.                                                                                                                                                                                              |
-| s               | Toggle between vertical / horizontal split in the preview mode.                                                                                                                                                          |
-| backspace       | Toggle whether to show hidden items or not. This change remains after exit (stored in `.session`).                                                                                                                       |
-| t               | Toggle sort order (by name <-> by modified time). This change remains after exit (same as above).                                                                                                                        |
-| /               | Search items by the keyword.                                                                                                                                                                                             |
-| n               | Go forward to the item that matches the keyword.                                                                                                                                                                         |
-| N               | Go backward to the item that matches the keyword.                                                                                                                                                                        |
-| :               | **_Experimantal._** Switch to the shell mode. Type command and press Enter to execute it. You can use any command in the displayed directory, but some commands may fail, and the display may collapse during execution. |
-| :e + Enter      | Reload the current directory. Useful when something goes wrong.                                                                                                                                                          |
-| :empty + Enter  | Empty the trash directory. **Please think twice to use this.**                                                                                                                                                           |
-| :h + Enter      | Show help. (scrolls by `j/k` or `Up/Down`)                                                                                                                                                                               |
-| Esc             | Return to the normal mode.                                                                                                                                                                                               |
-| :q + Enter / ZZ | Exit.                                                                                                                                                                                                                    |
+| Key             | Explanation                                                                                                                                                                                               |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| v               | Toggle whether to show the item preview (text, image, or the contents tree) on the right half of the terminal. **_You must install [`chafa`](https://hpjansson.org/chafa/) in order to preview images._** |
+| Alt + j / Down  | Scroll down the preview text.                                                                                                                                                                             |
+| Alt + k / Up    | Scroll up the preview text.                                                                                                                                                                               |
+| s               | Toggle between vertical / horizontal split in the preview mode.                                                                                                                                           |
+| backspace       | Toggle whether to show hidden items or not. This change remains after exit (stored in `.session`).                                                                                                        |
+| t               | Toggle sort order (by name <-> by modified time). This change remains after exit (same as above).                                                                                                         |
+| /               | Search items by the keyword.                                                                                                                                                                              |
+| n               | Go forward to the item that matches the keyword.                                                                                                                                                          |
+| N               | Go backward to the item that matches the keyword.                                                                                                                                                         |
+| :               | Switch to the shell mode. Type command and press Enter to execute it. You can use any command in the displayed directory, but some commands may fail, and the display may collapse during execution.      |
+| :e + Enter      | Reload the current directory. Useful when something goes wrong.                                                                                                                                           |
+| :empty + Enter  | Empty the trash directory. **Please think twice to use this.**                                                                                                                                            |
+| :h + Enter      | Show help. (scrolls by `j/k` or `Up/Down`)                                                                                                                                                                |
+| Esc             | Return to the normal mode.                                                                                                                                                                                |
+| :q + Enter / ZZ | Exit.                                                                                                                                                                                                     |
 
 Note that items moved to the trash directory are prefixed with Unix time (like `1633843993`) to avoid the name conflict. This prefix will be removed when put.
 
@@ -204,35 +221,42 @@ Note that items moved to the trash directory are prefixed with Unix time (like `
 
 ## Configuration
 
-| OS      | path                                      |
-| ------- | ----------------------------------------- |
-| Linux   | `$XDG_CONFIG_HOME/felix`                  |
-| macOS   | `$HOME/Library/Application Support/felix` |
-| Windows | `$PROFILE\AppData\Roaming\felix`          |
+### Linux
 
 ```
-felix
-├─ config.yaml # configuration file
-├─ log         # log files
-└─ trash       # trash directory
-
-# All config file and directories will be automatically created.
+config file     : $XDG_CONFIG_HOME/felix/config.yaml
+trash directory : $XDG_DATA_HOME/felix/Trash
+log files       : $XDG_DATA_HOME/felix/log
 ```
 
-Default config file will be created automatically at the first launch.
+### macOS
+
+```
+config file     : $HOME/Library/Application Support/felix/config.yaml
+trash directory : $HOME/Library/Application Support/felix/Trash
+log files       : $HOME/Library/Application Support/felix/log
+```
+
+### Windows
+
+```
+config file     : $PROFILE\AppData\Roaming\felix\config.yaml
+trash directory : $PROFILE\AppData\Local\felix\Trash
+log files       : $PROFILE\AppData\Local\felix\log
+```
+
+_All 3 items above will be automatically created._
 
 Default config.yaml:
 
 ```
-# v2.0.0
-
 # (Optional)
-# Default exec command when opening files.
+# Default exec command when opening file.
 # If not set, will default to $EDITOR.
 # default: nvim
 
 # (Optional)
-# key (the command you want to use when opening certain files): [values] (extensions)
+# key (the command you want to use when opening file): [values] (extensions)
 # exec:
 #   feh:
 #     [jpg, jpeg, png, gif, svg]
