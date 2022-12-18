@@ -34,6 +34,14 @@ Fast, simple, and easy to configure & use.
 
 ## New Release
 
+## v2.2.2 (2022-12-19)
+
+### Fixed
+
+- Disable commands with Ctrl or other modifiers unless explicitly implemented. (For now, `Ctrl + r` to redo, `Alt + j` and `Alt + k` to scroll the preview text are implemented) This avoids for example the situation where `Ctrl + d` unintentionally deletes an item.
+- Add `create_dir_all` to `config_dir` and `data_local_dir` to avoid error.
+- Check if the argument is directory.
+
 ## v2.2.1 (2022-12-15)
 
 ### Fixed
@@ -137,13 +145,16 @@ These apps do not need any configuration to use with felix!
 
 ## Usage
 
-| command / options                  |                                                               |
-| ---------------------------------- | ------------------------------------------------------------- |
-| `fx`                               | Show items in the current directory.                          |
-| `fx <directory path>`              | Show items in the path. Both relative and absolute available. |
-| `fx -l [path]` / `fx --log [path]` | Launch the app and create a log file.                         |
-| `fx -v` / `fx --version`           | Print the current version and check update.                   |
-| `fx -h` / `fx --help`              | Print help.                                                   |
+| command               |                                                               |
+| --------------------- | ------------------------------------------------------------- |
+| `fx`                  | Show items in the current directory.                          |
+| `fx <directory path>` | Show items in the path. Both relative and absolute available. |
+
+| option             |                                                      |     |
+| ------------------ | ---------------------------------------------------- | --- |
+| `-l` / `--log`     | Launch the app, automatically generating a log file. |
+| `-v` / `--version` | Print the current version and check update.          |
+| `-h` / `--help`    | Print help.                                          |
 
 <a id="key-manual"></a>
 
