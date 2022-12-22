@@ -137,7 +137,7 @@ cargo install --path .
 In addition, you can use felix more conveniently by installing the following two apps:
 
 - [zoxide](https://github.com/ajeetdsouza/zoxide): A smarter `cd` command, which enables you to jump to a directory that matches the keyword in felix.
-- [chafa](https://hpjansson.org/chafa/): Terminal graphics for the 21st century, by which you can preview images in felix.
+- [chafa](https://hpjansson.org/chafa/): Terminal graphics for the 21st century, by which you can preview images in felix. **_chafa must be v1.10.0 or later._**
 
 These apps do not need any configuration to use with felix!
 
