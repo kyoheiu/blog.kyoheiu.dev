@@ -150,8 +150,8 @@ These apps do not need any configuration to use with felix!
 | `fx`                  | Show items in the current directory.                          |
 | `fx <directory path>` | Show items in the path. Both relative and absolute available. |
 
-| option             |                                                      |     |
-| ------------------ | ---------------------------------------------------- | --- |
+| option             |                                                      |
+| ------------------ | ---------------------------------------------------- |
 | `-l` / `--log`     | Launch the app, automatically generating a log file. |
 | `-v` / `--version` | Print the current version and check update.          |
 | `-h` / `--help`    | Print help.                                          |
@@ -194,7 +194,7 @@ These apps do not need any configuration to use with felix!
 
 | Key             | Explanation                                                                                                                                                    |
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| dd              | Delete and yank one item (it will go to the trash directory).                                                                                                  |
+| dd              | Delete and yank one item, which will go to the trash directory.                                                                                                |
 | yy              | Yank one item. If you yanked other item(s) before, it's replaced by this one.                                                                                  |
 | p               | Put yanked item(s) in the current directory. If the item with same name exists, copied item will be renamed with the suffix `\_{count}`, such as `test_1.txt`. |
 | c               | Switch to the rename mode (enter the new name and press Enter to rename the item).                                                                             |
