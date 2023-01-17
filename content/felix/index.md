@@ -110,10 +110,10 @@ From crates.io:
 cargo install felix
 ```
 
-From AUR:
+Arch Linux:
 
 ```
-yay -S felix-rs
+pacman -S felix-rs
 ```
 
 On NetBSD, package is available from the official repositories:
