@@ -104,25 +104,30 @@ Update Rust if rustc < 1.60:
 rustup update
 ```
 
-From crates.io:
+#### From crates.io
 
 ```
 cargo install felix
 ```
 
-Arch Linux:
+#### Arch Linux
 
 ```
 pacman -S felix-rs
 ```
 
-On NetBSD, package is available from the official repositories:
+*The launcher binary name is `felix` via pacman.  
+Alias fx='felix' if you want, as this document (and other installations) uses `fx`.*
+
+#### NetBSD
+
+Package is available from the official repositories:
 
 ```
 pkgin install felix
 ```
 
-From this repository:
+#### From repository
 
 ```
 git clone https://github.com/kyoheiu/felix.git
@@ -144,6 +149,8 @@ These apps do not need any configuration to use with felix!
 <a id="usage"></a>
 
 ## Usage
+
+*If you install this app via pacman, the default binary name is `felix`.*
 
 | command               |                                                               |
 | --------------------- | ------------------------------------------------------------- |
