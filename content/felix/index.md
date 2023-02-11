@@ -34,49 +34,21 @@ Fast, simple, and easy to configure & use.
 
 ## New Release
 
-## v2.2.3 (2023-01-20)
-
-### Fixed
-- Wide chars handling: Using unicode_width, now felix can properly split file name or previewed texts.
-- Preview space height: When horizontally split, image preview could break the layout. Fixed this by adjusting the height.
+## v2.2.5 (2023-02-12)
 
 ### Added
-- `chafa`'s minimal supported version: >= v1.10.0
-- Add pacman installation.
-
-## v2.2.2 (2022-12-19)
-
-### Fixed
-
-- Disable commands with Ctrl or other modifiers unless explicitly implemented. (For now, `Ctrl + r` to redo, `Alt + j` and `Alt + k` to scroll the preview text are implemented) This avoids for example the situation where `Ctrl + d` unintentionally deletes an item.
-- Add `create_dir_all` to `config_dir` and `data_local_dir` to avoid error.
-- Check if the argument is directory.
-
-## v2.2.1 (2022-12-15)
+- Allow renaming even when item name contains non-ascii chars (i.e. wide chars).
+- Key command with arguments is now supported: For example,
+  ```
+  exec:
+  'feh -.':
+    [jpg, jpeg, png, gif, svg, hdr]
+  ```
+  this configuration enables you to execute `feh -. <item path>` by `Enter | l | Right`, or `o`.
+- Check for out-of-boundary of the cursor at the top of loop.
 
 ### Fixed
-
-- Fix the compilation on NetBSD.
-
-## v2.2.0 (2022-12-12)
-
-### Changed
-
-- **IMPORTANT**: Trash and log directory path changed.
-  - from v2.2.0, felix will use `dirs::data_local_dir()` to store the deleted items and log files, instead of `dirs::config_dir()`.
-  - Due to this change, the path for linux will be `$XDG_DATA_HOME/felix/{Trash, log}`, in most case `/home/user/.local/share/felix/{Trash, log}`. For Windows `{FOLDERID_LocalAppData}\felix\{Trash, log}`, typically `C:\Users\user\AppData\Local\felix\{Trash, log}`. No change for macOS users.
-  - Note that config file path is unchanged for any OS!
-  - Please don't forget deleting old trash diretory and log files if you don't want them anymore.
-- Refactoring overall.
-
-### Added
-
-- `:trash` to go to the trash directory.
-
-### Fixed
-
-- Support NetBSD to open file in a new window.
-- Properly remove broken symlink in Windows as well. Also, when deleting/puttiing a directory, broken symlink(s) in it won't cause any error and will be removed from the file system after deleting/putting.
+- Display when using in kitty: Correctly show the cursor and preview.
 
 For more details, see `CHANGELOG.md` in the [repository](https://github.com/kyoheiu/felix).
 
@@ -285,11 +257,12 @@ Default config.yaml:
 
 # (Optional)
 # key (the command you want to use when opening file): [values] (extensions)
+# In the key, You can use arguments.
 # exec:
-#   feh:
-#     [jpg, jpeg, png, gif, svg]
 #   zathura:
 #     [pdf]
+#  'feh -.':
+#   [jpg, jpeg, png, gif, svg, hdr]
 
 # (Optional)
 # Whether to use syntax highlighting in the preview mode.
@@ -349,10 +322,10 @@ For example, If you write
 default: nvim
 
 exec:
-  feh:
+  'feh -.':
     [jpg, jpeg, png, gif, svg]
   zathura:
     [pdf]
 ```
 
-then, `.jpg`, `.jpeg`, `.png`, `.gif` and `.svg` files are opened by `feh <file-name>`, `.pdf` files by `zathura <file-name>` and others by `nvim <file-name>` .
+then, `.jpg`, `.jpeg`, `.png`, `.gif` and `.svg` files are opened by `feh -. <file-name>`, `.pdf` files by `zathura <file-name>` and others by `nvim <file-name>` .
