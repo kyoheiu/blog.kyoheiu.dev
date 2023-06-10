@@ -9,7 +9,7 @@ title = "kyoheiu.dev"
 default_language = "ja"
 
 # The site theme to use.
-theme = "mont"
+theme = "emily_zola_theme"
 
 # When set to "true", a feed is automatically generated.
 generate_feed = true
