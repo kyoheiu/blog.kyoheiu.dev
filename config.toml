@@ -1,9 +1,9 @@
 # The base URL of the site; the only required configuration variable.
-base_url = "https://kyoheiu.dev"
+base_url = "https://blog.kyoheiu.dev"
 
 # The site title and description; used in feeds by default.
 description = "personal notes"
-title = "kyoheiu.dev"
+title = "blog.kyoheiu.dev"
 
 # The default language; used in feeds.
 default_language = "ja"
@@ -156,7 +156,7 @@ include_content = true
 #     author = "Famous author"
 #
 # author value will be available using {{ config.extra.author }} in templates
-[extra]
-mont_author = "Kyohei Uto"
 
-mont_favicon = "/images/icon.png"
+[extra]
+emily_icon = "/images/logo.png"
+emily_favicon = "/images/favicon.png"
