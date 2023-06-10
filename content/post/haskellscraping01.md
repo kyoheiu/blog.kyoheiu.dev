@@ -18,8 +18,8 @@ RSSを吐かず、実際に訪れないと更新されたかどうか確認で�
 この記事では(1)と(2)の`update.txt`の上書きまでをまとめる。続く部分は以下の記事に。
 
 1. HaskellによるWebスクレイピング（この記事）
-2. [HaskellでSlackに投稿する](@/posts/posttoslack.md)
-3. [systemdを使ってプログラムを定期実行する](@/posts/systemd-service.md)
+2. [HaskellでSlackに投稿する](@/post/posttoslack.md)
+3. [systemdを使ってプログラムを定期実行する](@/post/systemd-service.md)
 
 `Main.hs`は以下の通り。
 

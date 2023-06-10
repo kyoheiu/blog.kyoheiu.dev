@@ -6,7 +6,7 @@ math = false
 categories = ["code"]
 tags = ["Linux", "Arch Linux", "dotfiles", "Static Site Generator"]
 +++
-[Arch Linuxを再インストールした話](@/posts/reinstall-arch.md)に関連して。
+[Arch Linuxを再インストールした話](@/post/reinstall-arch.md)に関連して。
 
 ### dotfilesの扱い方
 

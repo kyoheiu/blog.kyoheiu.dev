@@ -1,6 +1,6 @@
 +++
 sort_by = "date"
-template = "posts.html"
+template = "post.html"
 page_template = "post-page.html"
 transparent = true
 +++
